@@ -1,7 +1,7 @@
 {
-  "name": "restless",
+  "name": "restless-client-api",
   "version": "1.1.0",
-  "description": "API’s manager, in real time. From anywhere, on the server you want.",
+  "description": "API’s manager in real time by Restless DevTools",
   "main": "index.js",
   "repository": {
     "type": "git",
