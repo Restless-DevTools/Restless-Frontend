@@ -1,42 +1,32 @@
 {
-  "name": "argon-design-system-react",
+  "name": "restless",
   "version": "1.1.0",
-  "description": "React version of Argon Design System by Creative Tim",
+  "description": "API’s manager, in real time. From anywhere, on the server you want.",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/argon-design-system-react.git"
+    "url": "git+https://github.com/Restless-DevTools/Restless-Frontend.git"
   },
   "keywords": [
-    "react",
-    "reactjs",
-    "argon",
-    "argon-react",
-    "design",
-    "design-react",
-    "argon-design",
-    "argon-design-react",
-    "kit",
-    "react-kit",
-    "argon-design-system",
-    "argon-design-system-react",
-    "design-system-react"
+    "api",
+    "api-rest",
+    "api-restfull",
+    "request",
+    "rest",
+    "restfull"
   ],
-  "author": "Creative Tim",
+  "author": "Restless DevTools",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/argon-design-system-react/issues"
+    "url": "https://github.com/Restless-DevTools/Restless-Frontend/issues"
   },
-  "homepage": "https://demos.creative-tim.com/argon-design-system-react/",
+  "homepage": "https://github.com/Restless-DevTools",
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && gulp licenses",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
-    "compile-sass": "node-sass src/assets/scss/argon-design-system-react.scss src/assets/css/argon-design-system-react.css",
-    "minify-sass": "node-sass src/assets/scss/argon-design-system-react.scss src/assets/css/argon-design-system-react.min.css --output-style compressed",
-    "map-sass": "node-sass src/assets/scss/argon-design-system-react.scss src/assets/css/argon-design-system-react.css --source-map true"
+    "install:clean": "rm -rf node_modules/ && rm -rf yarn.lock && yarn && yarn start"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -67,8 +57,6 @@
     "@types/markerclustererplus": "2.1.33",
     "@types/react": "16.9.19",
     "eslint-plugin-flowtype": "3.13.0",
-    "gulp": "4.0.2",
-    "gulp-append-prepend": "1.0.8",
     "jquery": "3.4.1",
     "typescript": "3.7.5"
   }
