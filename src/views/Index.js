@@ -22,7 +22,6 @@ import Labels from "./IndexSections/Labels.js";
 import Alerts from "./IndexSections/Alerts.js";
 import Typography from "./IndexSections/Typography.js";
 import Modals from "./IndexSections/Modals.js";
-import Datepicker from "./IndexSections/Datepicker.js";
 import TooltipPopover from "./IndexSections/TooltipPopover.js";
 import Carousel from "./IndexSections/Carousel.js";
 import Icons from "./IndexSections/Icons.js";
@@ -64,7 +63,6 @@ class Index extends React.Component {
               <Alerts />
               <Typography />
               <Modals />
-              <Datepicker />
               <TooltipPopover />
             </Container>
           </section>
