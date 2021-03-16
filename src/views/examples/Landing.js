@@ -1,6 +1,7 @@
-import React from "react";
+/* eslint-disable react/no-string-refs */
+import React, { Component } from 'react';
 // nodejs library that concatenates classes
-import classnames from "classnames";
+import classnames from 'classnames';
 
 // reactstrap components
 import {
@@ -16,23 +17,27 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
-} from "reactstrap";
+  Col,
+} from 'reactstrap';
 
 // core components
-import DemoNavbar from "components/Navbars/DemoNavbar.js";
-import CardsFooter from "components/Footers/CardsFooter.js";
+import CardsFooter from '../../components/Footers/CardsFooter';
+import DemoNavbar from '../../components/Navbars/DemoNavbar';
 
 // index page sections
-import Download from "../IndexSections/Download.js";
 
-class Landing extends React.Component {
-  state = {};
+class Landing extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
+
   componentDidMount() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
   }
+
   render() {
     return (
       <>
@@ -57,13 +62,14 @@ class Landing extends React.Component {
                   <Row>
                     <Col lg="6">
                       <h1 className="display-3 text-white">
-                        A beautiful Design System{" "}
+                        A beautiful Design System
+                        {' '}
                         <span>completed with examples</span>
                       </h1>
                       <p className="lead text-white">
                         The design system comes with four pre-built pages to
                         help you get started faster. You can change the text and
-                        images and you're good to go.
+                        images and your&apos;e good to go.
                       </p>
                       <div className="btn-wrapper">
                         <Button
@@ -146,7 +152,7 @@ class Landing extends React.Component {
                             className="mt-4"
                             color="primary"
                             href="#pablo"
-                            onClick={e => e.preventDefault()}
+                            onClick={(e) => e.preventDefault()}
                           >
                             Learn more
                           </Button>
@@ -182,7 +188,7 @@ class Landing extends React.Component {
                             className="mt-4"
                             color="success"
                             href="#pablo"
-                            onClick={e => e.preventDefault()}
+                            onClick={(e) => e.preventDefault()}
                           >
                             Learn more
                           </Button>
@@ -218,7 +224,7 @@ class Landing extends React.Component {
                             className="mt-4"
                             color="warning"
                             href="#pablo"
-                            onClick={e => e.preventDefault()}
+                            onClick={(e) => e.preventDefault()}
                           >
                             Learn more
                           </Button>
@@ -237,7 +243,7 @@ class Landing extends React.Component {
                   <img
                     alt="..."
                     className="img-fluid floating"
-                    src={require("assets/img/theme/promo-1.png")}
+                    src="../../assets/img/theme/promo-1.png"
                   />
                 </Col>
                 <Col className="order-md-1" md="6">
@@ -249,7 +255,7 @@ class Landing extends React.Component {
                     <p>
                       The kit comes with three pre-built pages to help you get
                       started faster. You can change the text and images and
-                      you're good to go.
+                      your&apos;e good to go.
                     </p>
                     <ul className="list-unstyled mt-5">
                       <li className="py-2">
@@ -314,7 +320,7 @@ class Landing extends React.Component {
                   <Card className="bg-default shadow border-0">
                     <CardImg
                       alt="..."
-                      src={require("assets/img/theme/img-1-1200x1000.jpg")}
+                      src="../../assets/img/theme/img-1-1200x1000.jpg"
                       top
                     />
                     <blockquote className="card-blockquote">
@@ -352,24 +358,24 @@ class Landing extends React.Component {
                     </div>
                     <h3>Our customers</h3>
                     <p className="lead">
-                      Don't let your uses guess by attaching tooltips and
+                      Don&apos;t let your uses guess by attaching tooltips and
                       popoves to any element. Just make sure you enable them
                       first via JavaScript.
                     </p>
                     <p>
                       The kit comes with three pre-built pages to help you get
                       started faster. You can change the text and images and
-                      you're good to go.
+                      your&apos;e good to go.
                     </p>
                     <p>
                       The kit comes with three pre-built pages to help you get
                       started faster. You can change the text and images and
-                      you're good to go.
+                      your&apos;e good to go.
                     </p>
                     <a
                       className="font-weight-bold text-warning mt-5"
                       href="#pablo"
-                      onClick={e => e.preventDefault()}
+                      onClick={(e) => e.preventDefault()}
                     >
                       A beautiful UI Kit for impactful websites
                     </a>
@@ -386,7 +392,7 @@ class Landing extends React.Component {
                     <img
                       alt="..."
                       className="img-center img-fluid"
-                      src={require("assets/img/ill/ill-2.svg")}
+                      src="../../assets/img/ill/ill-2.svg"
                     />
                   </div>
                 </Col>
@@ -426,7 +432,7 @@ class Landing extends React.Component {
                           <a
                             className="text-success"
                             href="#pablo"
-                            onClick={e => e.preventDefault()}
+                            onClick={(e) => e.preventDefault()}
                           >
                             Learn more
                           </a>
@@ -454,7 +460,7 @@ class Landing extends React.Component {
                           <a
                             className="text-warning"
                             href="#pablo"
-                            onClick={e => e.preventDefault()}
+                            onClick={(e) => e.preventDefault()}
                           >
                             Learn more
                           </a>
@@ -500,8 +506,8 @@ class Landing extends React.Component {
                     <img
                       alt="..."
                       className="rounded-circle img-center img-fluid shadow shadow-lg--hover"
-                      src={require("assets/img/theme/team-1-800x800.jpg")}
-                      style={{ width: "200px" }}
+                      src="../../assets/img/theme/team-1-800x800.jpg"
+                      style={{ width: '200px' }}
                     />
                     <div className="pt-4 text-center">
                       <h5 className="title">
@@ -513,7 +519,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle"
                           color="warning"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-twitter" />
                         </Button>
@@ -521,7 +527,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle ml-1"
                           color="warning"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-facebook" />
                         </Button>
@@ -529,7 +535,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle ml-1"
                           color="warning"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-dribbble" />
                         </Button>
@@ -542,8 +548,8 @@ class Landing extends React.Component {
                     <img
                       alt="..."
                       className="rounded-circle img-center img-fluid shadow shadow-lg--hover"
-                      src={require("assets/img/theme/team-2-800x800.jpg")}
-                      style={{ width: "200px" }}
+                      src="../../assets/img/theme/team-2-800x800.jpg"
+                      style={{ width: '200px' }}
                     />
                     <div className="pt-4 text-center">
                       <h5 className="title">
@@ -557,7 +563,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle"
                           color="primary"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-twitter" />
                         </Button>
@@ -565,7 +571,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle ml-1"
                           color="primary"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-facebook" />
                         </Button>
@@ -573,7 +579,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle ml-1"
                           color="primary"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-dribbble" />
                         </Button>
@@ -586,8 +592,8 @@ class Landing extends React.Component {
                     <img
                       alt="..."
                       className="rounded-circle img-center img-fluid shadow shadow-lg--hover"
-                      src={require("assets/img/theme/team-3-800x800.jpg")}
-                      style={{ width: "200px" }}
+                      src="../assets/img/theme/team-3-800x800.jpg"
+                      style={{ width: '200px' }}
                     />
                     <div className="pt-4 text-center">
                       <h5 className="title">
@@ -599,7 +605,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle"
                           color="info"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-twitter" />
                         </Button>
@@ -607,7 +613,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle ml-1"
                           color="info"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-facebook" />
                         </Button>
@@ -615,7 +621,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle ml-1"
                           color="info"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-dribbble" />
                         </Button>
@@ -628,8 +634,8 @@ class Landing extends React.Component {
                     <img
                       alt="..."
                       className="rounded-circle img-center img-fluid shadow shadow-lg--hover"
-                      src={require("assets/img/theme/team-4-800x800.jpg")}
-                      style={{ width: "200px" }}
+                      src="../../assets/img/theme/team-4-800x800.jpg"
+                      style={{ width: '200px' }}
                     />
                     <div className="pt-4 text-center">
                       <h5 className="title">
@@ -641,7 +647,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle"
                           color="success"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-twitter" />
                         </Button>
@@ -649,7 +655,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle ml-1"
                           color="success"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-facebook" />
                         </Button>
@@ -657,7 +663,7 @@ class Landing extends React.Component {
                           className="btn-icon-only rounded-circle ml-1"
                           color="success"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <i className="fa fa-dribbble" />
                         </Button>
@@ -720,7 +726,7 @@ class Landing extends React.Component {
                   <h5 className="text-white mt-3">Building tools</h5>
                   <p className="text-white mt-3">
                     Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
+                    up the bulk of the card&apos;s content.
                   </p>
                 </Col>
                 <Col lg="4">
@@ -730,7 +736,7 @@ class Landing extends React.Component {
                   <h5 className="text-white mt-3">Grow your market</h5>
                   <p className="text-white mt-3">
                     Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
+                    up the bulk of the card&apos;s content.
                   </p>
                 </Col>
                 <Col lg="4">
@@ -740,7 +746,7 @@ class Landing extends React.Component {
                   <h5 className="text-white mt-3">Launch time</h5>
                   <p className="text-white mt-3">
                     Some quick example text to build on the card title and make
-                    up the bulk of the card's content.
+                    up the bulk of the card&apos;s content.
                   </p>
                 </Col>
               </Row>
@@ -773,8 +779,8 @@ class Landing extends React.Component {
                         Your project is very important to us.
                       </p>
                       <FormGroup
-                        className={classnames("mt-5", {
-                          focused: this.state.nameFocused
+                        className={classnames('mt-5', {
+                          focused: this.state.nameFocused,
                         })}
                       >
                         <InputGroup className="input-group-alternative">
@@ -786,14 +792,14 @@ class Landing extends React.Component {
                           <Input
                             placeholder="Your name"
                             type="text"
-                            onFocus={e => this.setState({ nameFocused: true })}
-                            onBlur={e => this.setState({ nameFocused: false })}
+                            onFocus={() => this.setState({ nameFocused: true })}
+                            onBlur={() => this.setState({ nameFocused: false })}
                           />
                         </InputGroup>
                       </FormGroup>
                       <FormGroup
                         className={classnames({
-                          focused: this.state.emailFocused
+                          focused: this.state.emailFocused,
                         })}
                       >
                         <InputGroup className="input-group-alternative">
@@ -805,8 +811,8 @@ class Landing extends React.Component {
                           <Input
                             placeholder="Email address"
                             type="email"
-                            onFocus={e => this.setState({ emailFocused: true })}
-                            onBlur={e => this.setState({ emailFocused: false })}
+                            onFocus={() => this.setState({ emailFocused: true })}
+                            onBlur={() => this.setState({ emailFocused: false })}
                           />
                         </InputGroup>
                       </FormGroup>
@@ -837,7 +843,6 @@ class Landing extends React.Component {
               </Row>
             </Container>
           </section>
-          <Download />
         </main>
         <CardsFooter />
       </>

@@ -13,8 +13,8 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
-} from "reactstrap";
+  Col,
+} from 'reactstrap';
 
 import SimpleFooter from "components/Footers/SimpleFooter.js";
 import CardTitle from "reactstrap/lib/CardTitle";
