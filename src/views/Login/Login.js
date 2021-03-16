@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from 'react';
 
 import {
   Button,
@@ -16,8 +16,9 @@ import {
   Col,
 } from 'reactstrap';
 
-import SimpleFooter from "components/Footers/SimpleFooter.js";
-import CardTitle from "reactstrap/lib/CardTitle";
+import CardTitle from 'reactstrap/lib/CardTitle';
+import SimpleFooter from '../../components/Footers/SimpleFooter';
+import Github from '../../assets/img/icons/common/github.svg';
 
 const Login = (props) => {
   const main = useRef({ scrollTop: 0 });
@@ -25,7 +26,7 @@ const Login = (props) => {
   useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
-  }, [props])
+  }, [props]);
 
   return (
     <>
@@ -44,12 +45,12 @@ const Login = (props) => {
                         className="btn-neutral btn-icon"
                         color="default"
                         href="#"
-                        onClick={e => e.preventDefault()}
+                        onClick={(e) => e.preventDefault()}
                       >
                         <span className="btn-inner--icon mr-1">
                           <img
                             alt="..."
-                            src={require("assets/img/icons/common/github.svg")}
+                            src={Github}
                           />
                         </span>
                         <span className="btn-inner--text">Sign in with Github</span>
@@ -111,7 +112,7 @@ const Login = (props) => {
                           className="text-muted"
                           color="link"
                           href="#"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <small>Forgot password?</small>
                         </Button>
@@ -127,6 +128,6 @@ const Login = (props) => {
       </main>
     </>
   );
-}
+};
 
 export default Login;
