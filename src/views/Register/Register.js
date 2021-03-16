@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react/no-string-refs */
+import React from 'react';
 
 // reactstrap components
 import {
@@ -14,12 +15,12 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
-} from "reactstrap";
+  Col,
+} from 'reactstrap';
 
 // core components
-import DemoNavbar from "components/Navbars/DemoNavbar.js";
-import SimpleFooter from "components/Footers/SimpleFooter.js";
+import SimpleFooter from '../../components/Footers/SimpleFooter';
+import DemoNavbar from '../../components/Navbars/DemoNavbar';
 
 class Register extends React.Component {
   componentDidMount() {
@@ -27,6 +28,7 @@ class Register extends React.Component {
     document.scrollingElement.scrollTop = 0;
     this.refs.main.scrollTop = 0;
   }
+
   render() {
     return (
       <>
@@ -56,12 +58,12 @@ class Register extends React.Component {
                           className="btn-neutral btn-icon mr-4"
                           color="default"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <span className="btn-inner--icon mr-1">
                             <img
                               alt="..."
-                              src={require("assets/img/icons/common/github.svg")}
+                              src="../../assets/img/icons/common/github.svg"
                             />
                           </span>
                           <span className="btn-inner--text">Github</span>
@@ -70,12 +72,12 @@ class Register extends React.Component {
                           className="btn-neutral btn-icon ml-1"
                           color="default"
                           href="#pablo"
-                          onClick={e => e.preventDefault()}
+                          onClick={(e) => e.preventDefault()}
                         >
                           <span className="btn-inner--icon mr-1">
                             <img
                               alt="..."
-                              src={require("assets/img/icons/common/google.svg")}
+                              src="../../assets/img/icons/common/google.svg"
                             />
                           </span>
                           <span className="btn-inner--text">Google</span>
@@ -123,7 +125,8 @@ class Register extends React.Component {
                         </FormGroup>
                         <div className="text-muted font-italic">
                           <small>
-                            password strength:{" "}
+                            password strength:
+                            {' '}
                             <span className="text-success font-weight-700">
                               strong
                             </span>
@@ -142,10 +145,11 @@ class Register extends React.Component {
                                 htmlFor="customCheckRegister"
                               >
                                 <span>
-                                  I agree with the{" "}
+                                  I agree with the
+                                  {' '}
                                   <a
                                     href="#pablo"
-                                    onClick={e => e.preventDefault()}
+                                    onClick={(e) => e.preventDefault()}
                                   >
                                     Privacy Policy
                                   </a>
