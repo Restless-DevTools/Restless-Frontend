@@ -26,7 +26,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "install:clean": "rm -rf node_modules/ && rm -rf yarn.lock && yarn && yarn start"
+    "install:clean": "rm -rf node_modules/ && rm -rf yarn.lock && yarn && yarn start",
+    "lint:check": "eslint . --ext=js,jsx;  exit 0",
+    "lint:fix": "eslint . --ext=js,jsx --fix;  exit 0"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -52,7 +54,14 @@
   },
   "devDependencies": {
     "@types/react": "17.0.3",
-    "eslint-plugin-flowtype": "5.4.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.22.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-better-styled-components": "^1.1.2",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.22.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "jquery": "3.6.0"
   }
 }

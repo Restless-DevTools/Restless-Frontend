@@ -1,7 +1,7 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
 // JavaScript plugin that hides or shows a component based on your scroll
-import Headroom from "headroom.js";
+import Headroom from 'headroom.js';
 // reactstrap components
 import {
   Button,
@@ -19,29 +19,32 @@ import {
   Container,
   Row,
   Col,
-  UncontrolledTooltip
-} from "reactstrap";
+  UncontrolledTooltip,
+} from 'reactstrap';
 
 class DemoNavbar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapseClasses: '',
+    };
+  }
+
   componentDidMount() {
-    let headroom = new Headroom(document.getElementById("navbar-main"));
+    const headroom = new Headroom(document.getElementById('navbar-main'));
     // initialise
     headroom.init();
   }
-  state = {
-    collapseClasses: "",
-    collapseOpen: false
-  };
 
   onExiting = () => {
     this.setState({
-      collapseClasses: "collapsing-out"
+      collapseClasses: 'collapsing-out',
     });
   };
 
   onExited = () => {
     this.setState({
-      collapseClasses: ""
+      collapseClasses: '',
     });
   };
 
@@ -58,10 +61,10 @@ class DemoNavbar extends React.Component {
               <NavbarBrand className="mr-lg-5" to="/" tag={Link}>
                 <img
                   alt="..."
-                  src={require("assets/img/brand/argon-react-white.png")}
+                  src="assets/img/brand/argon-react-white.png"
                 />
               </NavbarBrand>
-              <button className="navbar-toggler" id="navbar_global">
+              <button className="navbar-toggler" id="navbar_global" type="button">
                 <span className="navbar-toggler-icon" />
               </button>
               <UncontrolledCollapse
@@ -77,12 +80,12 @@ class DemoNavbar extends React.Component {
                       <Link to="/">
                         <img
                           alt="..."
-                          src={require("assets/img/brand/argon-react.png")}
+                          src="../../assets/img/brand/argon-react.png"
                         />
                       </Link>
                     </Col>
                     <Col className="collapse-close" xs="6">
-                      <button className="navbar-toggler" id="navbar_global">
+                      <button className="navbar-toggler" id="navbar_global" type="button">
                         <span />
                         <span />
                       </button>
