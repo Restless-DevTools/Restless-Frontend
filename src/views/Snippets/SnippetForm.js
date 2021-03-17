@@ -36,7 +36,7 @@ function SnippetForm() {
     { label: 'Ruby', value: 'ruby' },
     { label: 'SASS', value: 'sass' },
     { label: 'R', value: 'r' },
-    { label: 'Objective-C', value: 'Objective-C' },
+    { label: 'Objective-C', value: 'objective-c' },
     { label: 'PL/SQL', value: 'sql' },
     { label: 'GO', value: 'go' },
   ]);

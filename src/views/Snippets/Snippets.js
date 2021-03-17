@@ -11,7 +11,7 @@ function Snippets() {
       <section className="section">
         <Col md="12">
           <Card>
-            <p>Snippets</p>
+            <h1 className="display-4 view-tittle">Snippets</h1>
             <SnippetForm />
           </Card>
         </Col>
