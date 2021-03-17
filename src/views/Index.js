@@ -2,7 +2,10 @@
 import React, { Component } from 'react';
 
 // reactstrap components
-import { Container, Row } from 'reactstrap';
+import {
+  Container,
+  Row,
+} from 'reactstrap';
 
 // core components
 import DemoNavbar from '../components/Navbars/DemoNavbar';
