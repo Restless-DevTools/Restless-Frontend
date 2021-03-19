@@ -17009,3 +17009,49 @@ td.rdtYear:hover {
   width: 1%; }
 
 /*# sourceMappingURL=argon-design-system-react.css.map */
+
+.main-content {
+  position: relative; }
+  .main-content .navbar-top {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: transparent;
+    padding-left: 0 !important;
+    padding-right: 0 !important; }
+  @media (min-width: 768px) {
+    .main-content .container-fluid, .main-content .container-sm, .main-content .container-md, .main-content .container-lg, .main-content .container-xl {
+      padding-left: 39px !important;
+      padding-right: 39px !important; } }
+
+.navbar-vertical.navbar-expand-xs.fixed-left + .main-content {
+  margin-left: 250px; }
+
+.navbar-vertical.navbar-expand-xs.fixed-right + .main-content {
+  margin-right: 250px; }
+
+@media (min-width: 576px) {
+  .navbar-vertical.navbar-expand-sm.fixed-left + .main-content {
+    margin-left: 250px; }
+  .navbar-vertical.navbar-expand-sm.fixed-right + .main-content {
+    margin-right: 250px; } }
+
+@media (min-width: 768px) {
+  .navbar-vertical.navbar-expand-md.fixed-left + .main-content {
+    margin-left: 250px; }
+  .navbar-vertical.navbar-expand-md.fixed-right + .main-content {
+    margin-right: 250px; } }
+
+@media (min-width: 992px) {
+  .navbar-vertical.navbar-expand-lg.fixed-left + .main-content {
+    margin-left: 250px; }
+  .navbar-vertical.navbar-expand-lg.fixed-right + .main-content {
+    margin-right: 250px; } }
+
+@media (min-width: 1200px) {
+  .navbar-vertical.navbar-expand-xl.fixed-left + .main-content {
+    margin-left: 250px; }
+  .navbar-vertical.navbar-expand-xl.fixed-right + .main-content {
+    margin-right: 250px; } }

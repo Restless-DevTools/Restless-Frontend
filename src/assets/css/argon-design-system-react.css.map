@@ -154,6 +154,8 @@
 		"../scss/argon-design-system/docs/nav.scss",
 		"../scss/argon-design-system/docs/prism.scss",
 		"../scss/argon-design-system/docs/sidebar.scss",
+		"../scss/argon-design-system/custom/_variables.scss",
+		"../scss/argon-design-system/custom/_content.scss",
 		"../scss/react/react-differences.scss",
 		"../scss/react/custom/_dropdown.scss",
 		"../scss/react/custom/_mixins.scss",
