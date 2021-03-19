@@ -22,7 +22,7 @@ import {
 
 // core components
 import CardsFooter from '../../components/Footers/CardsFooter';
-import DemoNavbar from '../../components/Navbars/DemoNavbar';
+import DemoNavbar from '../../components/Navbars/DashboardNavbar';
 
 // index page sections
 

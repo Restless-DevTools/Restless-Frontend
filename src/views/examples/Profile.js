@@ -7,8 +7,8 @@ import {
 } from 'reactstrap';
 
 // core components
-import DemoNavbar from '../../components/Navbars/DemoNavbar';
-import SimpleFooter from '../../components/Footers/SimpleFooter';
+import DemoNavbar from '../../components/Navbars/DashboardNavbar';
+import SimpleFooter from '../../components/Footers/DashboardFooter';
 
 class Profile extends React.Component {
   componentDidMount() {
