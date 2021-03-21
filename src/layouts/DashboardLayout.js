@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import {
-  useLocation, Route, Switch, Redirect,
+  Redirect, Route, Switch, useLocation,
 } from 'react-router-dom';
 import { Container } from 'reactstrap';
-import routes from '../routes';
-import DashboardNavbar from '../components/Navbars/DashboardNavbar';
 import DashboardFooter from '../components/Footers/DashboardFooter';
+import DashboardNavbar from '../components/Navbars/DashboardNavbar';
+import routes from '../routes';
 
 const DashboardLayout = (props) => {
   const mainContent = useRef(null);
@@ -50,7 +50,7 @@ const DashboardLayout = (props) => {
       />
       <Switch>
         {getRoutes(routes)}
-        <Redirect from="*" to="/dashboard/index" />
+        <Redirect from="*" to="/dashboard/requests" />
       </Switch>
       <Container fluid>
         <DashboardFooter />

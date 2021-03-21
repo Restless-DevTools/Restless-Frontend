@@ -78,7 +78,7 @@ const Login = (props) => {
                 type="button"
                 onClick={() => { navigate('/dashboard'); }}
               >
-                Sign in
+                Sign In
               </Button>
             </div>
             <div className="text-center">

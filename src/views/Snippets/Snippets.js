@@ -1,22 +1,21 @@
 import React from 'react';
 import {
-  Col, Card,
+  Card, Col, Container, Row,
 } from 'reactstrap';
 import SnippetForm from './SnippetForm';
 import './styles.css';
 
 function Snippets() {
   return (
-    <main>
-      <section className="section">
-        <Col md="12">
-          <Card>
-            <h1 className="display-4 view-tittle">Snippets</h1>
+    <Container className="pt-8" fluid>
+      <Row>
+        <Col className="mb-5 mb-xl-0">
+          <Card className="shadow">
             <SnippetForm />
           </Card>
         </Col>
-      </section>
-    </main>
+      </Row>
+    </Container>
   );
 }
 

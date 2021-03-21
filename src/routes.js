@@ -1,14 +1,14 @@
-import Index from './views/Index';
+import Requests from './views/Requests/Requests';
 import Login from './views/Login/Login';
 import Register from './views/Register/Register';
 import Snippets from './views/Snippets/Snippets';
 
 const routes = [
   {
-    path: '/index',
-    name: 'Dashboard',
+    path: '/requests',
+    name: 'Requests',
     icon: 'ni ni-tv-2 text-primary',
-    component: Index,
+    component: Requests,
     layout: '/dashboard',
   },
   {
