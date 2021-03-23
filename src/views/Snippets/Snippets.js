@@ -7,7 +7,7 @@ import './styles.css';
 
 function Snippets() {
   return (
-    <Container className="pt-8" fluid>
+    <Container fluid>
       <Row>
         <Col className="mb-5 mb-xl-0">
           <Card className="shadow">
