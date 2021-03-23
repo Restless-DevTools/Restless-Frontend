@@ -12101,7 +12101,7 @@ a.btn-icon-only {
 .main-content {
   position: relative; }
   .main-content .navbar-top {
-    position: absolute;
+    position: relative;
     left: 0;
     top: 0;
     width: 100%;
