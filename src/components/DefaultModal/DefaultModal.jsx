@@ -25,7 +25,7 @@ const ModalExample = (props) => {
   return (
     <div>
       <Modal isOpen={modal} toggle={toggle} className={className}>
-        <ModalHeader toggle={toggle}>{title}</ModalHeader>
+        <ModalHeader toggle={toggle}><h2>{title}</h2></ModalHeader>
         <ModalBody>
           {props.children}
         </ModalBody>

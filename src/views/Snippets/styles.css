@@ -1,5 +1,6 @@
 .form-page {
-  margin: 40px; 
+  margin: 40px;
+  margin-top: 0px;
 }
 
 .margin-top-30 {
@@ -13,4 +14,15 @@
 .view-tittle {
   margin-left: 15px;
   margin-top: 15px;
+}
+
+.snippet-modal {
+  max-width: 80%;
+}
+
+
+@media (max-width: 768px) {
+  .snippet-modal {
+    max-width: 100%;
+  } 
 }
