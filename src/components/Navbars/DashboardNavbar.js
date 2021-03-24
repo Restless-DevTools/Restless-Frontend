@@ -33,7 +33,7 @@ const DashboardNavbar = () => (
             <DropdownToggle className="pr-0" nav>
               <Media className="align-items-center">
                 <div className="icon icon-shape bg-danger text-white rounded-circle shadow">
-                  <i className="ni ni-single-02" />
+                  <i className="fas fa-user" />
                 </div>
                 <Media className="ml-2 d-none d-lg-block">
                   <span className="mb-0 text-sm font-weight-bold">
@@ -47,7 +47,7 @@ const DashboardNavbar = () => (
                 <h6 className="text-overflow m-0">Welcome!</h6>
               </DropdownItem>
               <DropdownItem to="/admin/user-profile" tag={Link}>
-                <i className="ni ni-single-02" />
+                <i className="fas fa-user" />
                 <span>My profile</span>
               </DropdownItem>
               <DropdownItem to="/admin/user-profile" tag={Link}>

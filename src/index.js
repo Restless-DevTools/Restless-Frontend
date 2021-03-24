@@ -4,8 +4,6 @@ import {
   BrowserRouter, Route, Switch, Redirect,
 } from 'react-router-dom';
 
-import './assets/vendor/nucleo/css/nucleo.css';
-import './assets/vendor/font-awesome/css/font-awesome.min.css';
 import './assets/scss/argon-dashboard-react.scss';
 
 import AuthLayout from './layouts/AuthLayout';
