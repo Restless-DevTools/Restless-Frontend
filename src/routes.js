@@ -2,6 +2,7 @@ import Requests from './views/Requests/Requests';
 import Login from './views/Login/Login';
 import Register from './views/Register/Register';
 import Snippets from './views/Snippets/Snippets';
+import Teams from './views/Teams/Teams';
 
 const routes = [
   {
@@ -16,6 +17,12 @@ const routes = [
     name: 'Snippets',
     icon: 'fa fa-code text-blue',
     component: Snippets,
+    layout: '/dashboard',
+  },
+  {
+    path: '/teams',
+    name: 'Teams',
+    component: Teams,
     layout: '/dashboard',
   },
   {
