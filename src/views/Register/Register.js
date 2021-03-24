@@ -50,7 +50,7 @@ const Register = (props) => {
               <InputGroup className="input-group-alternative mb-3">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="ni ni-single-02" />
+                    <i className="fa fa-user" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input placeholder="Username" type="text" />
@@ -60,7 +60,7 @@ const Register = (props) => {
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="ni ni-lock-circle-open" />
+                    <i className="fa fa-lock" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
@@ -74,7 +74,7 @@ const Register = (props) => {
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="ni ni-lock-circle-open" />
+                    <i className="fa fa-lock" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
@@ -97,7 +97,7 @@ const Register = (props) => {
               <InputGroup className="input-group-alternative mb-3">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="ni ni-email-83" />
+                    <i className="fa fa-envelope" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input placeholder="Email" type="email" />
@@ -107,7 +107,7 @@ const Register = (props) => {
               <InputGroup className="input-group-alternative mb-3">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="fa fa-id-card" />
+                    <i className="fa fa-signature" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input placeholder="Fullname" type="text" />
