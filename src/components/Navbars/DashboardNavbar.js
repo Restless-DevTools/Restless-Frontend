@@ -25,6 +25,12 @@ const DashboardNavbar = () => (
         >
           Snippets
         </Link>
+        <Link
+          className="h4 mb-0 text-white text-uppercase d-inline-block"
+          to="/dashboard/teams"
+        >
+          Teams
+        </Link>
         <NavbarBrand className="d-none d-sm-flex m-auto" href="/dashboard">
           <Logo width="200" />
         </NavbarBrand>
