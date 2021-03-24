@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button, Card,
 
@@ -8,20 +8,23 @@ import {
 
   Table,
 } from 'reactstrap';
+import DefaultModal from '../../components/DefaultModal/DefaultModal';
+import SnippetForm from './SnippetForm';
 import SnippetsHeader from './SnippetsHeader';
 import './styles.css';
 
 function Snippets() {
+  const [formModal, setFormModal] = useState(false);
   const actionsPanel = () => (
     <>
-      <Button color="success">Edit</Button>
+      <Button color="success" onClick={() => setFormModal(!formModal)}>Edit</Button>
       <Button color="danger">Delete</Button>
     </>
   );
 
   return (
     <>
-      <SnippetsHeader />
+      <SnippetsHeader setFormModal={setFormModal} />
       <Container fluid>
         <Row className="mt-5">
           <Col md="12">
@@ -74,6 +77,14 @@ function Snippets() {
             </Card>
           </Col>
         </Row>
+        <DefaultModal
+          isOpen={formModal}
+          title="New Snippet"
+          className="snippet-modal"
+          toggleModal={setFormModal}
+        >
+          <SnippetForm />
+        </DefaultModal>
       </Container>
     </>
   );
