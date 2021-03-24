@@ -50,7 +50,7 @@ const Login = (props) => {
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="ni ni-single-02" />
+                    <i className="fa fa-user" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input placeholder="Username" type="text" />
@@ -60,7 +60,7 @@ const Login = (props) => {
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="ni ni-lock-circle-open" />
+                    <i className="fa fa-lock" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
