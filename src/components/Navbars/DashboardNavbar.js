@@ -20,13 +20,13 @@ const DashboardNavbar = () => (
           Requests
         </Link>
         <Link
-          className="h4 mb-0 text-white text-uppercase d-inline-block"
+          className="h4 mb-0 text-white text-uppercase d-inline-block mr-3"
           to="/dashboard/snippets"
         >
           Snippets
         </Link>
         <Link
-          className="h4 mb-0 text-white text-uppercase d-inline-block"
+          className="h4 mb-0 text-white text-uppercase d-inline-block mr-3"
           to="/dashboard/teams"
         >
           Teams
