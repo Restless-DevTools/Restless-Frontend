@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import {
-  Badge,
   Button,
   Card,
   CardBody,
-
   CardHeader,
-
   Col,
-  Collapse,
+
   FormGroup,
   Input,
   InputGroup,
   InputGroupAddon,
   InputGroupText,
-
   Row,
 } from 'reactstrap';
+import DefaultCardList from '../../components/DefaultCardList/DefaultCardList';
+import DefaultCollapse from '../../components/DefaultCollapse/DefaultCollapse';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import GroupForm from './GroupForm';
 import RequestForm from './RequestForm';
@@ -27,7 +25,7 @@ const RequestsGroup = () => {
   const [requestModal, setRequestModal] = useState(false);
   const [requestModalTitle, setRequestModalTitle] = useState('');
 
-  const [group, setGroup] = useState(1);
+  const [selectedGroup, setSelectedGroup] = useState(1);
 
   const [groups] = useState([
     {
@@ -57,78 +55,32 @@ const RequestsGroup = () => {
         { id: 11, name: 'Update' },
         { id: 12, name: 'Delete' },
       ],
-    }]);
+    },
+  ]);
 
   const toggleGroup = (id) => {
-    if (id === group) {
-      setGroup('');
+    if (id === selectedGroup) {
+      setSelectedGroup('');
     } else {
-      setGroup(id);
+      setSelectedGroup(id);
     }
   };
 
-  const renderRequestGroup = (requestGroup) => (
-    <div key={requestGroup.id}>
-      <Row className="m-0 align-items-center">
-        <Col md="12" className="text-center px-0">
-          <Button
-            block
-            onClick={() => { toggleGroup(requestGroup.id); }}
-            className="btn-icon mb-1 text-left"
-            color="primary"
-            type="button"
-          >
-            <span>
-              <i className={group === requestGroup.id ? 'fa fa-arrow-down' : 'fa fa-arrow-right'} />
-            </span>
-            <span className="btn-inner--text">{requestGroup.name}</span>
-            <Badge color="dark">{requestGroup.requests.length}</Badge>
-          </Button>
-        </Col>
-      </Row>
-      {requestGroup.requests && (
-      <Collapse isOpen={group === requestGroup.id}>
-        {requestGroup.requests.map((request) => (
-          <Card key={request.id} className="mb-1">
-            <CardBody className="p-2">
-              <Row className="align-items-center">
-                <Col>
-                  <h3>{request.name}</h3>
-                </Col>
-                <Col className="text-right">
-                  <Button
-                    onClick={() => {
-                      setRequestModalTitle('Request');
-                      setRequestModal(!requestModal);
-                    }}
-                    className="btn-icon"
-                    color="primary"
-                    type="button"
-                  >
-                    <span>
-                      <i className="fa fa-edit" />
-                    </span>
-                  </Button>
-                  <Button className="btn-icon" color="danger" type="button">
-                    <span>
-                      <i className="fa fa-trash" />
-                    </span>
-                  </Button>
-                </Col>
-              </Row>
-            </CardBody>
-          </Card>
-        ))}
-      </Collapse>
-      )}
-    </div>
-  );
+  const handleEdit = () => {
+    setRequestModalTitle('Request');
+    setRequestModal(!requestModal);
+  };
+
+  const handleDelete = () => {
+    // TODO
+  };
 
   return (
     <>
       <Col xl="4">
+        <h2 className="text-secondary">Groups</h2>
         <Card className="shadow">
-          <CardHeader className="border-0 bg-default">
+          <CardHeader className="border-0 bg-dracula-secondary">
             <Row className="align-items-center">
               <Col className="align-items-center">
                 <FormGroup className="navbar-search navbar-search-dark mb-0">
@@ -178,9 +130,23 @@ const RequestsGroup = () => {
                 </Button>
               </Col>
             </Row>
-            {groups && (
-              groups.map((requestGroup) => renderRequestGroup(requestGroup))
-            )}
+            {groups && groups.map((group) => (
+              <DefaultCollapse
+                group={group}
+                selectedGroup={selectedGroup}
+                toggleGroup={toggleGroup}
+                badgeCount={group.requests.length}
+              >
+                <DefaultCardList
+                  list={group.requests}
+                  setRequestModal={setRequestModal}
+                  setRequestModalTitle={setRequestModalTitle}
+                  requestModal={requestModal}
+                  edit={handleEdit}
+                  remove={handleDelete}
+                />
+              </DefaultCollapse>
+            ))}
           </CardBody>
         </Card>
       </Col>

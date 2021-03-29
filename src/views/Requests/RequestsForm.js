@@ -39,8 +39,9 @@ const RequestsForm = () => {
   return (
     <>
       <Col className="mb-5 mb-xl-0" xl="8">
+        <h2 className="text-secondary">Request</h2>
         <Card className="shadow">
-          <CardHeader className="border-0 bg-default">
+          <CardHeader className="border-0 bg-dracula-secondary">
             <Row className="align-items-center">
               <Col md="3">
                 <FormGroup className="mb-md-0">

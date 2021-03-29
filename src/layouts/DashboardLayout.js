@@ -43,7 +43,7 @@ const DashboardLayout = (props) => {
   };
 
   return (
-    <div className="main-content" ref={mainContent}>
+    <div className="main-content bg-dracula-primary min-vh-100" ref={mainContent}>
       <DashboardNavbar
         {...props}
         brandText={getBrandText(props.location.pathname)}
