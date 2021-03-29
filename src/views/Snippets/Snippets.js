@@ -8,9 +8,9 @@ import {
 
   Table,
 } from 'reactstrap';
+import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import SnippetForm from './SnippetForm';
-import SnippetsHeader from './SnippetsHeader';
 import './styles.css';
 
 function Snippets() {
@@ -24,7 +24,17 @@ function Snippets() {
 
   return (
     <>
-      <SnippetsHeader setFormModal={setFormModal} />
+      <DefaultHeader>
+        <Col className="mb-xl-0">
+          <Button
+            onClick={() => setFormModal(!formModal)}
+            color="primary"
+            type="button"
+          >
+            New Snippet
+          </Button>
+        </Col>
+      </DefaultHeader>
       <Container fluid>
         <Row className="mt-5">
           <Col md="12">

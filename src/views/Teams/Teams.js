@@ -12,6 +12,7 @@ import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import TeamCard from './TeamCard';
 
 import './styles.css';
+import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 
 function Teams() {
   const [formModal, setFormModal] = useState(false);
@@ -22,44 +23,40 @@ function Teams() {
 
   return (
     <>
-      <Container className="pt-8" fluid>
-        <Row>
-          <Col className="mb-5 mb-xl-0">
-            <Button
-              onClick={() => setFormModal(!formModal)}
-              color="primary"
-              type="button"
-            >
-              New Team
-            </Button>
-            <DefaultModal
-              isOpen={formModal}
-              title="New Team"
-              className="snippet-modal"
-              toggleModal={setFormModal}
-            >
-              <TeamsForm />
-            </DefaultModal>
-
-            <Row className="mt-5">
-              <Col md="12">
-                <Card className="shadow">
-                  <CardHeader className="border-0">
-                    <Row className="align-items-center">
-                      <div className="col">
-                        <h3 className="mb-0">My Teams</h3>
-                      </div>
-                    </Row>
-                  </CardHeader>
-
-                  { teams.map((team) => (<TeamCard team={team} />))}
-
-                </Card>
-              </Col>
-            </Row>
-
+      <DefaultHeader>
+        <Col className="mb-xl-0">
+          <Button
+            onClick={() => setFormModal(!formModal)}
+            color="primary"
+            type="button"
+          >
+            New Team
+          </Button>
+        </Col>
+      </DefaultHeader>
+      <Container fluid>
+        <Row className="mt-5">
+          <Col md="12">
+            <Card className="shadow">
+              <CardHeader className="border-0">
+                <Row className="align-items-center">
+                  <div className="col">
+                    <h3 className="mb-0">My Teams</h3>
+                  </div>
+                </Row>
+              </CardHeader>
+              { teams.map((team) => (<TeamCard team={team} />))}
+            </Card>
           </Col>
         </Row>
+        <DefaultModal
+          isOpen={formModal}
+          title="New Team"
+          className="snippet-modal"
+          toggleModal={setFormModal}
+        >
+          <TeamsForm />
+        </DefaultModal>
       </Container>
     </>
   );
