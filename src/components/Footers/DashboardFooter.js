@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Row } from 'reactstrap';
 
 const DashboardFooter = () => (
-  <footer className="footer">
+  <footer className="footer bg-dracula-primary">
     <Row className="align-items-center justify-content-xl-between">
       <Col xl="12">
         <div className="copyright text-center text-xl-right text-muted">

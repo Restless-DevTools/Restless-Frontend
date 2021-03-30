@@ -3,8 +3,6 @@ import {
   Card, CardBody, CardHeader, Col, Row, Button,
 } from 'reactstrap';
 
-// import { Container } from './styles';
-
 function TeamCard(props) {
   const { team } = props;
 
