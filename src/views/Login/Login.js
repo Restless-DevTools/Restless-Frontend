@@ -28,7 +28,7 @@ const Login = (props) => {
     const loginInfo = await login(username, password);
 
     if (loginInfo.isValid) {
-      abrirNotificacaoSucesso('Login realizado com sucesso', 'Login');
+      abrirNotificacaoSucesso('Login successfully', 'Login');
       props.history.push('/dashboard/requests');
     } else {
       abrirNotificacaoErro(loginInfo.message, 'Login');

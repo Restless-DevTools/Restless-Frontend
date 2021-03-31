@@ -44,7 +44,7 @@ const Register = (props) => {
     const registerInfo = await register(userData);
 
     if (registerInfo.isValid) {
-      abrirNotificacaoSucesso('Usuário cadastrado com sucesso', 'Register');
+      abrirNotificacaoSucesso('User successfully registered', 'Register');
       props.history.push('/auth/login');
     } else {
       abrirNotificacaoErro(registerInfo.message, 'Register');
