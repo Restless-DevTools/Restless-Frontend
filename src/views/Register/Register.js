@@ -21,6 +21,8 @@ const Register = (props) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
+  const [isPasswordStrong, setIsPasswordStrong] = useState(false);
+
   const {
     abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta, register,
   } = useAuth();
@@ -32,8 +34,13 @@ const Register = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!isPasswordStrong) {
+      abrirNotificacaoAlerta('Your password must contain at least 8 digits, 1 uppercase character, 1 lowercase character, 1 number and a special character', 'Register');
+      return;
+    }
+
     if (password !== confirmPassword) {
-      abrirNotificacaoAlerta('As senhas informadas não coincidem', 'Register');
+      abrirNotificacaoAlerta('Passwords entered do not match', 'Register');
       return;
     }
 
@@ -48,6 +55,18 @@ const Register = (props) => {
       props.history.push('/auth/login');
     } else {
       abrirNotificacaoErro(registerInfo.message, 'Register');
+    }
+  };
+
+  const validatePasswordStrenght = (text) => {
+    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/;
+
+    console.log(re.test(text));
+
+    if (re.test(text)) {
+      setIsPasswordStrong(true);
+    } else {
+      setIsPasswordStrong(false);
     }
   };
 
@@ -69,7 +88,7 @@ const Register = (props) => {
             >
               <span className="btn-inner--icon mr-1">
                 <img
-                  alt="..."
+                  alt="github logo"
                   src={Github}
                 />
               </span>
@@ -106,7 +125,10 @@ const Register = (props) => {
                   placeholder="Password"
                   type="password"
                   autoComplete="off"
-                  onChange={(e) => { setPassword(e.target.value); }}
+                  onChange={(e) => {
+                    validatePasswordStrenght(e.target.value);
+                    setPassword(e.target.value);
+                  }}
                   required
                 />
               </InputGroup>
@@ -122,7 +144,9 @@ const Register = (props) => {
                   placeholder="Confirm password"
                   type="password"
                   autoComplete="off"
-                  onChange={(e) => { setConfirmPassword(e.target.value); }}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                  }}
                   required
                 />
               </InputGroup>
@@ -131,8 +155,8 @@ const Register = (props) => {
               <small>
                 password strength:
                 {' '}
-                <span className="text-success font-weight-700">
-                  strong
+                <span className={`font-weight-700 ${isPasswordStrong ? 'text-success' : 'text-danger'}`}>
+                  {isPasswordStrong ? 'strong' : 'weak'}
                 </span>
               </small>
             </div>
