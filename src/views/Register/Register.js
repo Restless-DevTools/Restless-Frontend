@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Card,
@@ -7,14 +7,48 @@ import {
   Input,
   InputGroup, InputGroupAddon,
   InputGroupText,
+  Label,
   Row,
 } from 'reactstrap';
+import useAuth from '../../contexts/AuthenticationContext';
 import Github from '../../assets/img/icons/common/github.svg';
 import Logo from '../../components/Logo/Logo';
 
 const Register = (props) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [privacyPolicy, setPrivacyPolicy] = useState(false);
+  const {
+    abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta, register,
+  } = useAuth();
+
   const navigate = (path) => {
     props.history.push(path || '/auth/register');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      abrirNotificacaoAlerta('As senhas informadas não coincidem', 'Register');
+      return;
+    }
+
+    const userData = {
+      username, password, email, name,
+    };
+
+    const registerInfo = await register(userData);
+
+    if (registerInfo.isValid) {
+      abrirNotificacaoSucesso('Usuário cadastrado com sucesso', 'Register');
+      props.history.push('/auth/login');
+    } else {
+      abrirNotificacaoErro(registerInfo.message, 'Register');
+    }
   };
 
   return (
@@ -45,7 +79,7 @@ const Register = (props) => {
           <div className="text-center text-muted my-4">
             <small>Or sign up with credentials</small>
           </div>
-          <Form role="form">
+          <Form role="form" onSubmit={handleSubmit}>
             <FormGroup>
               <InputGroup className="input-group-alternative mb-3">
                 <InputGroupAddon addonType="prepend">
@@ -53,7 +87,12 @@ const Register = (props) => {
                     <i className="fa fa-user" />
                   </InputGroupText>
                 </InputGroupAddon>
-                <Input placeholder="Username" type="text" />
+                <Input
+                  placeholder="Username"
+                  type="text"
+                  onChange={(e) => { setUsername(e.target.value); }}
+                  required
+                />
               </InputGroup>
             </FormGroup>
             <FormGroup>
@@ -67,6 +106,8 @@ const Register = (props) => {
                   placeholder="Password"
                   type="password"
                   autoComplete="off"
+                  onChange={(e) => { setPassword(e.target.value); }}
+                  required
                 />
               </InputGroup>
             </FormGroup>
@@ -81,6 +122,8 @@ const Register = (props) => {
                   placeholder="Confirm password"
                   type="password"
                   autoComplete="off"
+                  onChange={(e) => { setConfirmPassword(e.target.value); }}
+                  required
                 />
               </InputGroup>
             </FormGroup>
@@ -100,7 +143,12 @@ const Register = (props) => {
                     <i className="fa fa-envelope" />
                   </InputGroupText>
                 </InputGroupAddon>
-                <Input placeholder="Email" type="email" />
+                <Input
+                  placeholder="Email"
+                  type="email"
+                  onChange={(e) => { setEmail(e.target.value); }}
+                  required
+                />
               </InputGroup>
             </FormGroup>
             <FormGroup>
@@ -110,32 +158,31 @@ const Register = (props) => {
                     <i className="fa fa-signature" />
                   </InputGroupText>
                 </InputGroupAddon>
-                <Input placeholder="Fullname" type="text" />
+                <Input
+                  placeholder="Fullname"
+                  type="text"
+                  onChange={(e) => { setName(e.target.value); }}
+                  required
+                />
               </InputGroup>
             </FormGroup>
             <Row className="my-4">
               <Col xs="12">
                 <div className="custom-control custom-control-alternative custom-checkbox">
-                  <input
+                  <Input
                     className="custom-control-input"
-                    id="customCheckRegister"
+                    id="privacyPolicyCheck"
                     type="checkbox"
+                    onChange={() => { setPrivacyPolicy(!privacyPolicy); }}
+                    required
                   />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="customCheckRegister"
-                  >
+                  <Label className="custom-control-label" htmlFor="privacyPolicyCheck">
                     <span>
                       I agree with the
                       {' '}
-                      <a
-                        href="/"
-                        onClick={(e) => { e.preventDefault(); navigate(); }}
-                      >
-                        Privacy Policy
-                      </a>
+                      <a href="/" onClick={(e) => { e.preventDefault(); }}>Privacy Policy</a>
                     </span>
-                  </label>
+                  </Label>
                 </div>
               </Col>
             </Row>
@@ -144,8 +191,7 @@ const Register = (props) => {
                 block
                 className="mt-4"
                 color="primary"
-                type="button"
-                onClick={() => { navigate('/auth/login'); }}
+                type="submit"
               >
                 Sign Up
               </Button>

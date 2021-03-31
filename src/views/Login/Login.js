@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -11,11 +11,35 @@ import {
 import CardTitle from 'reactstrap/lib/CardTitle';
 import Github from '../../assets/img/icons/common/github.svg';
 import Logo from '../../components/Logo/Logo';
+import useAuth from '../../contexts/AuthenticationContext';
 
 const Login = (props) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const {
+    abrirNotificacaoSucesso, abrirNotificacaoErro, login, signed,
+  } = useAuth();
   const navigate = (path) => {
     props.history.push(path || '/auth/login');
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const loginInfo = await login(username, password);
+
+    if (loginInfo.isValid) {
+      abrirNotificacaoSucesso('Login realizado com sucesso', 'Login');
+      props.history.push('/dashboard/requests');
+    } else {
+      abrirNotificacaoErro(loginInfo.message, 'Login');
+    }
+  };
+
+  useEffect(() => {
+    if (signed) {
+      navigate('/dashboard/requests');
+    }
+  }, [signed]);
 
   return (
     <Col lg="5" md="7">
@@ -45,7 +69,7 @@ const Login = (props) => {
           <div className="text-center text-muted my-4">
             <small>Or sign in with credentials</small>
           </div>
-          <Form role="form">
+          <Form role="form" onSubmit={handleSubmit}>
             <FormGroup className="mb-3">
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
@@ -53,7 +77,12 @@ const Login = (props) => {
                     <i className="fa fa-user" />
                   </InputGroupText>
                 </InputGroupAddon>
-                <Input placeholder="Username" type="text" />
+                <Input
+                  placeholder="Username"
+                  type="text"
+                  onChange={(e) => { setUsername(e.target.value); }}
+                  required
+                />
               </InputGroup>
             </FormGroup>
             <FormGroup>
@@ -67,6 +96,8 @@ const Login = (props) => {
                   placeholder="Password"
                   type="password"
                   autoComplete="off"
+                  onChange={(e) => { setPassword(e.target.value); }}
+                  required
                 />
               </InputGroup>
             </FormGroup>
@@ -75,8 +106,7 @@ const Login = (props) => {
                 block
                 className="my-2"
                 color="primary"
-                type="button"
-                onClick={() => { navigate('/dashboard'); }}
+                type="submit"
               >
                 Sign In
               </Button>
