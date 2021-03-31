@@ -132,6 +132,7 @@ const RequestsGroup = () => {
             </Row>
             {groups && groups.map((group) => (
               <DefaultCollapse
+                key={group.id}
                 group={group}
                 selectedGroup={selectedGroup}
                 toggleGroup={toggleGroup}
