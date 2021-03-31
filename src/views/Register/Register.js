@@ -61,8 +61,6 @@ const Register = (props) => {
   const validatePasswordStrenght = (text) => {
     const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/;
 
-    console.log(re.test(text));
-
     if (re.test(text)) {
       setIsPasswordStrong(true);
     } else {
