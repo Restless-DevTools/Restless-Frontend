@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Col,
@@ -7,18 +7,30 @@ import {
   Row,
 } from 'reactstrap';
 import Select from 'react-select';
+import useApp from '../../contexts/ApplicationContext';
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
+import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import RequestsForm from './RequestsForm';
 import RequestsGroup from './RequestsGroup';
+import CollectionForm from './CollectionForm';
 
 const Requests = () => {
+  const { requests } = useApp();
   const [collection, setCollection] = useState(1);
   const [collectionModal, setCollectionModal] = useState(false);
+  const [collections, setCollections] = useState([]);
 
-  const [collections] = useState([
-    { label: 'Coleção 1', value: 1 },
-    { label: 'Coleção 2', value: 2 },
-  ]);
+  const getAllCollections = async () => {
+    const { data } = await requests.getAllCollections();
+
+    if (data.length) {
+      setCollections(data);
+    }
+  };
+
+  useEffect(() => {
+    getAllCollections();
+  }, []);
 
   return (
     <>
@@ -55,6 +67,14 @@ const Requests = () => {
           <RequestsGroup />
         </Row>
       </Container>
+      <DefaultModal
+        isOpen={collectionModal}
+        title="Collection"
+        className="default-modal"
+        toggleModal={setCollectionModal}
+      >
+        <CollectionForm />
+      </DefaultModal>
     </>
   );
 };

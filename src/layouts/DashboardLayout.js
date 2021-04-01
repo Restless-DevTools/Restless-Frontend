@@ -3,6 +3,7 @@ import {
   Redirect, Route, Switch, useLocation,
 } from 'react-router-dom';
 import { Container } from 'reactstrap';
+import { ApplicationProvider } from '../contexts/ApplicationContext';
 import DashboardFooter from '../components/Footers/DashboardFooter';
 import DashboardNavbar from '../components/Navbars/DashboardNavbar';
 import routes from '../routes';
@@ -43,19 +44,21 @@ const DashboardLayout = (props) => {
   };
 
   return (
-    <div className="main-content bg-dracula-primary min-vh-100" ref={mainContent}>
-      <DashboardNavbar
-        {...props}
-        brandText={getBrandText(props.location.pathname)}
-      />
-      <Switch>
-        {getRoutes(routes)}
-        <Redirect from="*" to="/dashboard/requests" />
-      </Switch>
-      <Container fluid>
-        <DashboardFooter />
-      </Container>
-    </div>
+    <ApplicationProvider history={props.history}>
+      <div className="main-content bg-dracula-primary min-vh-100" ref={mainContent}>
+        <DashboardNavbar
+          {...props}
+          brandText={getBrandText(props.location.pathname)}
+        />
+        <Switch>
+          {getRoutes(routes)}
+          <Redirect from="*" to="/dashboard/requests" />
+        </Switch>
+        <Container fluid>
+          <DashboardFooter />
+        </Container>
+      </div>
+    </ApplicationProvider>
   );
 };
 

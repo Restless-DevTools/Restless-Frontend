@@ -12,18 +12,35 @@ export const AuthenticationProvider = ({ children }) => {
   const restlessApi = process.env.REACT_APP_RESTLESS_URL;
   const token = Cookies.get('TOKEN');
 
-  // utils
+  // Notification
 
   const abrirNotificacaoSucesso = (message, title) => Notification.createNotification('success', message, title);
   const abrirNotificacaoErro = (message, title) => Notification.createNotification('error', message, title);
   const abrirNotificacaoAlerta = (message, title) => Notification.createNotification('warning', message, title);
 
+  // Validate token
+
+  const validateTokenRequest = () => axios.post(`${restlessApi}/auth/validate-token`, { token });
+
+  const validateToken = async () => {
+    try {
+      const { data } = await validateTokenRequest();
+
+      if (!data.user) {
+        return { isValid: false, message: data.message };
+      }
+
+      return { isValid: true };
+    } catch (error) {
+      return { isValid: false, message: error.response.data.message };
+    }
+  };
+
+  // logout
   const clearOldCookies = () => {
     Cookies.remove('TOKEN');
     Cookies.remove('USERNAME');
   };
-
-  // logout
 
   const logout = () => {
     clearOldCookies();
@@ -70,9 +87,13 @@ export const AuthenticationProvider = ({ children }) => {
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     if (token) {
-      setSigned(true);
+      const { isValid } = await validateToken();
+
+      if (isValid) {
+        setSigned(true);
+      }
     }
   }, []);
 
