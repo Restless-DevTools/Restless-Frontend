@@ -1,26 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Button, Card,
-
-  CardHeader, Col,
+  Button,
+  Card,
+  CardHeader,
+  Col,
   Container,
   Row,
-
   Table,
 } from 'reactstrap';
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import SnippetForm from './SnippetForm';
+import useAppContext from '../../contexts/ApplicationContext';
 import './styles.css';
 
 function Snippets() {
+  const { requests } = useAppContext();
   const [formModal, setFormModal] = useState(false);
-  const actionsPanel = () => (
-    <>
-      <Button color="success" onClick={() => setFormModal(!formModal)}>Edit</Button>
-      <Button color="danger">Delete</Button>
-    </>
-  );
+  const [snippets, setSnippets] = useState([]);
+
+  const getSnippets = async () => {
+    const { data } = await requests.getSnippets();
+    setSnippets(data);
+  };
+
+  useEffect(() => {
+    getSnippets();
+  }, []);
 
   return (
     <>
@@ -31,6 +37,8 @@ function Snippets() {
             color="primary"
             type="button"
           >
+            <i className="fas fa-code" />
+            {' '}
             New Snippet
           </Button>
         </Col>
@@ -58,30 +66,19 @@ function Snippets() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>{actionsPanel()}</td>
-                    <th scope="row">Fix DB Schema</th>
-                    <td>Fix the DB schema</td>
-                    <td>PL/SQL</td>
-                    <td>Private</td>
-                    <td>Today</td>
-                  </tr>
-                  <tr>
-                    <td>{actionsPanel()}</td>
-                    <th scope="row">Calculate Something</th>
-                    <td>Calculate something cool</td>
-                    <td>GO</td>
-                    <td>Private</td>
-                    <td>Today</td>
-                  </tr>
-                  <tr>
-                    <td>{actionsPanel()}</td>
-                    <th scope="row">React select</th>
-                    <td>React select component that is awesome</td>
-                    <td>JavaScript</td>
-                    <td>Public</td>
-                    <td>Today</td>
-                  </tr>
+                  {snippets.map(((snippet) => (
+                    <tr key={snippet.id}>
+                      <td>
+                        <Button color="success" onClick={() => setFormModal(!formModal)}><i className="fas fa-edit" /></Button>
+                        <Button color="danger"><i className="fas fa-trash" /></Button>
+                      </td>
+                      <th scope="row">{snippet.name}</th>
+                      <td>{snippet.description}</td>
+                      <td>{snippet.language}</td>
+                      <td>{snippet.permissionType}</td>
+                      <td>{snippet.createdAt}</td>
+                    </tr>
+                  )))}
                 </tbody>
               </Table>
             </Card>

@@ -6,4 +6,9 @@ export default class Requests {
   getAllCollections() {
     return this.api.get('/collections/all');
   }
+
+  // snippets
+  getSnippets() {
+    return this.api.get('/snippets/all');
+  }
 }
