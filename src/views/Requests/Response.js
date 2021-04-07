@@ -9,7 +9,7 @@ import './styles.css';
 
 const Response = () => {
   const [code, setCode] = useState('{\n"success": true,\n "message": "Informações gravadas! " \n}');
-  const [showHeaders, setShowHeaders] = useState(false);
+  const [showHeaders, setShowHeaders] = useState(true);
 
   return (
     <div className="form-page">

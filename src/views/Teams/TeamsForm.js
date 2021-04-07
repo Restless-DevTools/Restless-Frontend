@@ -4,7 +4,9 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 
-function TeamsForm() {
+function TeamsForm(props) {
+  const { toggleModal } = props;
+
   const userOptions = [{ value: 'francisco', label: '@Francisco' }, { value: 'mateus', label: '@Mateus' }];
 
   return (
@@ -49,7 +51,7 @@ function TeamsForm() {
             <Button color="success" type="button">
               Save
             </Button>
-            <Button color="danger" type="button">
+            <Button onClick={toggleModal} color="danger" type="button">
               Discard
             </Button>
           </Col>

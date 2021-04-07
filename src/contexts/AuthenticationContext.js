@@ -1,9 +1,8 @@
+import axios from 'axios';
 import Cookies from 'js-cookie';
 import React, {
   createContext, useContext, useEffect, useState,
 } from 'react';
-import axios from 'axios';
-import Notification from '../components/Notification/Notification';
 
 const AuthenticationContext = createContext();
 
@@ -11,12 +10,6 @@ export const AuthenticationProvider = ({ children }) => {
   const [signed, setSigned] = useState(false);
   const restlessApi = process.env.REACT_APP_RESTLESS_URL;
   const token = Cookies.get('TOKEN');
-
-  // Notification
-
-  const abrirNotificacaoSucesso = (message, title) => Notification.createNotification('success', message, title);
-  const abrirNotificacaoErro = (message, title) => Notification.createNotification('error', message, title);
-  const abrirNotificacaoAlerta = (message, title) => Notification.createNotification('warning', message, title);
 
   // Validate token
 
@@ -100,10 +93,6 @@ export const AuthenticationProvider = ({ children }) => {
   return (
     <AuthenticationContext.Provider value={{
       signed,
-
-      abrirNotificacaoSucesso,
-      abrirNotificacaoErro,
-      abrirNotificacaoAlerta,
 
       login,
       logout,

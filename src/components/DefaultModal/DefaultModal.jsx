@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button, Modal, ModalHeader, ModalBody, ModalFooter,
+  Modal, ModalBody, ModalFooter, ModalHeader,
 } from 'reactstrap';
 
 const ModalExample = (props) => {
   const {
+    children,
     isOpen,
     className,
     title,
+    toggleModal,
+    confirmButton,
   } = props;
 
   const [modal, setModal] = useState(isOpen);
@@ -19,23 +22,22 @@ const ModalExample = (props) => {
   const toggle = () => {
     const newModalState = !modal;
     setModal(newModalState);
-    props.toggleModal(newModalState);
+    toggleModal(newModalState);
   };
 
   return (
     <div>
       <Modal isOpen={modal} toggle={toggle} className={className}>
-        <ModalHeader toggle={toggle}><h2>{title}</h2></ModalHeader>
+        <ModalHeader tag="h2" toggle={toggle}>{title}</ModalHeader>
         <ModalBody>
-          {props.children}
+          {children}
         </ModalBody>
-        <ModalFooter>
-          <Button color="secondary" onClick={toggle}>Cancel</Button>
-          {props.confirmButton
+        {confirmButton
           && (
-            props.confirmButton
+          <ModalFooter>
+            confirmButton
+          </ModalFooter>
           )}
-        </ModalFooter>
       </Modal>
     </div>
   );

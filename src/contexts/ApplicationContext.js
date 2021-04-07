@@ -20,6 +20,22 @@ export const ApplicationProvider = (props) => {
   });
   const requests = new Requests(api);
 
+  // Collections
+
+  const createCollection = async (userData) => {
+    try {
+      const { data } = await requests.createCollection(userData);
+
+      if (!data.status && !data.id) {
+        return { isValid: false, message: data.message };
+      }
+
+      return { isValid: true };
+    } catch (error) {
+      return { isValid: false, message: error.response.data.message };
+    }
+  };
+
   useEffect(() => {
     const resInterceptor = api.interceptors.response
       .use(api.interceptors.response, (error) => {
@@ -39,6 +55,9 @@ export const ApplicationProvider = (props) => {
   return (
     <ApplicationContext.Provider value={{
       requests,
+
+      // Collections
+      createCollection,
     }}
     >
       {props.children}

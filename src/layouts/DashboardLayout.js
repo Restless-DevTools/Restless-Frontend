@@ -52,7 +52,7 @@ const DashboardLayout = (props) => {
         />
         <Switch>
           {getRoutes(routes)}
-          <Redirect from="*" to="/dashboard/requests" />
+          <Redirect from="*" to="/dashboard/collections" />
         </Switch>
         <Container fluid>
           <DashboardFooter />

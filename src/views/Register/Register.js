@@ -10,6 +10,7 @@ import {
   Label,
   Row,
 } from 'reactstrap';
+import useGlobal from '../../contexts/GlobalContext';
 import useAuth from '../../contexts/AuthenticationContext';
 import Github from '../../assets/img/icons/common/github.svg';
 import Logo from '../../components/Logo/Logo';
@@ -23,9 +24,8 @@ const Register = (props) => {
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [isPasswordStrong, setIsPasswordStrong] = useState(false);
 
-  const {
-    abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta, register,
-  } = useAuth();
+  const { abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta } = useGlobal();
+  const { register } = useAuth();
 
   const navigate = (path) => {
     props.history.push(path || '/auth/register');

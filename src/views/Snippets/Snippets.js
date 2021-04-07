@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import {
   Button, Card,
-
   CardHeader, Col,
   Container,
   Row,
-
   Table,
 } from 'reactstrap';
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
@@ -15,9 +13,16 @@ import './styles.css';
 
 function Snippets() {
   const [formModal, setFormModal] = useState(false);
+  const [formModalTitle, setFormModalTitle] = useState('');
+
+  const toggleModal = (edit) => {
+    setFormModalTitle(edit ? 'Snippet' : 'New Snippet');
+    setFormModal(!formModal);
+  };
+
   const actionsPanel = () => (
     <>
-      <Button color="success" onClick={() => setFormModal(!formModal)}>Edit</Button>
+      <Button color="success" onClick={() => { toggleModal(true); }}>Edit</Button>
       <Button color="danger">Delete</Button>
     </>
   );
@@ -27,7 +32,7 @@ function Snippets() {
       <DefaultHeader>
         <Col className="mb-xl-0">
           <Button
-            onClick={() => setFormModal(!formModal)}
+            onClick={() => { toggleModal(); }}
             color="primary"
             type="button"
           >
@@ -89,11 +94,11 @@ function Snippets() {
         </Row>
         <DefaultModal
           isOpen={formModal}
-          title="New Snippet"
+          title={formModalTitle}
           className="snippet-modal"
           toggleModal={setFormModal}
         >
-          <SnippetForm />
+          <SnippetForm toggleModal={toggleModal} />
         </DefaultModal>
       </Container>
     </>

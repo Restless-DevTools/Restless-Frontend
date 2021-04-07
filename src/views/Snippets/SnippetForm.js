@@ -5,7 +5,9 @@ import {
   FormGroup, Row, Col, Input, Label, Button,
 } from 'reactstrap';
 
-function SnippetForm() {
+function SnippetForm(props) {
+  const { toggleModal } = props;
+
   const [language, setLanguage] = useState('javascript');
 
   const [languages] = useState([
@@ -51,8 +53,6 @@ function SnippetForm() {
   ]);
 
   const [shareOption, setShareOption] = useState('private');
-
-  console.log(code);
 
   return (
     <div className="form-page">
@@ -128,6 +128,7 @@ function SnippetForm() {
             language={language}
             defaultValue="// Restless is awesome!"
             onChange={(value) => setCode(value)}
+            value={code}
           />
         </Col>
       </Row>
@@ -138,7 +139,7 @@ function SnippetForm() {
             <Button color="success" type="button">
               Save
             </Button>
-            <Button color="danger" type="button">
+            <Button onClick={toggleModal} color="danger" type="button">
               Discard
             </Button>
           </Col>

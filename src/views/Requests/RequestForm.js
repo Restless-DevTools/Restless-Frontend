@@ -5,7 +5,9 @@ import {
 } from 'reactstrap';
 import './styles.css';
 
-const RequestForm = () => {
+const RequestForm = (props) => {
+  const { toggleModal } = props;
+
   const [method, setMethod] = useState(1);
   const [format, setFormat] = useState(1);
   const [group, setGroup] = useState(1);
@@ -94,7 +96,7 @@ const RequestForm = () => {
             <Button color="success" type="button">
               Save
             </Button>
-            <Button color="danger" type="button">
+            <Button onClick={toggleModal} color="danger" type="button">
               Discard
             </Button>
           </Col>
