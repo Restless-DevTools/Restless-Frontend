@@ -81,6 +81,7 @@ const Login = (props) => {
                   placeholder="Username"
                   type="text"
                   onChange={(e) => { setUsername(e.target.value); }}
+                  maxLength={30}
                   required
                 />
               </InputGroup>
@@ -97,6 +98,7 @@ const Login = (props) => {
                   type="password"
                   autoComplete="off"
                   onChange={(e) => { setPassword(e.target.value); }}
+                  maxLength={30}
                   required
                 />
               </InputGroup>
