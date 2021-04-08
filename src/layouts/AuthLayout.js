@@ -3,7 +3,7 @@ import {
   Redirect, Route, Switch, useLocation,
 } from 'react-router-dom';
 import { Container, Row } from 'reactstrap';
-import AuthFooter from '../components/Footers/AuthFooter';
+import DefaultFooter from '../components/Footers/DefaultFooter';
 import routes from '../routes';
 
 const AuthLayout = () => {
@@ -37,8 +37,8 @@ const AuthLayout = () => {
   });
 
   return (
-    <>
-      <div className="main-content" ref={mainContent}>
+    <div className="min-vh-100 d-flex flex-column">
+      <div className="main-content flex-fill" ref={mainContent}>
         <div className="header py-7 py-lg-8" />
         <Container className="mt--8 pb-5">
           <Row className="justify-content-center">
@@ -49,8 +49,8 @@ const AuthLayout = () => {
           </Row>
         </Container>
       </div>
-      <AuthFooter />
-    </>
+      <DefaultFooter />
+    </div>
   );
 };
 

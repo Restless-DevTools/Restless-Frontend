@@ -2,10 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import {
   Redirect, Route, Switch, useLocation,
 } from 'react-router-dom';
-import { Container } from 'reactstrap';
-import { ApplicationProvider } from '../contexts/ApplicationContext';
-import DashboardFooter from '../components/Footers/DashboardFooter';
+import DefaultFooter from '../components/Footers/DefaultFooter';
 import DashboardNavbar from '../components/Navbars/DashboardNavbar';
+import { ApplicationProvider } from '../contexts/ApplicationContext';
 import routes from '../routes';
 
 const DashboardLayout = (props) => {
@@ -44,21 +43,21 @@ const DashboardLayout = (props) => {
   };
 
   return (
-    <ApplicationProvider history={props.history}>
-      <div className="main-content bg-dracula-primary min-vh-100" ref={mainContent}>
-        <DashboardNavbar
-          {...props}
-          brandText={getBrandText(props.location.pathname)}
-        />
-        <Switch>
-          {getRoutes(routes)}
-          <Redirect from="*" to="/dashboard/collections" />
-        </Switch>
-        <Container fluid>
-          <DashboardFooter />
-        </Container>
+    <div className="min-vh-100 d-flex flex-column bg-dracula-primary">
+      <div className="main-content flex-fill" ref={mainContent}>
+        <ApplicationProvider history={props.history}>
+          <DashboardNavbar
+            {...props}
+            brandText={getBrandText(props.location.pathname)}
+          />
+          <Switch>
+            {getRoutes(routes)}
+            <Redirect from="*" to="/dashboard/collections" />
+          </Switch>
+        </ApplicationProvider>
       </div>
-    </ApplicationProvider>
+      <DefaultFooter />
+    </div>
   );
 };
 
