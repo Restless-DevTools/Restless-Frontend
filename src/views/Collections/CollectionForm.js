@@ -9,7 +9,7 @@ import useGlobal from '../../contexts/GlobalContext';
 const CollectionForm = (props) => {
   const { toggleModal, loadData } = props;
   const { abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta } = useGlobal();
-  const { createCollection } = useApp();
+  const { requests } = useApp();
 
   const [permission, setPermission] = useState();
   const [collectionName, setCollectionName] = useState('');
@@ -20,6 +20,20 @@ const CollectionForm = (props) => {
     { label: 'Public', value: 'PUBLIC' },
     { label: 'Team', value: 'TEAM' },
   ]);
+
+  const createCollection = async (userData) => {
+    try {
+      const { data } = await requests.createCollection(userData);
+
+      if (!data.status && !data.id) {
+        return { isValid: false, message: data.message };
+      }
+
+      return { isValid: true };
+    } catch (error) {
+      return { isValid: false, message: error.response.data.message };
+    }
+  };
 
   const handleSaveCollection = async (e) => {
     e.preventDefault();

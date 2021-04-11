@@ -80,9 +80,15 @@ export const AuthenticationProvider = ({ children }) => {
     }
   };
 
-  useEffect(async () => {
+  useEffect(() => {
+    const validateTokenAsync = async () => {
+      const validateTokenInfo = await validateToken();
+
+      return validateTokenInfo;
+    };
+
     if (token) {
-      const { isValid } = await validateToken();
+      const { isValid } = validateTokenAsync();
 
       if (isValid) {
         setSigned(true);
