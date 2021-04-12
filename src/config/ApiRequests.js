@@ -3,8 +3,13 @@ export default class Requests {
     this.api = api;
   }
 
+  // collections
   getAllCollections() {
     return this.api.get('/collections/all');
+  }
+
+  createCollection(collection) {
+    return this.api.post('/collections/create', collection);
   }
 
   // snippets
