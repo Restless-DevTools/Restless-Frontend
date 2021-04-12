@@ -1,0 +1,33 @@
+.default-modal {
+  max-width: 80%;
+}
+
+.form-page {
+  margin: 40px;
+  margin-top: 0px;
+}
+
+.margin-top-30 {
+  margin-top: 30px;
+}
+
+.action-pane {
+  margin-top: 30px
+}
+
+.view-tittle {
+  margin-left: 15px;
+  margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+  .default-modal {
+    max-width: 100%;
+  } 
+}
+
+@media (min-width: 1200px) {
+  .collection-card {
+    max-width: 20rem;
+  } 
+}

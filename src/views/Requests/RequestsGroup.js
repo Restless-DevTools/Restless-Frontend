@@ -21,7 +21,7 @@ import RequestForm from './RequestForm';
 import './styles.css';
 
 const RequestsGroup = () => {
-  const [formModal, setFormModal] = useState(false);
+  const [groupModal, setGroupModal] = useState(false);
   const [requestModal, setRequestModal] = useState(false);
   const [requestModalTitle, setRequestModalTitle] = useState('');
 
@@ -66,10 +66,16 @@ const RequestsGroup = () => {
     }
   };
 
-  const handleEdit = () => {
-    setRequestModalTitle('Request');
+  const toggleRequestModal = (edit) => {
+    setRequestModalTitle(edit ? 'Request' : 'New Request');
     setRequestModal(!requestModal);
   };
+
+  const handleEdit = () => {
+    toggleRequestModal(true);
+  };
+
+  const toggleGroupModal = () => { setGroupModal(!groupModal); };
 
   const handleDelete = () => {
     // TODO
@@ -101,10 +107,7 @@ const RequestsGroup = () => {
               <Col>
                 <Button
                   block
-                  onClick={() => {
-                    setRequestModalTitle('New request');
-                    setRequestModal(!requestModal);
-                  }}
+                  onClick={() => { toggleRequestModal(); }}
                   className="btn-icon"
                   color="primary"
                   type="button"
@@ -112,12 +115,12 @@ const RequestsGroup = () => {
                   <span>
                     <i className="fa fa-send" />
                   </span>
-                  <span className="btn-inner--text">New request</span>
+                  <span className="btn-inner--text">New Request</span>
                 </Button>
               </Col>
               <Col>
                 <Button
-                  onClick={() => setFormModal(!formModal)}
+                  onClick={() => { toggleGroupModal(); }}
                   className="btn-icon"
                   color="success"
                   type="button"
@@ -126,7 +129,7 @@ const RequestsGroup = () => {
                   <span>
                     <i className="fa fa-layer-group" />
                   </span>
-                  <span className="btn-inner--text">New group</span>
+                  <span className="btn-inner--text">New Group</span>
                 </Button>
               </Col>
             </Row>
@@ -140,8 +143,6 @@ const RequestsGroup = () => {
               >
                 <DefaultCardList
                   list={group.requests}
-                  setRequestModal={setRequestModal}
-                  setRequestModalTitle={setRequestModalTitle}
                   requestModal={requestModal}
                   edit={handleEdit}
                   remove={handleDelete}
@@ -152,12 +153,12 @@ const RequestsGroup = () => {
         </Card>
       </Col>
       <DefaultModal
-        isOpen={formModal}
-        title="New request group"
+        isOpen={groupModal}
+        title="New Request Group"
         className="default-modal"
-        toggleModal={setFormModal}
+        toggleModal={setGroupModal}
       >
-        <GroupForm />
+        <GroupForm toggleModal={toggleGroupModal} />
       </DefaultModal>
       <DefaultModal
         isOpen={requestModal}
@@ -165,15 +166,7 @@ const RequestsGroup = () => {
         className="default-modal"
         toggleModal={setRequestModal}
       >
-        <RequestForm />
-      </DefaultModal>
-      <DefaultModal
-        isOpen={requestModal}
-        title={requestModalTitle}
-        className="default-modal"
-        toggleModal={setRequestModal}
-      >
-        <RequestForm />
+        <RequestForm toggleModal={toggleRequestModal} />
       </DefaultModal>
     </>
   );

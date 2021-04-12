@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Select from 'react-select';
 import {
   Button,
   Col,
@@ -6,18 +7,17 @@ import {
   FormGroup,
   Row,
 } from 'reactstrap';
-import Select from 'react-select';
-import useApp from '../../contexts/ApplicationContext';
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
+import useApp from '../../contexts/ApplicationContext';
+import CollectionForm from '../Collections/CollectionForm';
 import RequestsForm from './RequestsForm';
 import RequestsGroup from './RequestsGroup';
-import CollectionForm from './CollectionForm';
 
-const Requests = () => {
+const Requests = (props) => {
   const { requests } = useApp();
-  const [collection, setCollection] = useState(1);
-  const [collectionModal, setCollectionModal] = useState(false);
+  const [collection, setCollection] = useState();
+  const [formModal, setFormModal] = useState(false);
   const [collections, setCollections] = useState([]);
 
   const getAllCollections = async () => {
@@ -28,9 +28,24 @@ const Requests = () => {
     }
   };
 
+  const toggleModal = () => { setFormModal(!formModal); };
+
+  const handleSelectChange = (value) => {
+    setCollection(value);
+  };
+
   useEffect(() => {
     getAllCollections();
   }, []);
+
+  useEffect(() => {
+    const { state } = props.location;
+
+    if (state && state.collection) {
+      const { collection: selectedCollection } = state;
+      handleSelectChange(selectedCollection);
+    }
+  }, [props.location]);
 
   return (
     <>
@@ -39,10 +54,12 @@ const Requests = () => {
           <FormGroup className="m-0">
             <Select
               options={collections}
-              onChange={(evt) => setCollection(evt ? evt.value : '')}
-              placeholder="Select Collection"
-              value={collections
-                .filter((opt) => opt.value === collection)}
+              getOptionLabel={(col) => col.name}
+              getOptionValue={(col) => col.id}
+              onChange={handleSelectChange}
+              placeholder="Select collection"
+              defaultValue={collection}
+              value={collection}
               name="collection"
               isClearable
             />
@@ -53,7 +70,7 @@ const Requests = () => {
             className="btn-icon"
             color="primary"
             type="button"
-            onClick={() => setCollectionModal(!collectionModal)}
+            onClick={() => { toggleModal(); }}
           >
             <span>
               <i className="fa fa-plus" />
@@ -68,12 +85,12 @@ const Requests = () => {
         </Row>
       </Container>
       <DefaultModal
-        isOpen={collectionModal}
-        title="Collection"
+        isOpen={formModal}
+        title="New Collection"
         className="default-modal"
-        toggleModal={setCollectionModal}
+        toggleModal={setFormModal}
       >
-        <CollectionForm />
+        <CollectionForm toggleModal={toggleModal} />
       </DefaultModal>
     </>
   );
