@@ -12,18 +12,25 @@ import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import SnippetForm from './SnippetForm';
 import useAppContext from '../../contexts/ApplicationContext';
+import useGlobal from '../../contexts/GlobalContext';
+import DateUtils from '../../utils/DateUtils';
 import './styles.css';
 
 function Snippets() {
   const { requests } = useAppContext();
+  const { openSuccessNotification, openErrorNotification } = useGlobal();
   const [formModal, setFormModal] = useState(false);
   const [snippets, setSnippets] = useState([]);
   const [snippetSelected, setSnippetSelected] = useState({});
   const [edit, setEdit] = useState(false);
 
   const getSnippets = async () => {
-    const { data } = await requests.getSnippets();
-    setSnippets(data);
+    try {
+      const { data } = await requests.getSnippets();
+      setSnippets(data);
+    } catch (error) {
+      openErrorNotification('Can not fetch the records in backend.', 'Snippets');
+    }
   };
 
   useEffect(() => {
@@ -44,6 +51,7 @@ function Snippets() {
 
   const deleteSnippet = async (snippet) => {
     await requests.deleteSnippet(snippet.id);
+    openSuccessNotification('Snippet deleted successfully', 'Snippet');
     getSnippets();
   };
 
@@ -99,7 +107,7 @@ function Snippets() {
                       <td>{snippet.description}</td>
                       <td>{snippet.language}</td>
                       <td>{snippet.shareOption}</td>
-                      <td>{snippet.createdAt}</td>
+                      <td>{DateUtils.getDistanceFormattedDate(snippet.createdAt)}</td>
                     </tr>
                   )))}
                 </tbody>
@@ -109,7 +117,7 @@ function Snippets() {
         </Row>
         <DefaultModal
           isOpen={formModal}
-          title={formModalTitle}
+          title="Snippet"
           className="snippet-modal"
           toggleModal={setFormModal}
         >

@@ -24,7 +24,7 @@ const Register = (props) => {
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [passwordStrenght, setPasswordStrenght] = useState({ label: 'none', color: 'text-dark', isPasswordStrong: false });
 
-  const { abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta } = useGlobal();
+  const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
   const { register } = useAuth();
 
   const navigate = (path) => {
@@ -35,12 +35,12 @@ const Register = (props) => {
     e.preventDefault();
 
     if (!passwordStrenght.isPasswordStrong) {
-      abrirNotificacaoAlerta('Your password must contain at least 8 digits, 1 uppercase character, 1 lowercase character, 1 number and a special character', 'Register');
+      openInfoNotification('Your password must contain at least 8 digits, 1 uppercase character, 1 lowercase character, 1 number and a special character', 'Register');
       return;
     }
 
     if (password !== confirmPassword) {
-      abrirNotificacaoAlerta('Passwords entered do not match', 'Register');
+      openInfoNotification('Passwords entered do not match', 'Register');
       return;
     }
 
@@ -51,10 +51,10 @@ const Register = (props) => {
     const registerInfo = await register(userData);
 
     if (registerInfo.isValid) {
-      abrirNotificacaoSucesso('User successfully registered', 'Register');
+      openSuccessNotification('User successfully registered', 'Register');
       props.history.push('/auth/login');
     } else {
-      abrirNotificacaoErro(registerInfo.message, 'Register');
+      openErrorNotification(registerInfo.message, 'Register');
     }
   };
 

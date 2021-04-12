@@ -4,12 +4,14 @@ import Select from 'react-select';
 import {
   FormGroup, Row, Col, Input, Label, Button,
 } from 'reactstrap';
+import useGlobal from '../../contexts/GlobalContext';
 
 function SnippetForm(props) {
   const {
     snippet, requests, edit, toggleModal, getSnippets,
   } = props;
   const [language, setLanguage] = useState(props.snippet.language || 'javascript');
+  const { openSuccessNotification, openErrorNotification } = useGlobal();
 
   const [languages] = useState([
     { label: 'TypeScript', value: 'typescript' },
@@ -58,21 +60,24 @@ function SnippetForm(props) {
   const [shareOption, setShareOption] = useState(snippet.shareOption);
 
   const handleSubmit = async () => {
-    const sendObject = {
-      code, name, description, language, shareOption,
-    };
+    try {
+      const sendObject = {
+        code, name, description, language, shareOption,
+      };
 
-    if (edit) {
-      await requests.editSnippet(snippet.id, sendObject);
-    } else {
-      await requests.createSnippet(sendObject);
+      if (edit) {
+        await requests.editSnippet(snippet.id, sendObject);
+      } else {
+        await requests.createSnippet(sendObject);
+      }
+
+      toggleModal(false);
+      getSnippets();
+      openSuccessNotification();
+    } catch (error) {
+      openErrorNotification('Something went wrong!');
     }
-
-    toggleModal(false);
-    getSnippets();
   };
-
-  console.log(language);
 
   return (
     <div className="form-page">
