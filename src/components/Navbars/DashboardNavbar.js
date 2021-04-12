@@ -17,6 +17,14 @@ const DashboardNavbar = (props) => {
         <Nav className="col">
           <NavItem className="h4 text-uppercase d-inline-block mr-3">
             <NavLink
+              href="/dashboard/collections"
+              className="text-primary"
+            >
+              Collections
+            </NavLink>
+          </NavItem>
+          <NavItem className="h4 text-uppercase d-inline-block mr-3">
+            <NavLink
               href="/dashboard/requests"
               className="text-primary"
             >

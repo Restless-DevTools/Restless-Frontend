@@ -152,6 +152,7 @@ function SnippetForm(props) {
             language={language}
             defaultValue={code}
             onChange={(value) => setCode(value)}
+            value={code}
           />
         </Col>
       </Row>

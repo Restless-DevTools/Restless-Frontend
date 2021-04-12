@@ -11,14 +11,14 @@ import {
 import CardTitle from 'reactstrap/lib/CardTitle';
 import Github from '../../assets/img/icons/common/github.svg';
 import Logo from '../../components/Logo/Logo';
+import useGlobal from '../../contexts/GlobalContext';
 import useAuth from '../../contexts/AuthenticationContext';
 
 const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const {
-    abrirNotificacaoSucesso, abrirNotificacaoErro, login, signed,
-  } = useAuth();
+  const { abrirNotificacaoSucesso, abrirNotificacaoErro } = useGlobal();
+  const { login, signed } = useAuth();
   const navigate = (path) => {
     props.history.push(path || '/auth/login');
   };
@@ -29,7 +29,7 @@ const Login = (props) => {
 
     if (loginInfo.isValid) {
       abrirNotificacaoSucesso('Login successfully', 'Login');
-      props.history.push('/dashboard/requests');
+      props.history.push('/dashboard');
     } else {
       abrirNotificacaoErro(loginInfo.message, 'Login');
     }
@@ -37,7 +37,7 @@ const Login = (props) => {
 
   useEffect(() => {
     if (signed) {
-      navigate('/dashboard/requests');
+      navigate('/dashboard');
     }
   }, [signed]);
 
@@ -81,6 +81,7 @@ const Login = (props) => {
                   placeholder="Username"
                   type="text"
                   onChange={(e) => { setUsername(e.target.value); }}
+                  maxLength={30}
                   required
                 />
               </InputGroup>
@@ -97,6 +98,7 @@ const Login = (props) => {
                   type="password"
                   autoComplete="off"
                   onChange={(e) => { setPassword(e.target.value); }}
+                  maxLength={30}
                   required
                 />
               </InputGroup>

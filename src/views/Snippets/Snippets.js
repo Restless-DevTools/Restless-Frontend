@@ -109,7 +109,7 @@ function Snippets() {
         </Row>
         <DefaultModal
           isOpen={formModal}
-          title="New Snippet"
+          title={formModalTitle}
           className="snippet-modal"
           toggleModal={setFormModal}
         >

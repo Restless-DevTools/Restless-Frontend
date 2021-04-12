@@ -21,6 +21,8 @@ function Teams() {
     { name: 'Restless DevTeam', description: 'Awesome Team', integrants: [{ username: 'Francisco' }, { username: 'Mateus' }] },
   ];
 
+  const toggleModal = () => { setFormModal(!formModal); };
+
   return (
     <>
       <DefaultHeader>
@@ -55,7 +57,7 @@ function Teams() {
           className="snippet-modal"
           toggleModal={setFormModal}
         >
-          <TeamsForm />
+          <TeamsForm toggleModal={toggleModal} />
         </DefaultModal>
       </Container>
     </>

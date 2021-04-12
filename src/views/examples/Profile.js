@@ -8,7 +8,7 @@ import {
 
 // core components
 import DemoNavbar from '../../components/Navbars/DashboardNavbar';
-import SimpleFooter from '../../components/Footers/DashboardFooter';
+import DefaultFooter from '../../components/Footers/DefaultFooter';
 
 class Profile extends React.Component {
   componentDidMount() {
@@ -148,7 +148,7 @@ class Profile extends React.Component {
             </Container>
           </section>
         </main>
-        <SimpleFooter />
+        <DefaultFooter />
       </>
     );
   }

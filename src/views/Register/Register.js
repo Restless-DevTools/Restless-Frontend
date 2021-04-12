@@ -10,6 +10,7 @@ import {
   Label,
   Row,
 } from 'reactstrap';
+import useGlobal from '../../contexts/GlobalContext';
 import useAuth from '../../contexts/AuthenticationContext';
 import Github from '../../assets/img/icons/common/github.svg';
 import Logo from '../../components/Logo/Logo';
@@ -21,11 +22,10 @@ const Register = (props) => {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
-  const [isPasswordStrong, setIsPasswordStrong] = useState(false);
+  const [passwordStrenght, setPasswordStrenght] = useState({ label: 'none', color: 'text-dark', isPasswordStrong: false });
 
-  const {
-    abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta, register,
-  } = useAuth();
+  const { abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta } = useGlobal();
+  const { register } = useAuth();
 
   const navigate = (path) => {
     props.history.push(path || '/auth/register');
@@ -34,7 +34,7 @@ const Register = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isPasswordStrong) {
+    if (!passwordStrenght.isPasswordStrong) {
       abrirNotificacaoAlerta('Your password must contain at least 8 digits, 1 uppercase character, 1 lowercase character, 1 number and a special character', 'Register');
       return;
     }
@@ -59,12 +59,50 @@ const Register = (props) => {
   };
 
   const validatePasswordStrenght = (text) => {
-    const re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/;
+    let passwordStrenghtValue = 0;
 
-    if (re.test(text)) {
-      setIsPasswordStrong(true);
+    if ((text.length >= 4) && (text.length <= 7)) {
+      passwordStrenghtValue += 10;
+    } else if (text.length > 7) {
+      passwordStrenghtValue += 25;
+    }
+
+    if (text.match(/[a-z]+/)) {
+      passwordStrenghtValue += 10;
+    }
+
+    if (text.match(/[A-Z]+/)) {
+      passwordStrenghtValue += 20;
+    }
+
+    if (text.match(/\d+/)) {
+      passwordStrenghtValue += 20;
+    }
+
+    if (text.match(/\W+/)) {
+      passwordStrenghtValue += 25;
+    }
+
+    const passwordStrenghtObject = {};
+
+    if (passwordStrenghtValue < 30) {
+      passwordStrenghtObject.label = 'weak';
+      passwordStrenghtObject.color = 'text-danger';
+    } else if ((passwordStrenghtValue >= 30) && (passwordStrenghtValue < 60)) {
+      passwordStrenghtObject.label = 'medium';
+      passwordStrenghtObject.color = 'text-warning';
+    } else if ((passwordStrenghtValue >= 60) && (passwordStrenghtValue < 85)) {
+      passwordStrenghtObject.label = 'strong';
+      passwordStrenghtObject.color = 'text-primary';
+    } else if (passwordStrenghtValue >= 85) {
+      passwordStrenghtObject.label = 'excellent';
+      passwordStrenghtObject.color = 'text-success';
+    }
+
+    if (passwordStrenghtValue >= 85) {
+      setPasswordStrenght({ ...passwordStrenghtObject, isPasswordStrong: true });
     } else {
-      setIsPasswordStrong(false);
+      setPasswordStrenght({ ...passwordStrenghtObject, isPasswordStrong: false });
     }
   };
 
@@ -108,6 +146,7 @@ const Register = (props) => {
                   placeholder="Username"
                   type="text"
                   onChange={(e) => { setUsername(e.target.value); }}
+                  maxLength={30}
                   required
                 />
               </InputGroup>
@@ -127,11 +166,35 @@ const Register = (props) => {
                     validatePasswordStrenght(e.target.value);
                     setPassword(e.target.value);
                   }}
+                  maxLength={30}
                   required
                 />
               </InputGroup>
             </FormGroup>
-            <FormGroup className="mb-0">
+            <div className="text-muted ">
+              <small className="font-italic">
+                Password strength:
+              </small>
+              {' '}
+              <small className={`font-weight-700 ${passwordStrenght && passwordStrenght.color}`}>
+                {passwordStrenght && passwordStrenght.label}
+              </small>
+            </div>
+            <div className="text-muted form-group">
+              <small className="font-italic">
+                Your password must contain at least:
+              </small>
+              <small>
+                <ul>
+                  <li>8 digits;</li>
+                  <li>1 uppercase character;</li>
+                  <li>1 lowercase character;</li>
+                  <li>1 number;</li>
+                  <li>1 special character;</li>
+                </ul>
+              </small>
+            </div>
+            <FormGroup>
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
@@ -145,19 +208,11 @@ const Register = (props) => {
                   onChange={(e) => {
                     setConfirmPassword(e.target.value);
                   }}
+                  maxLength={30}
                   required
                 />
               </InputGroup>
             </FormGroup>
-            <div className="text-muted font-italic form-group">
-              <small>
-                password strength:
-                {' '}
-                <span className={`font-weight-700 ${isPasswordStrong ? 'text-success' : 'text-danger'}`}>
-                  {isPasswordStrong ? 'strong' : 'weak'}
-                </span>
-              </small>
-            </div>
             <FormGroup>
               <InputGroup className="input-group-alternative mb-3">
                 <InputGroupAddon addonType="prepend">
@@ -169,6 +224,7 @@ const Register = (props) => {
                   placeholder="Email"
                   type="email"
                   onChange={(e) => { setEmail(e.target.value); }}
+                  maxLength={50}
                   required
                 />
               </InputGroup>

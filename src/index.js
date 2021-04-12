@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom';
 import './assets/scss/argon-dashboard-react.scss';
 import { AuthenticationProvider } from './contexts/AuthenticationContext';
+import { GlobalProvider } from './contexts/GlobalContext';
 import AuthLayout from './layouts/AuthLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 
@@ -22,9 +23,11 @@ const App = () => (
 
 ReactDOM.render(
   <>
-    <AuthenticationProvider>
-      <App />
-    </AuthenticationProvider>
+    <GlobalProvider>
+      <AuthenticationProvider>
+        <App />
+      </AuthenticationProvider>
+    </GlobalProvider>
     <NotificationContainer />
   </>,
   document.getElementById('root'),

@@ -34,7 +34,7 @@ export const ApplicationProvider = (props) => {
     return () => {
       api.interceptors.response.eject(resInterceptor);
     };
-  }, [api.interceptors.response]);
+  }, []);
 
   return (
     <ApplicationContext.Provider value={{
