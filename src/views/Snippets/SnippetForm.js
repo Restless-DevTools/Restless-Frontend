@@ -5,8 +5,11 @@ import {
   FormGroup, Row, Col, Input, Label, Button,
 } from 'reactstrap';
 
-function SnippetForm() {
-  const [language, setLanguage] = useState('javascript');
+function SnippetForm(props) {
+  const {
+    snippet, requests, edit, toggleModal, getSnippets,
+  } = props;
+  const [language, setLanguage] = useState(props.snippet.language || 'javascript');
 
   const [languages] = useState([
     { label: 'TypeScript', value: 'typescript' },
@@ -41,18 +44,35 @@ function SnippetForm() {
     { label: 'GO', value: 'go' },
   ]);
 
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(snippet.code || '// Restless is awesome!');
+  const [name, setName] = useState(snippet.name);
+  const [description, setDescription] = useState(snippet.description);
 
   const [shareOptions] = useState([
-    { label: 'Private', value: 'private' },
-    { label: 'Public', value: 'public' },
-    { label: 'Team', value: 'team' },
-    { label: 'User', value: 'user' },
+    { label: 'Private', value: 'PRIVATE' },
+    { label: 'Public', value: 'PUBLIC' },
+    { label: 'Team', value: 'TEAM' },
+    { label: 'User', value: 'USER' },
   ]);
 
-  const [shareOption, setShareOption] = useState('private');
+  const [shareOption, setShareOption] = useState(snippet.shareOption);
 
-  console.log(code);
+  const handleSubmit = async () => {
+    const sendObject = {
+      code, name, description, language, shareOption,
+    };
+
+    if (edit) {
+      await requests.editSnippet(snippet.id, sendObject);
+    } else {
+      await requests.createSnippet(sendObject);
+    }
+
+    toggleModal(false);
+    getSnippets();
+  };
+
+  console.log(language);
 
   return (
     <div className="form-page">
@@ -64,6 +84,8 @@ function SnippetForm() {
               id="name"
               placeholder="Select a name for your snippet"
               type="text"
+              defaultValue={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </FormGroup>
         </Col>
@@ -74,6 +96,8 @@ function SnippetForm() {
               id="description"
               placeholder="Write a description for your colleagues understand what you wrote!"
               type="text"
+              defaultValue={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </FormGroup>
         </Col>
@@ -86,7 +110,7 @@ function SnippetForm() {
               options={languages}
               onChange={(evt) => setLanguage(evt.value)}
               placeholder="Select Language"
-              value={languages.filter((opt) => opt.value === language)}
+              value={languages.find((opt) => opt.value === language)}
               name="language"
             />
           </FormGroup>
@@ -98,7 +122,7 @@ function SnippetForm() {
               options={shareOptions}
               onChange={(evt) => setShareOption(evt.value)}
               placeholder="Share Snippet"
-              value={shareOptions.filter((opt) => opt.value === shareOption)}
+              value={shareOptions.find((opt) => opt.value === shareOption)}
               name="share"
             />
           </FormGroup>
@@ -126,7 +150,7 @@ function SnippetForm() {
             height="50vh"
             theme="vs-dark"
             language={language}
-            defaultValue="// Restless is awesome!"
+            defaultValue={code}
             onChange={(value) => setCode(value)}
           />
         </Col>
@@ -135,16 +159,24 @@ function SnippetForm() {
       <div className="action-pane">
         <Row>
           <Col md="6">
-            <Button color="success" type="button">
+            <Button
+              color="success"
+              type="button"
+              onClick={() => handleSubmit()}
+            >
               Save
             </Button>
-            <Button color="danger" type="button">
+
+            <Button
+              color="danger"
+              type="button"
+              onClick={() => toggleModal(false)}
+            >
               Discard
             </Button>
           </Col>
         </Row>
       </div>
-
     </div>
   );
 }

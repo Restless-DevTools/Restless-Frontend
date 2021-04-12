@@ -18,6 +18,8 @@ function Snippets() {
   const { requests } = useAppContext();
   const [formModal, setFormModal] = useState(false);
   const [snippets, setSnippets] = useState([]);
+  const [snippetSelected, setSnippetSelected] = useState({});
+  const [edit, setEdit] = useState(false);
 
   const getSnippets = async () => {
     const { data } = await requests.getSnippets();
@@ -28,12 +30,29 @@ function Snippets() {
     getSnippets();
   }, []);
 
+  const createSnippet = async () => {
+    setEdit(false);
+    setSnippetSelected({});
+    setFormModal(!formModal);
+  };
+
+  const editSnippet = async (snippet) => {
+    setEdit(true);
+    setSnippetSelected(snippet);
+    setFormModal(!formModal);
+  };
+
+  const deleteSnippet = async (snippet) => {
+    await requests.deleteSnippet(snippet.id);
+    getSnippets();
+  };
+
   return (
     <>
       <DefaultHeader>
         <Col className="mb-xl-0">
           <Button
-            onClick={() => setFormModal(!formModal)}
+            onClick={() => createSnippet()}
             color="primary"
             type="button"
           >
@@ -69,13 +88,17 @@ function Snippets() {
                   {snippets.map(((snippet) => (
                     <tr key={snippet.id}>
                       <td>
-                        <Button color="success" onClick={() => setFormModal(!formModal)}><i className="fas fa-edit" /></Button>
-                        <Button color="danger"><i className="fas fa-trash" /></Button>
+                        <Button color="success" onClick={() => editSnippet(snippet)}>
+                          <i className="fas fa-edit" />
+                        </Button>
+                        <Button color="danger" onClick={() => deleteSnippet(snippet)}>
+                          <i className="fas fa-trash" />
+                        </Button>
                       </td>
                       <th scope="row">{snippet.name}</th>
                       <td>{snippet.description}</td>
                       <td>{snippet.language}</td>
-                      <td>{snippet.permissionType}</td>
+                      <td>{snippet.shareOption}</td>
                       <td>{snippet.createdAt}</td>
                     </tr>
                   )))}
@@ -90,7 +113,13 @@ function Snippets() {
           className="snippet-modal"
           toggleModal={setFormModal}
         >
-          <SnippetForm />
+          <SnippetForm
+            requests={requests}
+            snippet={snippetSelected}
+            toggleModal={setFormModal}
+            getSnippets={getSnippets}
+            edit={edit}
+          />
         </DefaultModal>
       </Container>
     </>

@@ -11,4 +11,16 @@ export default class Requests {
   getSnippets() {
     return this.api.get('/snippets/all');
   }
+
+  createSnippet(payload) {
+    return this.api.post('/snippets/create', payload);
+  }
+
+  editSnippet(snippetId, payload) {
+    return this.api.put(`/snippets/update/${snippetId}`, payload);
+  }
+
+  deleteSnippet(snippetId) {
+    return this.api.delete(`/snippets/delete/${snippetId}`);
+  }
 }
