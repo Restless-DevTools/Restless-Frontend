@@ -13,7 +13,7 @@ const CollectionCard = (props) => {
   );
 
   return (
-    <Col xl="3" lg="3" md="4" sm="4" className="collection-card">
+    <Col xl="3" lg="3" md="4" sm="6" className="collection-card">
       <Card className="shadow btn p-0 text-left mb-5" onClick={() => { handleOpenCollection(collection); }}>
         <CardHeader className="bg-dracula-secondary">
           <Row>
