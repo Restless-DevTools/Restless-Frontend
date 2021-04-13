@@ -1,0 +1,4 @@
+.image { 
+  object-fit: contain;
+  opacity: 0.75;
+}
