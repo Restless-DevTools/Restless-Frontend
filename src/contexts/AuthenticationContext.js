@@ -25,7 +25,10 @@ export const AuthenticationProvider = ({ children }) => {
 
       return { isValid: true };
     } catch (error) {
-      return { isValid: false, message: error.response.data.message };
+      if (error && error.response) {
+        return { isValid: false, message: error.response.data.message };
+      }
+      return { isValid: false, message: 'Something went wrong' };
     }
   };
 

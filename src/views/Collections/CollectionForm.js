@@ -8,7 +8,7 @@ import useGlobal from '../../contexts/GlobalContext';
 
 const CollectionForm = (props) => {
   const { toggleModal, loadData } = props;
-  const { abrirNotificacaoSucesso, abrirNotificacaoErro, abrirNotificacaoAlerta } = useGlobal();
+  const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
   const { requests } = useApp();
 
   const [permission, setPermission] = useState();
@@ -39,7 +39,7 @@ const CollectionForm = (props) => {
     e.preventDefault();
 
     if (!permission) {
-      abrirNotificacaoAlerta('The permission field must be filled', 'Collection');
+      openInfoNotification('The permission field must be filled', 'Collection');
       return;
     }
 
@@ -52,11 +52,11 @@ const CollectionForm = (props) => {
     const collectionInfo = await createCollection(sendObject);
 
     if (collectionInfo.isValid) {
-      abrirNotificacaoSucesso('Collection successfully created', 'Collection');
+      openSuccessNotification('Collection successfully created', 'Collection');
       toggleModal();
       loadData();
     } else {
-      abrirNotificacaoErro(collectionInfo.message, 'Collection');
+      openErrorNotification(collectionInfo.message, 'Collection');
     }
   };
 

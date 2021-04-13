@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Button, Card,
-  CardHeader, Col,
+  Button,
+  Card,
+  CardHeader,
+  Col,
   Container,
   Row,
   Table,
@@ -9,33 +11,61 @@ import {
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import SnippetForm from './SnippetForm';
+import useAppContext from '../../contexts/ApplicationContext';
+import useGlobal from '../../contexts/GlobalContext';
+import DateUtils from '../../utils/DateUtils';
 import './styles.css';
 
 function Snippets() {
+  const { requests } = useAppContext();
+  const { openSuccessNotification, openErrorNotification } = useGlobal();
   const [formModal, setFormModal] = useState(false);
-  const [formModalTitle, setFormModalTitle] = useState('');
+  const [snippets, setSnippets] = useState([]);
+  const [snippetSelected, setSnippetSelected] = useState({});
+  const [edit, setEdit] = useState(false);
 
-  const toggleModal = (edit) => {
-    setFormModalTitle(edit ? 'Snippet' : 'New Snippet');
+  const getSnippets = async () => {
+    try {
+      const { data } = await requests.getSnippets();
+      setSnippets(data);
+    } catch (error) {
+      openErrorNotification('Can not fetch the records in backend.', 'Snippets');
+    }
+  };
+
+  useEffect(() => {
+    getSnippets();
+  }, []);
+
+  const createSnippet = async () => {
+    setEdit(false);
+    setSnippetSelected({});
     setFormModal(!formModal);
   };
 
-  const actionsPanel = () => (
-    <>
-      <Button color="success" onClick={() => { toggleModal(true); }}>Edit</Button>
-      <Button color="danger">Delete</Button>
-    </>
-  );
+  const editSnippet = async (snippet) => {
+    setEdit(true);
+    setSnippetSelected(snippet);
+    setFormModal(!formModal);
+  };
+
+  const deleteSnippet = async (snippet) => {
+    await requests.deleteSnippet(snippet.id);
+    openSuccessNotification('Snippet deleted successfully', 'Snippet');
+    getSnippets();
+  };
 
   return (
     <>
       <DefaultHeader>
         <Col className="mb-xl-0">
           <Button
-            onClick={() => { toggleModal(); }}
+            onClick={() => createSnippet()}
             color="primary"
             type="button"
           >
+            <i className="fas fa-code" />
+            {' '}
             New Snippet
           </Button>
         </Col>
@@ -63,30 +93,23 @@ function Snippets() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>{actionsPanel()}</td>
-                    <th scope="row">Fix DB Schema</th>
-                    <td>Fix the DB schema</td>
-                    <td>PL/SQL</td>
-                    <td>Private</td>
-                    <td>Today</td>
-                  </tr>
-                  <tr>
-                    <td>{actionsPanel()}</td>
-                    <th scope="row">Calculate Something</th>
-                    <td>Calculate something cool</td>
-                    <td>GO</td>
-                    <td>Private</td>
-                    <td>Today</td>
-                  </tr>
-                  <tr>
-                    <td>{actionsPanel()}</td>
-                    <th scope="row">React select</th>
-                    <td>React select component that is awesome</td>
-                    <td>JavaScript</td>
-                    <td>Public</td>
-                    <td>Today</td>
-                  </tr>
+                  {snippets.map(((snippet) => (
+                    <tr key={snippet.id}>
+                      <td>
+                        <Button color="success" onClick={() => editSnippet(snippet)}>
+                          <i className="fas fa-edit" />
+                        </Button>
+                        <Button color="danger" onClick={() => deleteSnippet(snippet)}>
+                          <i className="fas fa-trash" />
+                        </Button>
+                      </td>
+                      <th scope="row">{snippet.name}</th>
+                      <td>{snippet.description}</td>
+                      <td>{snippet.language}</td>
+                      <td>{snippet.shareOption}</td>
+                      <td>{DateUtils.getDistanceFormattedDate(snippet.createdAt)}</td>
+                    </tr>
+                  )))}
                 </tbody>
               </Table>
             </Card>
@@ -94,11 +117,17 @@ function Snippets() {
         </Row>
         <DefaultModal
           isOpen={formModal}
-          title={formModalTitle}
+          title="Snippet"
           className="snippet-modal"
           toggleModal={setFormModal}
         >
-          <SnippetForm toggleModal={toggleModal} />
+          <SnippetForm
+            requests={requests}
+            snippet={snippetSelected}
+            toggleModal={setFormModal}
+            getSnippets={getSnippets}
+            edit={edit}
+          />
         </DefaultModal>
       </Container>
     </>

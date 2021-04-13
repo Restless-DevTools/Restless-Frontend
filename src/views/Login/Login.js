@@ -17,7 +17,7 @@ import useAuth from '../../contexts/AuthenticationContext';
 const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { abrirNotificacaoSucesso, abrirNotificacaoErro } = useGlobal();
+  const { openSuccessNotification, openErrorNotification } = useGlobal();
   const { login, signed } = useAuth();
   const navigate = (path) => {
     props.history.push(path || '/auth/login');
@@ -28,10 +28,10 @@ const Login = (props) => {
     const loginInfo = await login(username, password);
 
     if (loginInfo.isValid) {
-      abrirNotificacaoSucesso('Login successfully', 'Login');
+      openSuccessNotification('Login successfully', 'Login');
       props.history.push('/dashboard');
     } else {
-      abrirNotificacaoErro(loginInfo.message, 'Login');
+      openErrorNotification(loginInfo.message, 'Login');
     }
   };
 

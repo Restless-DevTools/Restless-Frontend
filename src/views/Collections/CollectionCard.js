@@ -3,14 +3,10 @@ import {
   Badge,
   Card, CardBody, CardFooter, CardHeader, CardText, Col, Row,
 } from 'reactstrap';
-import { formatDistance } from 'date-fns';
+import DateUtils from '../../utils/DateUtils';
 
 const CollectionCard = (props) => {
   const { collection, handleOpenCollection } = props;
-
-  const getFormattedDate = (date) => formatDistance(
-    new Date(date), new Date(), { addSuffix: true },
-  );
 
   return (
     <Col xl="3" lg="3" md="4" sm="4" className="collection-card">
@@ -40,12 +36,12 @@ const CollectionCard = (props) => {
               <CardText className="text-white h5">
                 Created at:
                 {' '}
-                {getFormattedDate(collection.createdAt)}
+                {DateUtils.getDistanceFormattedDate(collection.createdAt)}
               </CardText>
               <CardText className="text-white h5">
                 Updated at:
                 {' '}
-                {getFormattedDate(collection.updatedAt)}
+                {DateUtils.getDistanceFormattedDate(collection.updatedAt)}
               </CardText>
             </Col>
           </Row>

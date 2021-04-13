@@ -4,7 +4,7 @@ import React, {
   createContext, useContext, useEffect,
 } from 'react';
 import useAuth from './AuthenticationContext';
-import Requests from '../config/Requests';
+import Requests from '../config/ApiRequests';
 
 const restlessApi = process.env.REACT_APP_RESTLESS_URL;
 const ApplicationContext = createContext();
