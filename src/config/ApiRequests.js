@@ -34,11 +34,24 @@ export default class Requests {
     return this.api.post('/groups/create', group);
   }
 
+  getAllGroups(filters) {
+    return this.api.get('/groups/all', {
+      params: {
+        ...filters,
+      },
+    });
+  }
+
   getGroupsByCollection(filters) {
     return this.api.get('/groups/get-by-collection', {
       params: {
         ...filters,
       },
     });
+  }
+
+  // Requests
+  createRequest(request) {
+    return this.api.post('/requests/create', request);
   }
 }

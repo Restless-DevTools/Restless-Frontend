@@ -168,10 +168,15 @@ const RequestsGroup = (props) => {
       <DefaultModal
         isOpen={requestModal}
         title={requestModalTitle}
-        className="default-modal"
+        className="default-small-modal"
         toggleModal={setRequestModal}
       >
-        <RequestForm toggleModal={toggleRequestModal} />
+        <RequestForm
+          toggleModal={toggleRequestModal}
+          collection={collection}
+          requests={requests}
+          getGroups={getGroups}
+        />
       </DefaultModal>
     </>
   );
