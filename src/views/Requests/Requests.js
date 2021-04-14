@@ -7,6 +7,7 @@ import {
   FormGroup,
   Row,
 } from 'reactstrap';
+import useGlobal from '../../contexts/GlobalContext';
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import useApp from '../../contexts/ApplicationContext';
@@ -16,15 +17,20 @@ import RequestsGroup from './RequestsGroup';
 
 const Requests = (props) => {
   const { requests } = useApp();
+  const { openErrorNotification } = useGlobal();
   const [collection, setCollection] = useState();
   const [formModal, setFormModal] = useState(false);
   const [collections, setCollections] = useState([]);
 
   const getAllCollections = async () => {
-    const { data } = await requests.getAllCollections();
+    try {
+      const { data } = await requests.getAllCollections();
 
-    if (data.length) {
-      setCollections(data);
+      if (data.length) {
+        setCollections(data);
+      }
+    } catch (error) {
+      openErrorNotification('Can not fetch the records in backend.', 'Collections');
     }
   };
 
