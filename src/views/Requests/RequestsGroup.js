@@ -156,7 +156,7 @@ const RequestsGroup = (props) => {
       <DefaultModal
         isOpen={groupModal}
         title="New Request Group"
-        className="default-modal"
+        className="default-small-modal"
         toggleModal={setGroupModal}
       >
         <GroupForm

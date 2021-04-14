@@ -40,7 +40,7 @@ const GroupForm = (props) => {
   return (
     <div className="form-page">
       <Row>
-        <Col md="6">
+        <Col>
           <FormGroup>
             <Label for="name">Name:</Label>
             <Input
@@ -55,7 +55,7 @@ const GroupForm = (props) => {
 
       <div className="action-pane">
         <Row>
-          <Col md="6">
+          <Col>
             <Button color="success" type="button" onClick={() => handleSubmit()}>
               Save
             </Button>

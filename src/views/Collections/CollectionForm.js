@@ -63,7 +63,7 @@ const CollectionForm = (props) => {
   return (
     <Form className="form-page" onSubmit={handleSaveCollection}>
       <Row>
-        <Col md="6">
+        <Col>
           <FormGroup>
             <Label for="collection-name">Name:</Label>
             <Input
@@ -77,7 +77,7 @@ const CollectionForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col md="6">
+        <Col>
           <FormGroup>
             <Label for="collection-description">Description:</Label>
             <Input
@@ -90,7 +90,7 @@ const CollectionForm = (props) => {
         </Col>
       </Row>
       <Row>
-        <Col md="6">
+        <Col>
           <FormGroup>
             <Label for="permission">Permission:</Label>
             <Select
@@ -110,7 +110,7 @@ const CollectionForm = (props) => {
 
       <footer className="action-pane">
         <Row>
-          <Col md="6">
+          <Col>
             <Button color="success" type="submit">
               Save
             </Button>
