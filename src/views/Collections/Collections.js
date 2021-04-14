@@ -14,23 +14,29 @@ import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import DefaultEmptySearch from '../../components/DefaultEmptySearch/DefaultEmptySearch';
 import useApp from '../../contexts/ApplicationContext';
+import useGlobal from '../../contexts/GlobalContext';
 import CollectionCard from './CollectionCard';
 import CollectionForm from './CollectionForm';
 import './styles.css';
 
 const Collections = (props) => {
   const { requests } = useApp();
+  const { openErrorNotification } = useGlobal();
   const [formModal, setFormModal] = useState(false);
   const [collections, setCollections] = useState([]);
   const [filteredCollections, setFilteredCollections] = useState([]);
   const [filterValue, setFilterValue] = useState('');
 
   const getAllCollections = async () => {
-    const { data } = await requests.getAllCollections();
+    try {
+      const { data } = await requests.getAllCollections();
 
-    if (data.length) {
-      setCollections(data);
-      setFilteredCollections(data);
+      if (data.length) {
+        setCollections(data);
+        setFilteredCollections(data);
+      }
+    } catch (error) {
+      openErrorNotification('Can not fetch the records in backend.', 'Collections');
     }
   };
 

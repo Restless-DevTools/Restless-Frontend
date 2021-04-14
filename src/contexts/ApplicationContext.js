@@ -12,29 +12,29 @@ const ApplicationContext = createContext();
 export const ApplicationProvider = (props) => {
   const { logout } = useAuth();
   const token = Cookies.get('TOKEN');
+
   const api = axios.create({
     baseURL: restlessApi,
     headers: {
       Authorization: token,
     },
   });
+
+  const resInterceptor = api.interceptors.response
+    .use(api.interceptors.response, (error) => {
+      const { response } = error;
+
+      if (response.status === 401) {
+        logout();
+        props.history.push('/auth/login');
+      }
+    });
+
   const requests = new Requests(api);
 
-  useEffect(() => {
-    const resInterceptor = api.interceptors.response
-      .use(api.interceptors.response, (error) => {
-        const { response } = error;
-
-        if (response.status === 401) {
-          logout();
-          props.history.push('/auth/login');
-        }
-      });
-
-    return () => {
-      api.interceptors.response.eject(resInterceptor);
-    };
-  }, []);
+  useEffect(() => () => {
+    api.interceptors.response.eject(resInterceptor);
+  });
 
   return (
     <ApplicationContext.Provider value={{
