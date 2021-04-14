@@ -3,7 +3,7 @@ export default class Requests {
     this.api = api;
   }
 
-  // collections
+  // Collections
   getAllCollections() {
     return this.api.get('/collections/all');
   }
@@ -12,7 +12,7 @@ export default class Requests {
     return this.api.post('/collections/create', collection);
   }
 
-  // snippets
+  // Snippets
   getSnippets() {
     return this.api.get('/snippets/all');
   }
@@ -27,5 +27,18 @@ export default class Requests {
 
   deleteSnippet(snippetId) {
     return this.api.delete(`/snippets/delete/${snippetId}`);
+  }
+
+  // Groups
+  createGroup(group) {
+    return this.api.post('/groups/create', group);
+  }
+
+  getGroupsByCollection(filters) {
+    return this.api.get('/groups/get-by-collection', {
+      params: {
+        ...filters,
+      },
+    });
   }
 }
