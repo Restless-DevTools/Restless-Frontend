@@ -86,7 +86,7 @@ const Requests = (props) => {
       </DefaultHeader>
       <Container fluid>
         <Row className="mt-5">
-          <RequestsForm />
+          <RequestsForm collection={collection} requests={requests} />
           <RequestsGroup collection={collection} requests={requests} />
         </Row>
       </Container>
