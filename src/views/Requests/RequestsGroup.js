@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Card,
   CardBody,
   CardHeader,
   Col,
-
   FormGroup,
   Input,
   InputGroup,
@@ -20,43 +19,32 @@ import GroupForm from './GroupForm';
 import RequestForm from './RequestForm';
 import './styles.css';
 
-const RequestsGroup = () => {
+const RequestsGroup = (props) => {
+  const { collection, requests } = props;
   const [groupModal, setGroupModal] = useState(false);
   const [requestModal, setRequestModal] = useState(false);
   const [requestModalTitle, setRequestModalTitle] = useState('');
 
   const [selectedGroup, setSelectedGroup] = useState(1);
 
-  const [groups] = useState([
-    {
-      id: 1,
-      name: 'Users',
-      requests: [
-        { id: 1, name: 'Get All' },
-        { id: 2, name: 'Create' },
-        { id: 3, name: 'Update' },
-        { id: 4, name: 'Delete' },
-      ],
-    }, {
-      id: 2,
-      name: 'Teams',
-      requests: [
-        { id: 5, name: 'Get All' },
-        { id: 6, name: 'Create' },
-        { id: 7, name: 'Update' },
-        { id: 8, name: 'Delete' },
-      ],
-    }, {
-      id: 3,
-      name: 'Requests',
-      requests: [
-        { id: 9, name: 'Get All' },
-        { id: 10, name: 'Create' },
-        { id: 11, name: 'Update' },
-        { id: 12, name: 'Delete' },
-      ],
-    },
-  ]);
+  const [groups, setGroups] = useState([]);
+
+  const getGroups = async () => {
+    try {
+      if (collection) {
+        const { data } = await requests.getGroupsByCollection({ collectionId: collection.id });
+        if (data) {
+          setGroups(data);
+        }
+      }
+    } catch (error) {
+      setGroups([]);
+    }
+  };
+
+  useEffect(() => {
+    getGroups();
+  }, [collection]);
 
   const toggleGroup = (id) => {
     if (id === selectedGroup) {
@@ -81,6 +69,17 @@ const RequestsGroup = () => {
     // TODO
   };
 
+  const [searchValue, setSearchValue] = useState('');
+
+  useEffect(() => {
+    if (searchValue) {
+      const newGroups = groups.filter((group) => group.name.includes(searchValue));
+      setGroups(newGroups);
+    } else {
+      getGroups();
+    }
+  }, [searchValue]);
+
   return (
     <>
       <Col xl="4">
@@ -96,7 +95,7 @@ const RequestsGroup = () => {
                         <i className="fa fa-search" />
                       </InputGroupText>
                     </InputGroupAddon>
-                    <Input className="w-50" placeholder="Search" type="text" />
+                    <Input className="w-50" placeholder="Search" type="text" onChange={(e) => setSearchValue(e.target.value)} />
                   </InputGroup>
                 </FormGroup>
               </Col>
@@ -139,14 +138,16 @@ const RequestsGroup = () => {
                 group={group}
                 selectedGroup={selectedGroup}
                 toggleGroup={toggleGroup}
-                badgeCount={group.requests.length}
+                badgeCount={(group.requests && group.requests.length) ? group.requests.length : 0}
               >
-                <DefaultCardList
-                  list={group.requests}
-                  requestModal={requestModal}
-                  edit={handleEdit}
-                  remove={handleDelete}
-                />
+                { group.requests && group.requests.length > 0 && (
+                  <DefaultCardList
+                    list={group.requests}
+                    requestModal={requestModal}
+                    edit={handleEdit}
+                    remove={handleDelete}
+                  />
+                )}
               </DefaultCollapse>
             ))}
           </CardBody>
@@ -158,7 +159,11 @@ const RequestsGroup = () => {
         className="default-modal"
         toggleModal={setGroupModal}
       >
-        <GroupForm toggleModal={toggleGroupModal} />
+        <GroupForm
+          toggleModal={toggleGroupModal}
+          collection={collection}
+          getGroups={getGroups}
+        />
       </DefaultModal>
       <DefaultModal
         isOpen={requestModal}
