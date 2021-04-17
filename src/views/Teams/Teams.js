@@ -32,6 +32,8 @@ function Teams() {
             color="primary"
             type="button"
           >
+            <i className="fas fa-users" />
+            {' '}
             New Team
           </Button>
         </Col>
