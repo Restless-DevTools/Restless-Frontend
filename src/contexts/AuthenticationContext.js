@@ -83,6 +83,22 @@ export const AuthenticationProvider = ({ children }) => {
     }
   };
 
+  // Recover Password
+
+  const requestRecoverPasswordRequest = (userData) => axios.post(`${restlessApi}/auth/request-recover-password`, userData);
+
+  const requestRecoverPassword = async (userData) => {
+    try {
+      const { data } = await requestRecoverPasswordRequest(userData);
+
+      return { isValid: true, message: data.message };
+    } catch (error) {
+      return { isValid: false, message: error.response.data.message };
+    }
+  };
+
+  // State control
+
   useEffect(() => {
     const validateTokenAsync = async () => {
       const validateTokenInfo = await validateToken();
@@ -106,6 +122,7 @@ export const AuthenticationProvider = ({ children }) => {
       login,
       logout,
       register,
+      requestRecoverPassword,
     }}
     >
       {children}

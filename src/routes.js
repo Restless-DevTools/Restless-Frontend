@@ -1,9 +1,10 @@
 import Collections from './views/Collections/Collections';
-import Login from './views/Login/Login';
-import Register from './views/Register/Register';
 import Requests from './views/Requests/Requests';
 import Snippets from './views/Snippets/Snippets';
 import Teams from './views/Teams/Teams';
+import Login from './views/Login/Login';
+import Register from './views/Register/Register';
+import RecoverPassword from './views/RecoverPassword/RecoverPassword';
 
 const routes = [
   {
@@ -39,6 +40,12 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register,
+    layout: '/auth',
+  },
+  {
+    path: '/recover-password',
+    name: 'RecoverPassword',
+    component: RecoverPassword,
     layout: '/auth',
   },
 ];
