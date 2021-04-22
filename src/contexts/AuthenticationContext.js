@@ -11,6 +11,56 @@ export const AuthenticationProvider = ({ children }) => {
   const restlessApi = process.env.REACT_APP_RESTLESS_URL;
   const token = Cookies.get('TOKEN');
 
+  // Utils
+
+  const validatePasswordStrenght = (text) => {
+    let passwordStrenghtValue = 0;
+
+    if ((text.length >= 4) && (text.length <= 7)) {
+      passwordStrenghtValue += 10;
+    } else if (text.length > 7) {
+      passwordStrenghtValue += 25;
+    }
+
+    if (text.match(/[a-z]+/)) {
+      passwordStrenghtValue += 10;
+    }
+
+    if (text.match(/[A-Z]+/)) {
+      passwordStrenghtValue += 20;
+    }
+
+    if (text.match(/\d+/)) {
+      passwordStrenghtValue += 20;
+    }
+
+    if (text.match(/\W+/)) {
+      passwordStrenghtValue += 25;
+    }
+
+    const passwordStrenghtObject = {};
+
+    if (passwordStrenghtValue < 30) {
+      passwordStrenghtObject.label = 'weak';
+      passwordStrenghtObject.color = 'text-danger';
+    } else if ((passwordStrenghtValue >= 30) && (passwordStrenghtValue < 60)) {
+      passwordStrenghtObject.label = 'medium';
+      passwordStrenghtObject.color = 'text-warning';
+    } else if ((passwordStrenghtValue >= 60) && (passwordStrenghtValue < 85)) {
+      passwordStrenghtObject.label = 'strong';
+      passwordStrenghtObject.color = 'text-primary';
+    } else if (passwordStrenghtValue >= 85) {
+      passwordStrenghtObject.label = 'excellent';
+      passwordStrenghtObject.color = 'text-success';
+    }
+
+    if (passwordStrenghtValue >= 85) {
+      return { ...passwordStrenghtObject, isPasswordStrong: true };
+    }
+
+    return { ...passwordStrenghtObject, isPasswordStrong: false };
+  };
+
   // Validate token
 
   const validateTokenRequest = () => axios.post(`${restlessApi}/auth/validate-token`, { token });
@@ -83,7 +133,7 @@ export const AuthenticationProvider = ({ children }) => {
     }
   };
 
-  // Recover Password
+  // Request Recover Password
 
   const requestRecoverPasswordRequest = (userData) => axios.post(`${restlessApi}/auth/request-recover-password`, userData);
 
@@ -92,6 +142,24 @@ export const AuthenticationProvider = ({ children }) => {
       const { data } = await requestRecoverPasswordRequest(userData);
 
       return { isValid: true, message: data.message };
+    } catch (error) {
+      return { isValid: false, message: error.response.data.message };
+    }
+  };
+
+  // Recover Password
+
+  const recoverPasswordRequest = (userData) => axios.post(`${restlessApi}/auth/recover-password`, userData);
+
+  const recoverPassword = async (userData) => {
+    try {
+      const { data } = await recoverPasswordRequest(userData);
+
+      if (!data.status) {
+        return { isValid: false, message: 'User not found or confirmation code invalid!' };
+      }
+
+      return { isValid: true, message: 'Password updated. You can sign in now.' };
     } catch (error) {
       return { isValid: false, message: error.response.data.message };
     }
@@ -119,10 +187,17 @@ export const AuthenticationProvider = ({ children }) => {
     <AuthenticationContext.Provider value={{
       signed,
 
+      // Utils
+
+      validatePasswordStrenght,
+
+      // Requests
+
       login,
       logout,
       register,
       requestRecoverPassword,
+      recoverPassword,
     }}
     >
       {children}
