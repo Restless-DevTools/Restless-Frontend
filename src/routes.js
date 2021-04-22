@@ -5,6 +5,7 @@ import Teams from './views/Teams/Teams';
 import Login from './views/Login/Login';
 import Register from './views/Register/Register';
 import RecoverPassword from './views/RecoverPassword/RecoverPassword';
+import RequestRecoverPassword from './views/RequestRecoverPassword/RequestRecoverPassword';
 
 const routes = [
   {
@@ -40,6 +41,12 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register,
+    layout: '/auth',
+  },
+  {
+    path: '/request-recover-password',
+    name: 'RequestRecoverPassword',
+    component: RequestRecoverPassword,
     layout: '/auth',
   },
   {

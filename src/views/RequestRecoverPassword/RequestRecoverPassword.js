@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Card,
@@ -9,37 +9,42 @@ import {
   InputGroupText,
 } from 'reactstrap';
 import CardTitle from 'reactstrap/lib/CardTitle';
-import Github from '../../assets/img/icons/common/github.svg';
+import useAuth from '../../contexts/AuthenticationContext';
 import Logo from '../../components/Logo/Logo';
 import useGlobal from '../../contexts/GlobalContext';
-import useAuth from '../../contexts/AuthenticationContext';
 
-const Login = (props) => {
+const RequestRecoverPassword = (props) => {
   const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const { requestRecoverPassword } = useAuth();
   const { openSuccessNotification, openErrorNotification } = useGlobal();
-  const { login, signed } = useAuth();
+
   const navigate = (path) => {
     props.history.push(path || '/auth/login');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const loginInfo = await login(username, password);
 
-    if (loginInfo.isValid) {
-      openSuccessNotification('Login successfully', 'Login');
-      props.history.push('/dashboard');
+    const userData = {};
+
+    if (username) {
+      userData.username = username;
+    }
+
+    if (email) {
+      userData.email = email;
+    }
+
+    const recoverPasswordInfo = await requestRecoverPassword(userData);
+
+    if (recoverPasswordInfo.isValid) {
+      openSuccessNotification(recoverPasswordInfo.message, 'Recover password');
+      navigate('/auth/recover-password');
     } else {
-      openErrorNotification(loginInfo.message, 'Login');
+      openErrorNotification(recoverPasswordInfo.message, 'Register');
     }
   };
-
-  useEffect(() => {
-    if (signed) {
-      navigate('/dashboard');
-    }
-  }, [signed]);
 
   return (
     <Col lg="5" md="7">
@@ -48,26 +53,9 @@ const Login = (props) => {
           <Logo />
         </CardHeader>
         <CardBody className="px-lg-5">
-          <CardTitle tag="h3" className="text-center">Login</CardTitle>
-          <div className="btn-wrapper text-center">
-            <Button
-              block
-              className="btn-neutral btn-icon"
-              color="default"
-              href="#"
-              onClick={(e) => e.preventDefault()}
-            >
-              <span className="btn-inner--icon mr-1">
-                <img
-                  alt="github logo"
-                  src={Github}
-                />
-              </span>
-              <span className="btn-inner--text">Sign in with Github</span>
-            </Button>
-          </div>
+          <CardTitle tag="h3" className="text-center">Request Recover Password</CardTitle>
           <div className="text-center text-muted my-4">
-            <small>Or sign in with credentials</small>
+            <small>Recover your password using your username</small>
           </div>
           <Form role="form" onSubmit={handleSubmit}>
             <FormGroup className="mb-3">
@@ -78,28 +66,32 @@ const Login = (props) => {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
+                  defaultValue={username}
                   placeholder="Username"
                   type="text"
                   onChange={(e) => { setUsername(e.target.value); }}
                   maxLength={30}
-                  required
+                  required={!email}
                 />
               </InputGroup>
             </FormGroup>
+            <div className="text-center text-muted my-4">
+              <small>Or recover using email</small>
+            </div>
             <FormGroup>
-              <InputGroup className="input-group-alternative">
+              <InputGroup className="input-group-alternative mb-3">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="fa fa-lock" />
+                    <i className="fa fa-envelope" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
-                  placeholder="Password"
-                  type="password"
-                  autoComplete="off"
-                  onChange={(e) => { setPassword(e.target.value); }}
-                  maxLength={30}
-                  required
+                  defaultValue={email}
+                  placeholder="Email"
+                  type="email"
+                  onChange={(e) => { setEmail(e.target.value); }}
+                  maxLength={50}
+                  required={!username}
                 />
               </InputGroup>
             </FormGroup>
@@ -110,18 +102,7 @@ const Login = (props) => {
                 color="primary"
                 type="submit"
               >
-                Sign In
-              </Button>
-            </div>
-            <div className="text-center">
-              <Button
-                block
-                className="my-2"
-                color="secondary"
-                type="button"
-                onClick={() => { navigate('/auth/register'); }}
-              >
-                Sign Up
+                Recover
               </Button>
             </div>
             <div className="text-center">
@@ -129,9 +110,9 @@ const Login = (props) => {
                 block
                 className="text-muted"
                 color="link"
-                onClick={() => { navigate('/auth/request-recover-password'); }}
+                onClick={() => { navigate('/auth/login'); }}
               >
-                <small>Forgot password?</small>
+                <small>Remembered your password?</small>
               </Button>
             </div>
           </Form>
@@ -141,4 +122,4 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default RequestRecoverPassword;

@@ -14,10 +14,12 @@ import Logo from '../../components/Logo/Logo';
 import useGlobal from '../../contexts/GlobalContext';
 
 const RecoverPassword = (props) => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const { requestRecoverPassword } = useAuth();
-  const { openSuccessNotification, openErrorNotification } = useGlobal();
+  const [verificationCode, setVerificationCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { recoverPassword, validatePasswordStrenght } = useAuth();
+  const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
+  const [passwordStrenght, setPasswordStrenght] = useState({ label: 'none', color: 'text-dark', isPasswordStrong: false });
 
   const navigate = (path) => {
     props.history.push(path || '/auth/login');
@@ -26,17 +28,27 @@ const RecoverPassword = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userData = {
-      username, email,
+    if (!passwordStrenght.isPasswordStrong) {
+      openInfoNotification('Your password must contain at least 8 digits, 1 uppercase character, 1 lowercase character, 1 number and a special character', 'Recover password');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      openInfoNotification('Passwords entered do not match', 'Recover password');
+      return;
+    }
+
+    const recoverData = {
+      verificationCode, password,
     };
 
-    const recoverPasswordInfo = await requestRecoverPassword(userData);
+    const recoverInfo = await recoverPassword(recoverData);
 
-    if (recoverPasswordInfo.isValid) {
-      openSuccessNotification(recoverPasswordInfo.message, 'Recover password');
+    if (recoverInfo.isValid) {
+      openSuccessNotification(recoverInfo.message, 'Recover password');
       props.history.push('/auth/login');
     } else {
-      openErrorNotification(recoverPasswordInfo.message, 'Register');
+      openErrorNotification(recoverInfo.message, 'Recover password');
     }
   };
 
@@ -48,44 +60,85 @@ const RecoverPassword = (props) => {
         </CardHeader>
         <CardBody className="px-lg-5">
           <CardTitle tag="h3" className="text-center">Recover Password</CardTitle>
-          <div className="text-center text-muted my-4">
-            <small>Recover your password using your username</small>
-          </div>
           <Form role="form" onSubmit={handleSubmit}>
             <FormGroup className="mb-3">
               <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="fa fa-user" />
+                    <i className="fa fa-key" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
-                  defaultValue={username}
-                  placeholder="Username"
+                  id="verificationCode"
+                  name="verificationCode"
+                  defaultValue={verificationCode}
+                  placeholder="Verification code"
                   type="text"
-                  onChange={(e) => { setUsername(e.target.value); }}
+                  onChange={(e) => { setVerificationCode(e.target.value); }}
                   maxLength={30}
-                  required={!email}
+                  required
                 />
               </InputGroup>
             </FormGroup>
-            <div className="text-center text-muted my-4">
-              <small>Or recover using email</small>
-            </div>
             <FormGroup>
-              <InputGroup className="input-group-alternative mb-3">
+              <InputGroup className="input-group-alternative">
                 <InputGroupAddon addonType="prepend">
                   <InputGroupText>
-                    <i className="fa fa-envelope" />
+                    <i className="fa fa-lock" />
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
-                  defaultValue={email}
-                  placeholder="Email"
-                  type="email"
-                  onChange={(e) => { setEmail(e.target.value); }}
-                  maxLength={50}
-                  required={!username}
+                  placeholder="Password"
+                  type="password"
+                  autoComplete="off"
+                  onChange={(e) => {
+                    setPasswordStrenght(validatePasswordStrenght(e.target.value));
+                    setPassword(e.target.value);
+                  }}
+                  maxLength={30}
+                  required
+                />
+              </InputGroup>
+            </FormGroup>
+            <div className="text-muted ">
+              <small className="font-italic">
+                Password strength:
+              </small>
+              {' '}
+              <small className={`font-weight-700 ${passwordStrenght && passwordStrenght.color}`}>
+                {passwordStrenght && passwordStrenght.label}
+              </small>
+            </div>
+            <div className="text-muted form-group">
+              <small className="font-italic">
+                Your password must contain at least:
+              </small>
+              <small>
+                <ul>
+                  <li>8 digits;</li>
+                  <li>1 uppercase character;</li>
+                  <li>1 lowercase character;</li>
+                  <li>1 number;</li>
+                  <li>1 special character;</li>
+                </ul>
+              </small>
+            </div>
+            <FormGroup>
+              <InputGroup className="input-group-alternative">
+                <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="fa fa-lock" />
+                  </InputGroupText>
+                </InputGroupAddon>
+                <Input
+                  placeholder="Confirm password"
+                  type="password"
+                  autoComplete="off"
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                  }}
+                  maxLength={30}
+                  required
                 />
               </InputGroup>
             </FormGroup>
@@ -96,7 +149,7 @@ const RecoverPassword = (props) => {
                 color="primary"
                 type="submit"
               >
-                Recover
+                Change Password
               </Button>
             </div>
             <div className="text-center">
