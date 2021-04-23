@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import Select from 'react-select';
 import {
-  FormGroup, Row, Col, Input, Label, Button,
+  FormGroup, Row, Col, Input, Label, Button, Form,
 } from 'reactstrap';
 import useGlobal from '../../contexts/GlobalContext';
 
@@ -11,7 +11,7 @@ function SnippetForm(props) {
     snippet, requests, edit, toggleModal, getSnippets,
   } = props;
   const [language, setLanguage] = useState(props.snippet.language || 'javascript');
-  const { openSuccessNotification, openErrorNotification } = useGlobal();
+  const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
 
   const [languages] = useState([
     { label: 'TypeScript', value: 'typescript' },
@@ -59,82 +59,99 @@ function SnippetForm(props) {
 
   const [shareOption, setShareOption] = useState(snippet.shareOption);
 
-  const handleSubmit = async () => {
+  const finishProccess = () => {
+    toggleModal(false);
+    getSnippets();
+    openSuccessNotification();
+  };
+
+  const handleSubmit = async (e) => {
     try {
+      e.preventDefault();
       const sendObject = {
         code, name, description, language, shareOption,
       };
 
-      if (edit) {
-        await requests.editSnippet(snippet.id, sendObject);
-      } else {
-        await requests.createSnippet(sendObject);
+      if (!shareOption) {
+        openInfoNotification('Select a share option', 'Snippet');
+        return;
       }
 
-      toggleModal(false);
-      getSnippets();
-      openSuccessNotification();
+      if (edit) {
+        await requests.editSnippet(snippet.id, sendObject);
+        finishProccess();
+      } else {
+        const { data } = await requests.createSnippet(sendObject);
+        if (data.id) {
+          finishProccess();
+        }
+      }
     } catch (error) {
       openErrorNotification('Something went wrong!');
     }
   };
 
+  console.log(name);
+
   return (
     <div className="form-page">
-      <Row>
-        <Col md="6">
-          <FormGroup>
-            <Label for="name">Name:</Label>
-            <Input
-              id="name"
-              placeholder="Select a name for your snippet"
-              type="text"
-              defaultValue={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-          </FormGroup>
-        </Col>
-        <Col md="6">
-          <FormGroup>
-            <Label for="description">Description:</Label>
-            <Input
-              id="description"
-              placeholder="Write a description for your colleagues understand what you wrote!"
-              type="text"
-              defaultValue={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-          </FormGroup>
-        </Col>
-      </Row>
-      <Row>
-        <Col md="6">
-          <FormGroup>
-            <Label for="language">Language:</Label>
-            <Select
-              options={languages}
-              onChange={(evt) => setLanguage(evt.value)}
-              placeholder="Select Language"
-              value={languages.find((opt) => opt.value === language)}
-              name="language"
-            />
-          </FormGroup>
-        </Col>
-        <Col md="6">
-          <FormGroup>
-            <Label for="share">Share:</Label>
-            <Select
-              options={shareOptions}
-              onChange={(evt) => setShareOption(evt.value)}
-              placeholder="Share Snippet"
-              value={shareOptions.find((opt) => opt.value === shareOption)}
-              name="share"
-            />
-          </FormGroup>
-        </Col>
-      </Row>
+      <Form onSubmit={handleSubmit}>
+        <Row>
+          <Col md="6">
+            <FormGroup>
+              <Label for="name">Name:</Label>
+              <Input
+                id="name"
+                placeholder="Select a name for your snippet"
+                type="text"
+                defaultValue={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </FormGroup>
+          </Col>
+          <Col md="6">
+            <FormGroup>
+              <Label for="description">Description:</Label>
+              <Input
+                id="description"
+                placeholder="Write a description for your colleagues understand what you wrote!"
+                type="text"
+                defaultValue={description}
+                onChange={(e) => setDescription(e.target.value)}
+                required
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+        <Row>
+          <Col md="6">
+            <FormGroup>
+              <Label for="language">Language:</Label>
+              <Select
+                options={languages}
+                onChange={(evt) => setLanguage(evt.value)}
+                placeholder="Select Language"
+                value={languages.find((opt) => opt.value === language)}
+                name="language"
+              />
+            </FormGroup>
+          </Col>
+          <Col md="6">
+            <FormGroup>
+              <Label for="share">Share:</Label>
+              <Select
+                options={shareOptions}
+                onChange={(evt) => setShareOption(evt.value)}
+                placeholder="Share Snippet"
+                value={shareOptions.find((opt) => opt.value === shareOption)}
+                name="share"
+              />
+            </FormGroup>
+          </Col>
+        </Row>
 
-      {shareOption === 'team' && (
+        {shareOption === 'team' && (
         <Row>
           <Col md="6">
             <FormGroup>
@@ -147,42 +164,42 @@ function SnippetForm(props) {
             </FormGroup>
           </Col>
         </Row>
-      )}
+        )}
 
-      <Row>
-        <Col md="12">
-          <Editor
-            height="50vh"
-            theme="vs-dark"
-            language={language}
-            defaultValue={code}
-            onChange={(value) => setCode(value)}
-            value={code}
-          />
-        </Col>
-      </Row>
-
-      <div className="action-pane">
         <Row>
-          <Col md="6">
-            <Button
-              color="success"
-              type="button"
-              onClick={() => handleSubmit()}
-            >
-              Save
-            </Button>
-
-            <Button
-              color="danger"
-              type="button"
-              onClick={() => toggleModal(false)}
-            >
-              Discard
-            </Button>
+          <Col md="12">
+            <Editor
+              height="50vh"
+              theme="vs-dark"
+              language={language}
+              defaultValue={code}
+              onChange={(value) => setCode(value)}
+              value={code}
+            />
           </Col>
         </Row>
-      </div>
+
+        <div className="action-pane">
+          <Row>
+            <Col md="6">
+              <Button
+                color="success"
+                type="submit"
+              >
+                Save
+              </Button>
+
+              <Button
+                color="danger"
+                type="button"
+                onClick={() => toggleModal(false)}
+              >
+                Discard
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      </Form>
     </div>
   );
 }

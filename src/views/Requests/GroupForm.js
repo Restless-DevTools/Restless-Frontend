@@ -7,10 +7,20 @@ import useGlobal from '../../contexts/GlobalContext';
 import './styles.css';
 
 const GroupForm = (props) => {
+  const {
+    toggleModal, collection, getGroups, groupSelected, edit,
+  } = props;
   const { requests } = useAppContext();
   const { openSuccessNotification, openErrorNotification } = useGlobal();
-  const { toggleModal, collection, getGroups } = props;
-  const [name, setName] = useState('');
+  const [name, setName] = useState(groupSelected.name || '');
+
+  const printSuccessMessage = () => {
+    if (!edit) {
+      return openSuccessNotification('Group created successfully', 'Group');
+    }
+
+    return openSuccessNotification('Group updated successfully', 'Group');
+  };
 
   const handleSubmit = async () => {
     if (!collection) {
@@ -23,11 +33,14 @@ const GroupForm = (props) => {
     };
 
     try {
-      const { data } = await requests.createGroup(sendObject);
+      const request = edit
+        ? requests.editGroup(groupSelected.id, sendObject)
+        : requests.createGroup(sendObject);
+      const { data } = await request;
       if (data.id) {
         toggleModal();
         getGroups();
-        openSuccessNotification('Group created successfully', 'Group');
+        printSuccessMessage();
       } else {
         openErrorNotification('Something went wrong', 'Group');
       }
@@ -45,6 +58,7 @@ const GroupForm = (props) => {
             <Label for="name">Name:</Label>
             <Input
               id="name"
+              defaultValue={name}
               placeholder="Select a name for your group"
               type="text"
               onChange={(e) => setName(e.target.value)}

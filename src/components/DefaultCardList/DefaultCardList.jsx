@@ -19,10 +19,11 @@ const DefaultCardList = (props) => {
             <Col className="text-right">
               {edit && (
                 <Button
-                  onClick={edit}
+                  onClick={() => edit(request.id)}
                   className="btn-icon"
                   color="primary"
                   type="button"
+                  size="sm"
                 >
                   <span>
                     <i className="fa fa-edit" />
@@ -30,7 +31,13 @@ const DefaultCardList = (props) => {
                 </Button>
               )}
               {remove && (
-                <Button className="btn-icon" color="danger" type="button">
+                <Button
+                  className="btn-icon"
+                  color="danger"
+                  type="button"
+                  size="sm"
+                  onClick={() => remove(request.id)}
+                >
                   <span>
                     <i className="fa fa-trash" />
                   </span>

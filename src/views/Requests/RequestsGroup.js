@@ -13,19 +13,23 @@ import {
   Row,
 } from 'reactstrap';
 import DefaultCardList from '../../components/DefaultCardList/DefaultCardList';
-import DefaultCollapse from '../../components/DefaultCollapse/DefaultCollapse';
+import DefaultCollapse from '../../components/DefaultCollapse/GroupCollapse';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import GroupForm from './GroupForm';
 import RequestForm from './RequestForm';
 import './styles.css';
 
 const RequestsGroup = (props) => {
-  const { collection, requests } = props;
+  const {
+    collection, requests, openSuccessNotification, openErrorNotification,
+  } = props;
   const [groupModal, setGroupModal] = useState(false);
   const [requestModal, setRequestModal] = useState(false);
   const [requestModalTitle, setRequestModalTitle] = useState('');
+  const [edit, setEdit] = useState(false);
 
   const [selectedGroup, setSelectedGroup] = useState(1);
+  const [requestSelected, setRequestSelected] = useState({});
 
   const [groups, setGroups] = useState([]);
 
@@ -54,19 +58,39 @@ const RequestsGroup = (props) => {
     }
   };
 
-  const toggleRequestModal = (edit) => {
-    setRequestModalTitle(edit ? 'Request' : 'New Request');
+  const toggleRequestModal = (shouldEdit) => {
+    setRequestModalTitle(shouldEdit ? 'Request' : 'New Request');
     setRequestModal(!requestModal);
   };
 
-  const handleEdit = () => {
-    toggleRequestModal(true);
+  const createRequest = () => {
+    toggleRequestModal();
+    setEdit(false);
+    setRequestSelected({});
+  };
+
+  const handleEdit = async (requestId) => {
+    const { data } = await requests.getRequest(requestId);
+    if (data) {
+      setEdit(true);
+      setRequestSelected(data);
+      toggleRequestModal(true);
+    } else {
+      openErrorNotification('Can\'t find request', 'Request');
+    }
   };
 
   const toggleGroupModal = () => { setGroupModal(!groupModal); };
 
-  const handleDelete = () => {
-    // TODO
+  const handleDeleteRequest = async (requestId) => {
+    // TODO add a confirm
+    const { data } = await requests.deleteRequest(requestId);
+    if (data.status) {
+      openSuccessNotification('Request deleted successfully', 'Request');
+      getGroups();
+    } else {
+      openErrorNotification('Can\'t delete request.', 'Request');
+    }
   };
 
   const [searchValue, setSearchValue] = useState('');
@@ -79,6 +103,29 @@ const RequestsGroup = (props) => {
       getGroups();
     }
   }, [searchValue]);
+
+  const [groupSelected, setGroupSelected] = useState({});
+
+  const newGroup = () => {
+    setEdit(false);
+    setGroupSelected({});
+    toggleGroupModal();
+  };
+
+  const editGroup = (groupId) => {
+    const group = groups.find((g) => g.id === groupId);
+    setEdit(true);
+    setGroupSelected(group);
+    toggleGroupModal();
+  };
+
+  const deleteGroup = async (groupId) => {
+    const { data } = await requests.deleteGroup(groupId);
+    if (data.status) {
+      openSuccessNotification('Group deleted successfully', 'Group');
+      getGroups();
+    }
+  };
 
   return (
     <>
@@ -106,7 +153,7 @@ const RequestsGroup = (props) => {
               <Col>
                 <Button
                   block
-                  onClick={() => { toggleRequestModal(); }}
+                  onClick={() => createRequest()}
                   className="btn-icon"
                   color="primary"
                   type="button"
@@ -119,7 +166,7 @@ const RequestsGroup = (props) => {
               </Col>
               <Col>
                 <Button
-                  onClick={() => { toggleGroupModal(); }}
+                  onClick={() => { newGroup(); }}
                   className="btn-icon"
                   color="success"
                   type="button"
@@ -139,13 +186,15 @@ const RequestsGroup = (props) => {
                 selectedGroup={selectedGroup}
                 toggleGroup={toggleGroup}
                 badgeCount={(group.requests && group.requests.length) ? group.requests.length : 0}
+                editGroup={editGroup}
+                deleteGroup={deleteGroup}
               >
                 { group.requests && group.requests.length > 0 && (
                   <DefaultCardList
                     list={group.requests}
                     requestModal={requestModal}
                     edit={handleEdit}
-                    remove={handleDelete}
+                    remove={handleDeleteRequest}
                   />
                 )}
               </DefaultCollapse>
@@ -163,6 +212,8 @@ const RequestsGroup = (props) => {
           toggleModal={toggleGroupModal}
           collection={collection}
           getGroups={getGroups}
+          groupSelected={groupSelected}
+          edit={edit}
         />
       </DefaultModal>
       <DefaultModal
@@ -176,6 +227,8 @@ const RequestsGroup = (props) => {
           collection={collection}
           requests={requests}
           getGroups={getGroups}
+          requestSelected={requestSelected}
+          edit={edit}
         />
       </DefaultModal>
     </>
