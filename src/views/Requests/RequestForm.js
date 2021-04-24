@@ -8,15 +8,15 @@ import './styles.css';
 
 const RequestForm = (props) => {
   const {
-    toggleModal, collection, requests, getGroups,
+    toggleModal, collection, requests, getGroups, requestSelected, edit,
   } = props;
   const { openSuccessNotification, openErrorNotification } = useGlobal();
 
-  const [method, setMethod] = useState({ value: 'GET', label: 'GET' });
-  const [format, setFormat] = useState({ value: 'JSON', label: 'JSON' });
+  const [method, setMethod] = useState(requestSelected.method || 'GET');
+  const [format, setFormat] = useState(requestSelected.format || 'JSON');
   const [group, setGroup] = useState();
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState(requestSelected.name || '');
 
   const [methods] = useState([
     { label: 'GET', value: 'GET' },
@@ -38,6 +38,11 @@ const RequestForm = (props) => {
       if (data) {
         const groupsMapped = data.map((g) => ({ value: g.id, label: g.name, info: { ...g } }));
         setGroups(groupsMapped);
+        if (requestSelected && requestSelected.groupId) {
+          const groupSelected = groupsMapped
+            .find((groupMp) => groupMp.value === requestSelected.groupId);
+          setGroup(groupSelected.value);
+        }
       }
     }
   };
@@ -46,8 +51,15 @@ const RequestForm = (props) => {
     getGroupsWithOutRequests();
   }, [collection]);
 
+  const printSuccessMessage = () => {
+    if (!edit) {
+      return openSuccessNotification('Request created Successfully', 'Request');
+    }
+
+    return openSuccessNotification('Request updated Successfully', 'Request');
+  };
+
   const handleSubmit = async () => {
-    console.log(method);
     if (!group) {
       openErrorNotification('Group not selected', 'Group');
       return;
@@ -69,10 +81,14 @@ const RequestForm = (props) => {
       groupId: group,
     };
 
-    const { data } = await requests.createRequest(sendObject);
+    const request = edit
+      ? requests.editRequest(requestSelected.id, sendObject)
+      : requests.createRequest(sendObject);
+
+    const { data } = await request;
 
     if (data.id) {
-      openSuccessNotification('Request created Successfully', 'Request');
+      printSuccessMessage();
       getGroups();
       toggleModal();
     } else {
@@ -92,6 +108,7 @@ const RequestForm = (props) => {
               type="text"
               onChange={(e) => setName(e.target.value)}
               required
+              defaultValue={name}
             />
           </FormGroup>
         </Col>
@@ -104,7 +121,7 @@ const RequestForm = (props) => {
               options={methods}
               onChange={(evt) => setMethod(evt.value)}
               placeholder="Select a Method"
-              value={methods
+              defaultValue={methods
                 .find((opt) => opt.value === method)}
               name="method"
             />
@@ -134,7 +151,7 @@ const RequestForm = (props) => {
               options={groups}
               onChange={(evt) => setGroup(evt.value)}
               placeholder="Select Group"
-              defaultValue={groups
+              value={groups
                 .find((opt) => opt.value === group)}
               name="group"
             />

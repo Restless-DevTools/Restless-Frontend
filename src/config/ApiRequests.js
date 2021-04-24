@@ -50,8 +50,28 @@ export default class Requests {
     });
   }
 
+  editGroup(groupId, group) {
+    return this.api.put(`/groups/update/${groupId}`, group);
+  }
+
+  deleteGroup(groupId) {
+    return this.api.delete(`/groups/delete/${groupId}`);
+  }
+
   // Requests
   createRequest(request) {
     return this.api.post('/requests/create', request);
+  }
+
+  deleteRequest(requestId) {
+    return this.api.delete(`/requests/delete/${requestId}`);
+  }
+
+  getRequest(requestId) {
+    return this.api.get(`/requests/show/${requestId}`);
+  }
+
+  editRequest(requestId, request) {
+    return this.api.put(`/requests/update/${requestId}`, request);
   }
 }

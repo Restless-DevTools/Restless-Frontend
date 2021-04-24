@@ -11,13 +11,17 @@ import Logo from '../Logo/Logo';
 const DashboardNavbar = (props) => {
   const { logout } = useAuth();
 
+  const navigate = (path) => {
+    props.history.push(path);
+  };
+
   return (
     <Navbar className="navbar-top navbar-dark bg-dracula-primary">
       <Container fluid>
         <Nav className="col">
           <NavItem className="h4 text-uppercase d-inline-block mr-3">
             <NavLink
-              href="/dashboard/collections"
+              onClick={() => navigate('collection')}
               className="text-primary"
             >
               Collections
@@ -25,7 +29,7 @@ const DashboardNavbar = (props) => {
           </NavItem>
           <NavItem className="h4 text-uppercase d-inline-block mr-3">
             <NavLink
-              href="/dashboard/requests"
+              onClick={() => navigate('requests')}
               className="text-primary"
             >
               Requests
@@ -33,7 +37,7 @@ const DashboardNavbar = (props) => {
           </NavItem>
           <NavItem className="h4 text-uppercase d-inline-block mr-3">
             <NavLink
-              href="/dashboard/snippets"
+              onClick={() => navigate('snippets')}
               className="text-primary"
             >
               Snippets
@@ -41,7 +45,7 @@ const DashboardNavbar = (props) => {
           </NavItem>
           <NavItem className="h4 text-uppercase d-inline-block mr-3">
             <NavLink
-              href="/dashboard/teams"
+              onClick={() => navigate('teams')}
               className="text-primary"
             >
               Teams

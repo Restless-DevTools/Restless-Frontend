@@ -119,7 +119,7 @@ const Collections = (props) => {
         <DefaultModal
           isOpen={formModal}
           title="New Collection"
-          className="default-modal"
+          className="default-small-modal"
           toggleModal={setFormModal}
         >
           <CollectionForm toggleModal={toggleModal} loadData={getAllCollections} />

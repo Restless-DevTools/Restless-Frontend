@@ -17,7 +17,7 @@ import RequestsGroup from './RequestsGroup';
 
 const Requests = (props) => {
   const { requests } = useApp();
-  const { openErrorNotification } = useGlobal();
+  const { openErrorNotification, openSuccessNotification } = useGlobal();
   const [collection, setCollection] = useState();
   const [formModal, setFormModal] = useState(false);
   const [collections, setCollections] = useState([]);
@@ -86,8 +86,16 @@ const Requests = (props) => {
       </DefaultHeader>
       <Container fluid>
         <Row className="mt-5">
-          <RequestsForm collection={collection} requests={requests} />
-          <RequestsGroup collection={collection} requests={requests} />
+          <RequestsForm
+            collection={collection}
+            requests={requests}
+          />
+          <RequestsGroup
+            collection={collection}
+            requests={requests}
+            openErrorNotification={openErrorNotification}
+            openSuccessNotification={openSuccessNotification}
+          />
         </Row>
       </Container>
       <DefaultModal
