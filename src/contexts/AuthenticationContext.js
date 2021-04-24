@@ -11,6 +11,10 @@ export const AuthenticationProvider = ({ children }) => {
   const restlessApi = process.env.REACT_APP_RESTLESS_URL;
   const token = Cookies.get('TOKEN');
 
+  const clientId = process.env.REACT_APP_CLIENT_ID;
+  const redirectUri = process.env.REACT_APP_REDIRECT_URI;
+  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
+
   // Validate token
 
   const validateTokenRequest = () => axios.post(`${restlessApi}/auth/validate-token`, { token });
@@ -65,6 +69,28 @@ export const AuthenticationProvider = ({ children }) => {
     }
   };
 
+  // Login with github
+
+  const githubLoginRequest = (code) => axios.post(`${restlessApi}/auth/github-login`, { code });
+
+  const githubLogin = async (code) => {
+    try {
+      const { data } = await githubLoginRequest(code);
+
+      if (!data.status && !data.user) {
+        return { isValid: false, message: data.message };
+      }
+
+      clearOldCookies();
+      Cookies.set('TOKEN', data.token);
+      Cookies.set('USERNAME', data.username);
+
+      return { isValid: true };
+    } catch (error) {
+      return { isValid: false, message: error.response.data.message };
+    }
+  };
+
   // register
 
   const registerRequest = (userData) => axios.post(`${restlessApi}/users/create`, userData);
@@ -102,8 +128,12 @@ export const AuthenticationProvider = ({ children }) => {
   return (
     <AuthenticationContext.Provider value={{
       signed,
+      clientId,
+      clientSecret,
+      redirectUri,
 
       login,
+      githubLogin,
       logout,
       register,
     }}

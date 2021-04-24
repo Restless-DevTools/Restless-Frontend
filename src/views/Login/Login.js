@@ -17,8 +17,11 @@ import useAuth from '../../contexts/AuthenticationContext';
 const Login = (props) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const { openSuccessNotification, openErrorNotification } = useGlobal();
-  const { login, signed } = useAuth();
+  const {
+    signed, login, githubLogin, clientId, redirectUri,
+  } = useAuth();
   const navigate = (path) => {
     props.history.push(path || '/auth/login');
   };
@@ -34,6 +37,34 @@ const Login = (props) => {
       openErrorNotification(loginInfo.message, 'Login');
     }
   };
+
+  const handleToggleLoading = () => setLoading(!loading);
+
+  const handleGithubLogin = async (code) => {
+    const githubLoginInfo = await githubLogin(code);
+
+    if (githubLoginInfo.isValid) {
+      openSuccessNotification('Login successfully', 'Login');
+      props.history.push('/dashboard');
+    } else {
+      openErrorNotification(githubLoginInfo.message, 'Login');
+      handleToggleLoading();
+    }
+  };
+
+  useEffect(() => {
+    const url = window.location.href;
+    const hasCode = url.includes('?code=');
+
+    if (hasCode) {
+      handleToggleLoading();
+
+      const [redirect, code] = url.split('?code=');
+      window.history.pushState({}, null, redirect);
+
+      handleGithubLogin(code);
+    }
+  }, [props.history]);
 
   useEffect(() => {
     if (signed) {
@@ -54,14 +85,19 @@ const Login = (props) => {
               block
               className="btn-neutral btn-icon"
               color="default"
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              href={`https://github.com/login/oauth/authorize?scope=user&client_id=${clientId}&redirect_uri=${redirectUri}`}
+              disabled={loading}
+              onClick={handleToggleLoading}
             >
               <span className="btn-inner--icon mr-1">
-                <img
-                  alt="github logo"
-                  src={Github}
-                />
+                {loading
+                  ? (<i className="text-primary fa fa-circle-notch fa-spin" />)
+                  : (
+                    <img
+                      alt="github logo"
+                      src={Github}
+                    />
+                  )}
               </span>
               <span className="btn-inner--text">Sign in with Github</span>
             </Button>
@@ -82,6 +118,7 @@ const Login = (props) => {
                   type="text"
                   onChange={(e) => { setUsername(e.target.value); }}
                   maxLength={30}
+                  disabled={loading}
                   required
                 />
               </InputGroup>
@@ -99,6 +136,7 @@ const Login = (props) => {
                   autoComplete="off"
                   onChange={(e) => { setPassword(e.target.value); }}
                   maxLength={30}
+                  disabled={loading}
                   required
                 />
               </InputGroup>
@@ -109,6 +147,7 @@ const Login = (props) => {
                 className="my-2"
                 color="primary"
                 type="submit"
+                disabled={loading}
               >
                 Sign In
               </Button>
@@ -120,6 +159,7 @@ const Login = (props) => {
                 color="secondary"
                 type="button"
                 onClick={() => { navigate('/auth/register'); }}
+                disabled={loading}
               >
                 Sign Up
               </Button>
@@ -130,6 +170,7 @@ const Login = (props) => {
                 className="text-muted"
                 color="link"
                 onClick={() => { navigate('/auth/login'); }}
+                disabled={loading}
               >
                 <small>Forgot password?</small>
               </Button>
