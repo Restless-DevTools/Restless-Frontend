@@ -37,7 +37,7 @@ const AuthLayout = () => {
   });
 
   return (
-    <div className="min-vh-100 d-flex flex-column">
+    <div className="min-vh-100 d-flex flex-column bg-dracula-primary">
       <div className="main-content flex-fill" ref={mainContent}>
         <div className="header py-7 py-lg-8" />
         <Container className="mt--8 pb-5">

@@ -79,6 +79,8 @@ const Collections = (props) => {
             color="primary"
             type="button"
           >
+            <i className="fas fa-bars" />
+            {' '}
             New Collection
           </Button>
         </Col>

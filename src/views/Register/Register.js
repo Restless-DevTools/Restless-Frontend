@@ -25,7 +25,7 @@ const Register = (props) => {
   const [passwordStrenght, setPasswordStrenght] = useState({ label: 'none', color: 'text-dark', isPasswordStrong: false });
 
   const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
-  const { register } = useAuth();
+  const { register, validatePasswordStrenght } = useAuth();
 
   const navigate = (path) => {
     props.history.push(path || '/auth/register');
@@ -55,54 +55,6 @@ const Register = (props) => {
       props.history.push('/auth/login');
     } else {
       openErrorNotification(registerInfo.message, 'Register');
-    }
-  };
-
-  const validatePasswordStrenght = (text) => {
-    let passwordStrenghtValue = 0;
-
-    if ((text.length >= 4) && (text.length <= 7)) {
-      passwordStrenghtValue += 10;
-    } else if (text.length > 7) {
-      passwordStrenghtValue += 25;
-    }
-
-    if (text.match(/[a-z]+/)) {
-      passwordStrenghtValue += 10;
-    }
-
-    if (text.match(/[A-Z]+/)) {
-      passwordStrenghtValue += 20;
-    }
-
-    if (text.match(/\d+/)) {
-      passwordStrenghtValue += 20;
-    }
-
-    if (text.match(/\W+/)) {
-      passwordStrenghtValue += 25;
-    }
-
-    const passwordStrenghtObject = {};
-
-    if (passwordStrenghtValue < 30) {
-      passwordStrenghtObject.label = 'weak';
-      passwordStrenghtObject.color = 'text-danger';
-    } else if ((passwordStrenghtValue >= 30) && (passwordStrenghtValue < 60)) {
-      passwordStrenghtObject.label = 'medium';
-      passwordStrenghtObject.color = 'text-warning';
-    } else if ((passwordStrenghtValue >= 60) && (passwordStrenghtValue < 85)) {
-      passwordStrenghtObject.label = 'strong';
-      passwordStrenghtObject.color = 'text-primary';
-    } else if (passwordStrenghtValue >= 85) {
-      passwordStrenghtObject.label = 'excellent';
-      passwordStrenghtObject.color = 'text-success';
-    }
-
-    if (passwordStrenghtValue >= 85) {
-      setPasswordStrenght({ ...passwordStrenghtObject, isPasswordStrong: true });
-    } else {
-      setPasswordStrenght({ ...passwordStrenghtObject, isPasswordStrong: false });
     }
   };
 
@@ -163,7 +115,7 @@ const Register = (props) => {
                   type="password"
                   autoComplete="off"
                   onChange={(e) => {
-                    validatePasswordStrenght(e.target.value);
+                    setPasswordStrenght(validatePasswordStrenght(e.target.value));
                     setPassword(e.target.value);
                   }}
                   maxLength={30}
