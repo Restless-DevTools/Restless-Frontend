@@ -79,6 +79,8 @@ const Collections = (props) => {
             color="primary"
             type="button"
           >
+            <i className="fas fa-bars" />
+            {' '}
             New Collection
           </Button>
         </Col>
@@ -119,7 +121,7 @@ const Collections = (props) => {
         <DefaultModal
           isOpen={formModal}
           title="New Collection"
-          className="default-modal"
+          className="default-small-modal"
           toggleModal={setFormModal}
         >
           <CollectionForm toggleModal={toggleModal} loadData={getAllCollections} />

@@ -169,8 +169,8 @@ const Login = (props) => {
                 block
                 className="text-muted"
                 color="link"
-                onClick={() => { navigate('/auth/login'); }}
                 disabled={loading}
+                onClick={() => { navigate('/auth/request-recover-password'); }}
               >
                 <small>Forgot password?</small>
               </Button>
