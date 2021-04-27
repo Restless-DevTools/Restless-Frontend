@@ -130,6 +130,16 @@ export const AuthenticationProvider = ({ children }) => {
         return { isValid: false, message: data.message };
       }
 
+      if (data.needRegister) {
+        const { needRegister, userToCreate } = data;
+
+        return {
+          isValid: true,
+          needRegister,
+          userToCreate,
+        };
+      }
+
       clearOldCookies();
       Cookies.set('TOKEN', data.token);
       Cookies.set('USERNAME', data.username);

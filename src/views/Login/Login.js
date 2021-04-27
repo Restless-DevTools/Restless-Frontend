@@ -41,14 +41,28 @@ const Login = (props) => {
   const handleToggleLoading = () => setLoading(!loading);
 
   const handleGithubLogin = async (code) => {
-    const githubLoginInfo = await githubLogin(code);
+    const {
+      isValid,
+      message,
+      needRegister,
+      userToCreate,
+    } = await githubLogin(code);
 
-    if (githubLoginInfo.isValid) {
-      openSuccessNotification('Login successfully', 'Login');
-      props.history.push('/dashboard');
+    if (isValid) {
+      if (needRegister) {
+        openSuccessNotification('Login successfully! Now we need somee info to create a user', 'Login');
+        props.history.push({
+          pathname: '/auth/register',
+          state: { userToCreate },
+        });
+      } else {
+        openSuccessNotification('Login successfully', 'Login');
+        props.history.push('/dashboard');
+        setLoading(false);
+      }
     } else {
-      openErrorNotification(githubLoginInfo.message, 'Login');
-      handleToggleLoading();
+      openErrorNotification(message, 'Login');
+      setLoading(false);
     }
   };
 
