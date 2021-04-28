@@ -91,8 +91,6 @@ function SnippetForm(props) {
     }
   };
 
-  console.log(name);
-
   return (
     <div className="form-page">
       <Form onSubmit={handleSubmit}>

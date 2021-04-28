@@ -17,7 +17,7 @@ import History from './History';
 import Response from './Response';
 import './styles.css';
 
-const RequestsForm = () => {
+const SendRequestsForm = () => {
   const [method, setMethod] = useState(1);
   const [format, setFormat] = useState(1);
   const [code, setCode] = useState('// Restless is awesome!');
@@ -140,4 +140,4 @@ const RequestsForm = () => {
   );
 };
 
-export default RequestsForm;
+export default SendRequestsForm;
