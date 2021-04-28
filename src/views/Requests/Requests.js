@@ -12,7 +12,7 @@ import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import useApp from '../../contexts/ApplicationContext';
 import CollectionForm from '../Collections/CollectionForm';
-import RequestsForm from './RequestsForm';
+import SendRequestsForm from './SendRequestsForm';
 import RequestsGroup from './RequestsGroup';
 
 const Requests = (props) => {
@@ -86,7 +86,7 @@ const Requests = (props) => {
       </DefaultHeader>
       <Container fluid>
         <Row className="mt-5">
-          <RequestsForm
+          <SendRequestsForm
             collection={collection}
             requests={requests}
           />

@@ -74,4 +74,30 @@ export default class Requests {
   editRequest(requestId, request) {
     return this.api.put(`/requests/update/${requestId}`, request);
   }
+
+  // users
+  getAllUsers() {
+    return this.api.get('/users/all');
+  }
+
+  // Teams
+  getAllTeams() {
+    return this.api.get('/teams/all');
+  }
+
+  createTeam(team) {
+    return this.api.post('/teams/create', team);
+  }
+
+  getTeam(teamId) {
+    return this.api.get(`/teams/show/${teamId}`);
+  }
+
+  deleteTeam(teamId) {
+    return this.api.delete(`/teams/delete/${teamId}`);
+  }
+
+  editTeam(teamId, team) {
+    return this.api.put(`/teams/update/${teamId}`, team);
+  }
 }

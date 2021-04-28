@@ -127,6 +127,10 @@ const RequestsGroup = (props) => {
     }
   };
 
+  const handleSelectRequest = async (request) => {
+    console.log(request);
+  };
+
   return (
     <>
       <Col xl="4">
@@ -195,6 +199,7 @@ const RequestsGroup = (props) => {
                     requestModal={requestModal}
                     edit={handleEdit}
                     remove={handleDeleteRequest}
+                    handleItemClick={handleSelectRequest}
                   />
                 )}
               </DefaultCollapse>

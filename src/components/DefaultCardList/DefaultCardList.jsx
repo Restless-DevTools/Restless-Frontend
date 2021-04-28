@@ -5,18 +5,33 @@ import {
 
 const DefaultCardList = (props) => {
   const {
-    list, edit, remove,
+    list, edit, remove, handleItemClick,
   } = props;
+
+  const handleRequestClick = (request) => {
+    handleItemClick(request);
+  };
 
   return list && (
     list.map((request) => (
       <Card key={request.id} className="mb-1">
         <CardBody className="p-2">
           <Row className="align-items-center">
-            <Col>
-              <h3>{request.name}</h3>
+            <Col md="8">
+              <Button
+                color="link"
+                type="button"
+                onClick={() => handleRequestClick(request)}
+                block
+                size="sm"
+              >
+                <h3>
+                  {request.name}
+                </h3>
+
+              </Button>
             </Col>
-            <Col className="text-right">
+            <Col md="4" className="text-right">
               {edit && (
                 <Button
                   onClick={() => edit(request.id)}
