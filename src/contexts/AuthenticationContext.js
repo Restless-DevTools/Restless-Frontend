@@ -11,6 +11,10 @@ export const AuthenticationProvider = ({ children }) => {
   const restlessApi = process.env.REACT_APP_RESTLESS_URL;
   const token = Cookies.get('TOKEN');
 
+  const githubClientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+  const githubRedirectUri = process.env.REACT_APP_GITHUB_REDIRECT_URI;
+  const githubAuthorizeApi = `https://github.com/login/oauth/authorize?scope=user&client_id=${githubClientId}&redirect_uri=${githubRedirectUri}`;
+
   // Utils
 
   const validatePasswordStrenght = (text) => {
@@ -115,6 +119,28 @@ export const AuthenticationProvider = ({ children }) => {
     }
   };
 
+  // Login with github
+
+  const githubLoginRequest = (code) => axios.post(`${restlessApi}/auth/github-login`, { code });
+
+  const githubLogin = async (code) => {
+    try {
+      const { data } = await githubLoginRequest(code);
+
+      if (!data.status && !data.user) {
+        return { isValid: false, message: data.message };
+      }
+
+      clearOldCookies();
+      Cookies.set('TOKEN', data.token);
+      Cookies.set('USERNAME', data.username);
+
+      return { isValid: true };
+    } catch (error) {
+      return { isValid: false, message: error.response.data.message };
+    }
+  };
+
   // register
 
   const registerRequest = (userData) => axios.post(`${restlessApi}/users/create`, userData);
@@ -186,6 +212,7 @@ export const AuthenticationProvider = ({ children }) => {
   return (
     <AuthenticationContext.Provider value={{
       signed,
+      githubAuthorizeApi,
 
       // Utils
 
@@ -194,6 +221,7 @@ export const AuthenticationProvider = ({ children }) => {
       // Requests
 
       login,
+      githubLogin,
       logout,
       register,
       requestRecoverPassword,

@@ -10,10 +10,10 @@ import {
   Label,
   Row,
 } from 'reactstrap';
-import useGlobal from '../../contexts/GlobalContext';
-import useAuth from '../../contexts/AuthenticationContext';
 import Github from '../../assets/img/icons/common/github.svg';
 import Logo from '../../components/Logo/Logo';
+import useAuth from '../../contexts/AuthenticationContext';
+import useGlobal from '../../contexts/GlobalContext';
 
 const Register = (props) => {
   const [username, setUsername] = useState('');
@@ -95,7 +95,10 @@ const Register = (props) => {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
+                  id="username"
+                  name="username"
                   placeholder="Username"
+                  value={username}
                   type="text"
                   onChange={(e) => { setUsername(e.target.value); }}
                   maxLength={30}
@@ -111,7 +114,10 @@ const Register = (props) => {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
+                  id="password"
+                  name="password"
                   placeholder="Password"
+                  value={password}
                   type="password"
                   autoComplete="off"
                   onChange={(e) => {
@@ -154,7 +160,10 @@ const Register = (props) => {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
                   placeholder="Confirm password"
+                  value={confirmPassword}
                   type="password"
                   autoComplete="off"
                   onChange={(e) => {
@@ -173,7 +182,10 @@ const Register = (props) => {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
+                  id="email"
+                  name="email"
                   placeholder="Email"
+                  value={email}
                   type="email"
                   onChange={(e) => { setEmail(e.target.value); }}
                   maxLength={50}
@@ -189,7 +201,10 @@ const Register = (props) => {
                   </InputGroupText>
                 </InputGroupAddon>
                 <Input
+                  id="name"
+                  name="name"
                   placeholder="Fullname"
+                  value={name}
                   type="text"
                   onChange={(e) => { setName(e.target.value); }}
                   required
