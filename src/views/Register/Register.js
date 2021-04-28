@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Card,
@@ -10,10 +10,10 @@ import {
   Label,
   Row,
 } from 'reactstrap';
-import useGlobal from '../../contexts/GlobalContext';
-import useAuth from '../../contexts/AuthenticationContext';
 import Github from '../../assets/img/icons/common/github.svg';
 import Logo from '../../components/Logo/Logo';
+import useAuth from '../../contexts/AuthenticationContext';
+import useGlobal from '../../contexts/GlobalContext';
 
 const Register = (props) => {
   const [username, setUsername] = useState('');
@@ -21,28 +21,11 @@ const Register = (props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [github, setGithub] = useState(false);
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [passwordStrenght, setPasswordStrenght] = useState({ label: 'none', color: 'text-dark', isPasswordStrong: false });
 
   const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
   const { register, validatePasswordStrenght } = useAuth();
-
-  useEffect(() => {
-    const { state } = props.location;
-
-    if (state && state.userToCreate) {
-      const { userToCreate } = state;
-
-      setUsername(userToCreate.username);
-      setName(userToCreate.name);
-      setGithub(userToCreate.github);
-
-      if (userToCreate.email) {
-        setEmail(userToCreate.email);
-      }
-    }
-  }, [props.location]);
 
   const navigate = (path) => {
     props.history.push(path || '/auth/register');
@@ -62,7 +45,7 @@ const Register = (props) => {
     }
 
     const userData = {
-      username, password, email, name, github,
+      username, password, email, name,
     };
 
     const registerInfo = await register(userData);
@@ -83,30 +66,26 @@ const Register = (props) => {
         </CardHeader>
         <CardBody className="px-lg-5">
           <CardTitle tag="h3" className="text-center">Register</CardTitle>
-          {!github && (
-            <>
-              <div className="text-center">
-                <Button
-                  block
-                  className="btn-neutral btn-icon mr-4"
-                  color="default"
-                  href="#"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <span className="btn-inner--icon mr-1">
-                    <img
-                      alt="github logo"
-                      src={Github}
-                    />
-                  </span>
-                  <span className="btn-inner--text">Sign up with Github</span>
-                </Button>
-              </div>
-              <div className="text-center text-muted my-4">
-                <small>Or sign up with credentials</small>
-              </div>
-            </>
-          )}
+          <div className="text-center">
+            <Button
+              block
+              className="btn-neutral btn-icon mr-4"
+              color="default"
+              href="#"
+              onClick={(e) => e.preventDefault()}
+            >
+              <span className="btn-inner--icon mr-1">
+                <img
+                  alt="github logo"
+                  src={Github}
+                />
+              </span>
+              <span className="btn-inner--text">Sign up with Github</span>
+            </Button>
+          </div>
+          <div className="text-center text-muted my-4">
+            <small>Or sign up with credentials</small>
+          </div>
           <Form role="form" onSubmit={handleSubmit}>
             <FormGroup>
               <InputGroup className="input-group-alternative mb-3">

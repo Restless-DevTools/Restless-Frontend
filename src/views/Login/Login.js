@@ -20,50 +20,41 @@ const Login = (props) => {
   const [loading, setLoading] = useState(false);
   const { openSuccessNotification, openErrorNotification } = useGlobal();
   const {
-    signed, login, githubLogin, clientId, redirectUri,
+    signed,
+    login,
+    githubLogin,
+    githubAuthorizeApi,
   } = useAuth();
   const navigate = (path) => {
     props.history.push(path || '/auth/login');
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const loginInfo = await login(username, password);
+  const handleToggleLoading = () => setLoading(!loading);
 
-    if (loginInfo.isValid) {
+  const validateLogin = (loginInfo) => {
+    const { isValid, message } = loginInfo;
+
+    if (isValid) {
+      setLoading(false);
       openSuccessNotification('Login successfully', 'Login');
       props.history.push('/dashboard');
     } else {
-      openErrorNotification(loginInfo.message, 'Login');
+      setLoading(false);
+      openErrorNotification(message, 'Login');
     }
   };
 
-  const handleToggleLoading = () => setLoading(!loading);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    handleToggleLoading();
+
+    const loginInfo = await login(username, password);
+    validateLogin(loginInfo);
+  };
 
   const handleGithubLogin = async (code) => {
-    const {
-      isValid,
-      message,
-      needRegister,
-      userToCreate,
-    } = await githubLogin(code);
-
-    if (isValid) {
-      if (needRegister) {
-        openSuccessNotification('Login successfully! Now we need somee info to create a user', 'Login');
-        props.history.push({
-          pathname: '/auth/register',
-          state: { userToCreate },
-        });
-      } else {
-        openSuccessNotification('Login successfully', 'Login');
-        props.history.push('/dashboard');
-        setLoading(false);
-      }
-    } else {
-      openErrorNotification(message, 'Login');
-      setLoading(false);
-    }
+    const loginInfo = await githubLogin(code);
+    validateLogin(loginInfo);
   };
 
   useEffect(() => {
@@ -99,7 +90,7 @@ const Login = (props) => {
               block
               className="btn-neutral btn-icon"
               color="default"
-              href={`https://github.com/login/oauth/authorize?scope=user&client_id=${clientId}&redirect_uri=${redirectUri}`}
+              href={githubAuthorizeApi}
               disabled={loading}
               onClick={handleToggleLoading}
             >

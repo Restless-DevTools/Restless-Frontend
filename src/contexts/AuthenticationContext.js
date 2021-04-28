@@ -11,9 +11,10 @@ export const AuthenticationProvider = ({ children }) => {
   const restlessApi = process.env.REACT_APP_RESTLESS_URL;
   const token = Cookies.get('TOKEN');
 
-  const clientId = process.env.REACT_APP_CLIENT_ID;
-  const redirectUri = process.env.REACT_APP_REDIRECT_URI;
-  const clientSecret = process.env.REACT_APP_CLIENT_SECRET;
+  const githubClientId = process.env.REACT_APP_GITHUB_CLIENT_ID;
+  const githubRedirectUri = process.env.REACT_APP_GITHUB_REDIRECT_URI;
+  const githubAuthorizeApi = `https://github.com/login/oauth/authorize?scope=user&client_id=${githubClientId}&redirect_uri=${githubRedirectUri}`;
+
   // Utils
 
   const validatePasswordStrenght = (text) => {
@@ -130,16 +131,6 @@ export const AuthenticationProvider = ({ children }) => {
         return { isValid: false, message: data.message };
       }
 
-      if (data.needRegister) {
-        const { needRegister, userToCreate } = data;
-
-        return {
-          isValid: true,
-          needRegister,
-          userToCreate,
-        };
-      }
-
       clearOldCookies();
       Cookies.set('TOKEN', data.token);
       Cookies.set('USERNAME', data.username);
@@ -221,9 +212,7 @@ export const AuthenticationProvider = ({ children }) => {
   return (
     <AuthenticationContext.Provider value={{
       signed,
-      clientId,
-      clientSecret,
-      redirectUri,
+      githubAuthorizeApi,
 
       // Utils
 
