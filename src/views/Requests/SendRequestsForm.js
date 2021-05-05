@@ -16,6 +16,7 @@ import {
   Row,
   TabContent,
   TabPane,
+  Spinner,
 } from 'reactstrap';
 import DefaultDynamicForm from '../../components/DefaultDynamicForm/DefaultDynamicForm';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
@@ -45,6 +46,7 @@ const SendRequestsForm = (props) => {
   const [response, setResponse] = useState(null);
   const [headers, setHeaders] = useState(null);
   const [queries, setQueries] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [methods] = useState([
     { label: 'GET', value: 'GET' },
@@ -123,6 +125,7 @@ const SendRequestsForm = (props) => {
         return {
           name: element.name,
           value: element.value,
+          requestId,
         };
       }
 
@@ -134,6 +137,7 @@ const SendRequestsForm = (props) => {
 
   const sendRequest = async (sendObject) => {
     try {
+      console.log(sendObject);
       const { data } = await requests.sendRequest(requestId, sendObject);
 
       if (!data.id) {
@@ -147,18 +151,23 @@ const SendRequestsForm = (props) => {
   };
 
   const handleSendRequest = async () => {
+    setLoading(true);
+
     if (!format) {
       openErrorNotification('Format not selected', 'Format');
+      setLoading(false);
       return;
     }
 
     if (!method) {
       openErrorNotification('Method not selected', 'Method');
+      setLoading(false);
       return;
     }
 
     if (!link) {
       openErrorNotification('Link not selected', 'Link');
+      setLoading(false);
       return;
     }
 
@@ -183,6 +192,7 @@ const SendRequestsForm = (props) => {
     } else {
       openErrorNotification(requestInfo.message, 'Request');
     }
+    setLoading(false);
   };
 
   return (
@@ -220,11 +230,21 @@ const SendRequestsForm = (props) => {
                 </FormGroup>
               </Col>
               <Col md="2" className="text-center px-md-0">
-                <Button onClick={handleSendRequest} className="btn-icon" color="primary" type="button">
-                  <span>
-                    <i className="fa fa-send" />
-                  </span>
-                  <span className="btn-inner--text">Send</span>
+                <Button
+                  onClick={handleSendRequest}
+                  className="btn-icon"
+                  color="primary"
+                  type="button"
+                  disabled={loading}
+                >
+                  { loading ? (<Spinner size="sm" />) : (
+                    <>
+                      <span>
+                        <i className="fa fa-send" />
+                      </span>
+                      <span className="btn-inner--text">Send</span>
+                    </>
+                  ) }
                 </Button>
               </Col>
             </Row>
