@@ -80,7 +80,7 @@ const SendRequestsForm = (props) => {
     if (!isValid) {
       openErrorNotification(message, 'Request');
     } else {
-      setHeaders(data.requestHeader);
+      setHeaders(data.requestHeaders);
       setQueries(data.requestQueries);
     }
   };
@@ -137,7 +137,6 @@ const SendRequestsForm = (props) => {
 
   const sendRequest = async (sendObject) => {
     try {
-      console.log(sendObject);
       const { data } = await requests.sendRequest(requestId, sendObject);
 
       if (!data.id) {
