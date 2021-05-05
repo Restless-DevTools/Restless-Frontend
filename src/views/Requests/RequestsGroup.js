@@ -21,7 +21,8 @@ import './styles.css';
 
 const RequestsGroup = (props) => {
   const {
-    collection, requests, openSuccessNotification, openErrorNotification,
+    collection, requests, openSuccessNotification,
+    openErrorNotification, requestSelected, setRequestSelected,
   } = props;
   const [groupModal, setGroupModal] = useState(false);
   const [requestModal, setRequestModal] = useState(false);
@@ -29,7 +30,6 @@ const RequestsGroup = (props) => {
   const [edit, setEdit] = useState(false);
 
   const [selectedGroup, setSelectedGroup] = useState(1);
-  const [requestSelected, setRequestSelected] = useState({});
 
   const [groups, setGroups] = useState([]);
 
@@ -128,7 +128,7 @@ const RequestsGroup = (props) => {
   };
 
   const handleSelectRequest = async (request) => {
-    console.log(request);
+    setRequestSelected(request);
   };
 
   return (

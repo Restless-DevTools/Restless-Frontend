@@ -21,6 +21,7 @@ const Requests = (props) => {
   const [collection, setCollection] = useState();
   const [formModal, setFormModal] = useState(false);
   const [collections, setCollections] = useState([]);
+  const [requestSelected, setRequestSelected] = useState({});
 
   const getAllCollections = async () => {
     try {
@@ -89,12 +90,17 @@ const Requests = (props) => {
           <SendRequestsForm
             collection={collection}
             requests={requests}
+            requestSelected={requestSelected}
+            openErrorNotification={openErrorNotification}
+            openSuccessNotification={openSuccessNotification}
           />
           <RequestsGroup
             collection={collection}
             requests={requests}
             openErrorNotification={openErrorNotification}
             openSuccessNotification={openSuccessNotification}
+            setRequestSelected={setRequestSelected}
+            requestSelected={requestSelected}
           />
         </Row>
       </Container>

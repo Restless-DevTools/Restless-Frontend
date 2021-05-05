@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import {
   Button,
@@ -17,29 +17,73 @@ import History from './History';
 import Response from './Response';
 import './styles.css';
 
-const SendRequestsForm = () => {
-  const [method, setMethod] = useState(1);
-  const [format, setFormat] = useState(1);
-  const [code, setCode] = useState('// Restless is awesome!');
+const SendRequestsForm = (props) => {
+  const {
+    requestSelected,
+    openErrorNotification,
+    openSuccessNotification,
+  } = props;
+  const [method, setMethod] = useState(requestSelected.method || 'GET');
+  const [format, setFormat] = useState(requestSelected.format || 'JSON');
+  const [code, setCode] = useState(requestSelected.body || '');
+  const [name, setName] = useState(requestSelected.name || '');
   const [responseModal, setResponseModal] = useState(false);
   const [historyModal, setHistoryModal] = useState(false);
+  const [link, setLink] = useState(requestSelected.link || '');
 
   const [methods] = useState([
-    { label: 'GET', value: 1 },
-    { label: 'POST', value: 2 },
-    { label: 'UPDATE', value: 3 },
-    { label: 'DELETE', value: 4 },
+    { label: 'GET', value: 'GET' },
+    { label: 'POST', value: 'POST' },
+    { label: 'PUT', value: 'PUT' },
+    { label: 'DELETE', value: 'DELETE' },
   ]);
 
   const [formats] = useState([
-    { label: 'JSON', value: 1 },
-    { label: 'NO BODY', value: 2 },
+    { label: 'JSON', value: 'JSON' },
+    { label: 'NO BODY', value: 'NO BODY' },
   ]);
+
+  useEffect(() => {
+    if (requestSelected) {
+      setMethod(requestSelected.method);
+      setFormat(requestSelected.format);
+      setCode(requestSelected.body);
+      setName(requestSelected.name);
+      setLink(requestSelected.link);
+    }
+  }, [requestSelected]);
+
+  const sendRequest = () => {
+    if (!link) {
+      openErrorNotification('Link not selected', 'Link');
+      return;
+    }
+
+    const sendObject = {
+      method,
+      name,
+      format,
+      groupId: requestSelected.groupId,
+      link,
+      requestBody: { body: code },
+      requestHeader: [],
+      requestQuery: [],
+    };
+
+    console.log(sendObject);
+    // call sendRequest
+
+    setResponseModal(!responseModal);
+  };
 
   return (
     <>
       <Col className="mb-5 mb-xl-0" xl="8">
-        <h2 className="text-secondary">Request</h2>
+        <h2 className="text-secondary">
+          Request -
+          {' '}
+          {name}
+        </h2>
         <Card className="shadow">
           <CardHeader className="border-0 bg-dracula-secondary">
             <Row className="align-items-center">
@@ -58,14 +102,16 @@ const SendRequestsForm = () => {
               <Col md="7">
                 <FormGroup className="mb-md-0">
                   <Input
-                    id="name"
-                    placeholder="Select a name for your request"
+                    id="link"
+                    placeholder="https://www.example.com"
                     type="text"
+                    defaultValue={link}
+                    onChange={(e) => setLink(e.target.value)}
                   />
                 </FormGroup>
               </Col>
               <Col md="2" className="text-center px-md-0">
-                <Button onClick={() => setResponseModal(!responseModal)} className="btn-icon" color="primary" type="button">
+                <Button onClick={() => sendRequest()} className="btn-icon" color="primary" type="button">
                   <span>
                     <i className="fa fa-send" />
                   </span>
@@ -104,7 +150,7 @@ const SendRequestsForm = () => {
                 </Button>
               </Col>
             </Row>
-            {(format === 1) && (
+            {(format === 'JSON') && (
             <Row className="mt-3">
               <Col md="12">
                 <Editor
