@@ -43,6 +43,8 @@ const SendRequestsForm = (props) => {
   const [headerInputs, setHeaderInputs] = useState([{ id: 0, name: '', value: '' }]);
   const [queryInputs, setQueryInputs] = useState([{ id: 0, name: '', value: '' }]);
   const [response, setResponse] = useState(null);
+  const [headers, setHeaders] = useState(null);
+  const [queries, setQueries] = useState(null);
 
   const [methods] = useState([
     { label: 'GET', value: 'GET' },
@@ -56,8 +58,52 @@ const SendRequestsForm = (props) => {
     { label: 'NO BODY', value: 'NO BODY' },
   ]);
 
+  const getRequest = async (id) => {
+    try {
+      const { data } = await requests.getRequest(id);
+
+      if (!data.id) {
+        return { isValid: false, message: data.message };
+      }
+
+      return { isValid: true, data };
+    } catch (error) {
+      return { isValid: false, message: error.response.data.message };
+    }
+  };
+
+  const loadFullRequest = async (id) => {
+    const { isValid, message, data } = await getRequest(id);
+
+    if (!isValid) {
+      openErrorNotification(message, 'Request');
+    } else {
+      setHeaders(data.requestHeader);
+      setQueries(data.requestQueries);
+    }
+  };
+
   useEffect(() => {
-    if (requestSelected) {
+    if (headers && headers.length) {
+      setHeaderInputs(headers.map((header, index) => ({
+        id: index,
+        name: header.name,
+        value: header.value,
+      })));
+    }
+
+    if (queries && queries.length) {
+      setQueries(queries.map((query, index) => ({
+        id: index,
+        name: query.name,
+        value: query.value,
+      })));
+    }
+  }, [headers, queries]);
+
+  useEffect(() => {
+    if (requestSelected.id) {
+      loadFullRequest(requestSelected.id);
       setRequestId(requestSelected.id);
       setMethod(requestSelected.method);
       setFormat(requestSelected.format);
@@ -220,8 +266,8 @@ const SendRequestsForm = (props) => {
                 </Button>
               </Col>
             </Row>
-            {(format === 'JSON' || showAdvancedOptions) && (
-              <Row className="mt-3">
+            <Row className="mt-3">
+              {(format === 'JSON') && (
                 <Col md="12" lg={showAdvancedOptions ? 6 : 12}>
                   <Editor
                     height="50vh"
@@ -231,54 +277,54 @@ const SendRequestsForm = (props) => {
                     onChange={(value) => setCode(value)}
                   />
                 </Col>
-                {showAdvancedOptions && (
-                  <Col md="12" lg="6" className="pr-2 pl-2">
-                    <Nav tabs className="mt-3 mt-lg-0">
-                      <NavItem>
-                        <NavLink
-                          className={classnames({ active: activeTab === 1 })}
-                          onClick={() => { toggleActiveTab(1); }}
-                        >
-                          Headers
-                        </NavLink>
-                      </NavItem>
-                      <NavItem>
-                        <NavLink
-                          className={classnames({ active: activeTab === 2 })}
-                          onClick={() => { toggleActiveTab(2); }}
-                        >
-                          Queries
-                        </NavLink>
-                      </NavItem>
-                    </Nav>
-                    <TabContent activeTab={activeTab}>
-                      <TabPane tabId={1}>
-                        <Row className="mt-3">
-                          <Col md="12">
-                            <DefaultDynamicForm
-                              inputs={headerInputs}
-                              setInputs={setHeaderInputs}
-                              inputIdentifier="Header"
-                            />
-                          </Col>
-                        </Row>
-                      </TabPane>
-                      <TabPane tabId={2}>
-                        <Row className="mt-3">
-                          <Col md="12">
-                            <DefaultDynamicForm
-                              inputs={queryInputs}
-                              setInputs={setQueryInputs}
-                              inputIdentifier="Query"
-                            />
-                          </Col>
-                        </Row>
-                      </TabPane>
-                    </TabContent>
-                  </Col>
-                )}
-              </Row>
-            )}
+              )}
+              {showAdvancedOptions && (
+                <Col md="12" lg={format === 'JSON' ? 6 : 12} className="pr-2 pl-2">
+                  <Nav tabs className="mt-3 mt-lg-0">
+                    <NavItem>
+                      <NavLink
+                        className={classnames({ active: activeTab === 1 })}
+                        onClick={() => { toggleActiveTab(1); }}
+                      >
+                        Headers
+                      </NavLink>
+                    </NavItem>
+                    <NavItem>
+                      <NavLink
+                        className={classnames({ active: activeTab === 2 })}
+                        onClick={() => { toggleActiveTab(2); }}
+                      >
+                        Queries
+                      </NavLink>
+                    </NavItem>
+                  </Nav>
+                  <TabContent activeTab={activeTab}>
+                    <TabPane tabId={1}>
+                      <Row className="mt-3">
+                        <Col md="12">
+                          <DefaultDynamicForm
+                            inputs={headerInputs}
+                            setInputs={setHeaderInputs}
+                            inputIdentifier="Header"
+                          />
+                        </Col>
+                      </Row>
+                    </TabPane>
+                    <TabPane tabId={2}>
+                      <Row className="mt-3">
+                        <Col md="12">
+                          <DefaultDynamicForm
+                            inputs={queryInputs}
+                            setInputs={setQueryInputs}
+                            inputIdentifier="Query"
+                          />
+                        </Col>
+                      </Row>
+                    </TabPane>
+                  </TabContent>
+                </Col>
+              )}
+            </Row>
           </CardBody>
         </Card>
       </Col>
