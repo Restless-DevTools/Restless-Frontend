@@ -151,8 +151,10 @@ const SendRequestsForm = (props) => {
 
       return { isValid: true, data };
     } catch (error) {
-      setLoading(false);
-      return { isValid: false, message: error.response.data.message };
+      if (error.response && error.response.data) {
+        return { isValid: false, message: error.response.data.message };
+      }
+      return { isValid: false, message: 'Invalid Request, check if the body is valid' };
     }
   };
 
