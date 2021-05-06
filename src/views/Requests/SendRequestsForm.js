@@ -184,11 +184,14 @@ const SendRequestsForm = (props) => {
       name,
       format,
       link,
-      requestBody: { id: requestBody.id, body: code },
       groupId: requestSelected.groupId,
       requestHeaders: mountSendObjectArray(headerInputs),
       requestQueries: mountSendObjectArray(queryInputs),
     };
+
+    if (requestBody) {
+      sendObject.requestBody = { id: requestBody.id, body: code };
+    }
 
     const requestInfo = await sendRequest(sendObject);
 
