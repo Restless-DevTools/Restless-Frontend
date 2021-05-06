@@ -31,21 +31,23 @@ const SendRequestsForm = (props) => {
     openErrorNotification,
     openSuccessNotification,
   } = props;
-  const [requestId, setRequestId] = useState(requestSelected.id || null);
-  const [method, setMethod] = useState(requestSelected.method || 'GET');
-  const [format, setFormat] = useState(requestSelected.format || 'JSON');
-  const [code, setCode] = useState(requestSelected.body || '');
-  const [name, setName] = useState(requestSelected.name || '');
   const [responseModal, setResponseModal] = useState(false);
   const [historyModal, setHistoryModal] = useState(false);
+  const [method, setMethod] = useState(requestSelected.method || 'GET');
+  const [format, setFormat] = useState(requestSelected.format || 'JSON');
+  const [name, setName] = useState(requestSelected.name || '');
   const [link, setLink] = useState(requestSelected.link || '');
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const [activeTab, setActiveTab] = useState(1);
   const [headerInputs, setHeaderInputs] = useState([{ id: 0, name: '', value: '' }]);
   const [queryInputs, setQueryInputs] = useState([{ id: 0, name: '', value: '' }]);
+
+  const [requestId, setRequestId] = useState(requestSelected.id || null);
+  const [code, setCode] = useState('');
+  const [requestBody, setRequestBody] = useState(null);
+  const [requestHeaders, setRequestHeaders] = useState(null);
+  const [requestQueries, setRequestQueries] = useState(null);
   const [response, setResponse] = useState(null);
-  const [headers, setHeaders] = useState(null);
-  const [queries, setQueries] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const [methods] = useState([
@@ -80,28 +82,33 @@ const SendRequestsForm = (props) => {
     if (!isValid) {
       openErrorNotification(message, 'Request');
     } else {
-      setHeaders(data.requestHeaders);
-      setQueries(data.requestQueries);
+      setRequestBody(data.requestBody);
+      setRequestHeaders(data.requestHeaders);
+      setRequestQueries(data.requestQueries);
     }
   };
 
   useEffect(() => {
-    if (headers && headers.length) {
-      setHeaderInputs(headers.map((header, index) => ({
+    if (requestHeaders && requestHeaders.length) {
+      setHeaderInputs(requestHeaders.map((header, index) => ({
         id: index,
         name: header.name,
         value: header.value,
       })));
     }
 
-    if (queries && queries.length) {
-      setQueries(queries.map((query, index) => ({
+    if (requestQueries && requestQueries.length) {
+      setQueryInputs(requestQueries.map((query, index) => ({
         id: index,
         name: query.name,
         value: query.value,
       })));
     }
-  }, [headers, queries]);
+
+    if (requestBody) {
+      setCode(JSON.stringify(requestBody.body, null, 2));
+    }
+  }, [requestHeaders, requestQueries, requestBody]);
 
   useEffect(() => {
     if (requestSelected.id) {
@@ -109,7 +116,6 @@ const SendRequestsForm = (props) => {
       setRequestId(requestSelected.id);
       setMethod(requestSelected.method);
       setFormat(requestSelected.format);
-      setCode(requestSelected.body);
       setName(requestSelected.name);
       setLink(requestSelected.link);
     }
@@ -145,6 +151,7 @@ const SendRequestsForm = (props) => {
 
       return { isValid: true, data };
     } catch (error) {
+      setLoading(false);
       return { isValid: false, message: error.response.data.message };
     }
   };
@@ -175,7 +182,7 @@ const SendRequestsForm = (props) => {
       name,
       format,
       link,
-      requestBody: { body: code },
+      requestBody: { id: requestBody.id, body: code },
       groupId: requestSelected.groupId,
       requestHeaders: mountSendObjectArray(headerInputs),
       requestQueries: mountSendObjectArray(queryInputs),
@@ -292,7 +299,7 @@ const SendRequestsForm = (props) => {
                     height="50vh"
                     theme="vs-dark"
                     language="json"
-                    defaultValue={code}
+                    value={code}
                     onChange={(value) => setCode(value)}
                   />
                 </Col>
