@@ -30,6 +30,7 @@ const SendRequestsForm = (props) => {
     requestSelected,
     openErrorNotification,
     openSuccessNotification,
+    getHttpStatusColor,
   } = props;
   const [responseModal, setResponseModal] = useState(false);
   const [historyModal, setHistoryModal] = useState(false);
@@ -89,24 +90,35 @@ const SendRequestsForm = (props) => {
   };
 
   useEffect(() => {
-    if (requestHeaders && requestHeaders.length) {
-      setHeaderInputs(requestHeaders.map((header, index) => ({
-        id: index,
-        name: header.name,
-        value: header.value,
-      })));
-    }
+    if (
+      requestSelected.id
+      && (requestHeaders || requestQueries || requestBody)
+    ) {
+      if (requestHeaders && requestHeaders.length) {
+        setHeaderInputs(requestHeaders.map((header, index) => ({
+          id: index,
+          name: header.name,
+          value: header.value,
+        })));
+      } else {
+        setHeaderInputs([{ id: 0, name: '', value: '' }]);
+      }
 
-    if (requestQueries && requestQueries.length) {
-      setQueryInputs(requestQueries.map((query, index) => ({
-        id: index,
-        name: query.name,
-        value: query.value,
-      })));
-    }
+      if (requestQueries && requestQueries.length) {
+        setQueryInputs(requestQueries.map((query, index) => ({
+          id: index,
+          name: query.name,
+          value: query.value,
+        })));
+      } else {
+        setQueryInputs([{ id: 0, name: '', value: '' }]);
+      }
 
-    if (requestBody) {
-      setCode(JSON.stringify(requestBody.body, null, 2));
+      if (requestBody) {
+        setCode(requestBody.body);
+      } else {
+        setCode(null);
+      }
     }
   }, [requestHeaders, requestQueries, requestBody]);
 
@@ -159,6 +171,8 @@ const SendRequestsForm = (props) => {
   };
 
   const handleSendRequest = async () => {
+    const startTime = new Date().getTime();
+
     setLoading(true);
 
     if (!format) {
@@ -187,6 +201,7 @@ const SendRequestsForm = (props) => {
       groupId: requestSelected.groupId,
       requestHeaders: mountSendObjectArray(headerInputs),
       requestQueries: mountSendObjectArray(queryInputs),
+      startTime,
     };
 
     if (requestBody) {
@@ -367,6 +382,7 @@ const SendRequestsForm = (props) => {
       >
         <Response
           response={response}
+          getHttpStatusColor={getHttpStatusColor}
         />
       </DefaultModal>
       <DefaultModal
