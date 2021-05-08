@@ -4,16 +4,19 @@ import {
   Button,
   Col, Row, Table,
 } from 'reactstrap';
-import './styles.css';
 import FileSizeUtils from '../../utils/FileSizeUtils';
+import DateUtils from '../../utils/DateUtils';
+import './styles.css';
 
-const Response = (props) => {
+const Response = ({ response, getHttpStatusColor }) => {
   const {
     status,
     data,
     size,
+    allTransactionTime,
+    requestTime,
     responseHeaders,
-  } = props.response;
+  } = response;
 
   const [showHeaders, setShowHeaders] = useState(true);
 
@@ -36,18 +39,37 @@ const Response = (props) => {
         </Col>
         <Col md="4" className="mt-3 mt-md-0">
           <Row>
-            <h3 className="text-success">
+            <h3>
               HTTP status:
               {' '}
-              {status}
+              <span
+                className="text-darker pl-1 pr-1 bold"
+                style={{ background: getHttpStatusColor(status) }}
+              >
+                {status}
+              </span>
             </h3>
           </Row>
           <Row>
-            <h4>
+            <h3>
               Size:
               {' '}
-              {FileSizeUtils.formatFileSize(size)}
-            </h4>
+              {FileSizeUtils.formatFileSize(size.split('.')[0])}
+            </h3>
+          </Row>
+          <Row>
+            <h3>
+              Total time:
+              {' '}
+              {DateUtils.formatTimeFromMilliseconds(allTransactionTime)}
+            </h3>
+          </Row>
+          <Row>
+            <h3>
+              Request time:
+              {' '}
+              {DateUtils.formatTimeFromMilliseconds(requestTime)}
+            </h3>
           </Row>
           {(responseHeaders && responseHeaders.length > 0) && (
             <>
