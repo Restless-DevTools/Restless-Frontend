@@ -20,6 +20,11 @@
   margin-top: 15px;
 }
 
+.response-headers-table {
+  max-height: 17.7rem;
+  overflow-y: scroll;
+}
+
 @media (max-width: 768px) {
   .default-modal {
     max-width: 100%;

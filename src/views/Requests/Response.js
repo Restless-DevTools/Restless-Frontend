@@ -15,10 +15,15 @@ const Response = ({ response, getHttpStatusColor }) => {
     size,
     allTransactionTime,
     requestTime,
-    responseHeaders,
+    headers,
   } = response;
 
+  const parsedHeaders = headers && JSON.parse(headers);
+  const headersArray = parsedHeaders && Object.entries(parsedHeaders)
+    .map((item) => ({ name: item[0], value: item[1] }));
+
   const [showHeaders, setShowHeaders] = useState(true);
+  const [code] = useState(JSON.parse(data) || null);
 
   return (
     <div className="form-page">
@@ -28,7 +33,7 @@ const Response = ({ response, getHttpStatusColor }) => {
             height="50vh"
             theme="vs-dark"
             defaultLanguage="json"
-            defaultValue={JSON.stringify(data, null, 2)}
+            value={JSON.stringify(code, null, 2)}
             options={{
               autoIndent: 'full',
               formatOnPaste: true,
@@ -71,7 +76,7 @@ const Response = ({ response, getHttpStatusColor }) => {
               {DateUtils.formatTimeFromMilliseconds(requestTime)}
             </h3>
           </Row>
-          {(responseHeaders && responseHeaders.length > 0) && (
+          {(headersArray && headersArray.length > 0) && (
             <>
               <Row>
                 <Button onClick={() => { setShowHeaders(!showHeaders); }} className="btn-icon" color="primary" type="button">
@@ -83,22 +88,24 @@ const Response = ({ response, getHttpStatusColor }) => {
               </Row>
               {showHeaders && (
                 <Row className="mt-3">
-                  <Table className="align-items-center table-flush" responsive>
-                    <thead className="thead-light">
-                      <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {responseHeaders.map((header) => (
-                        <tr key={header.id}>
-                          <td>{header.name}</td>
-                          <td>{header.value}</td>
+                  <div className="response-headers-table">
+                    <Table className="align-items-center table-flush" responsive>
+                      <thead className="thead-light">
+                        <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col">Value</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </Table>
+                      </thead>
+                      <tbody>
+                        {headersArray.map((header) => (
+                          <tr key={header.name}>
+                            <td>{header.name}</td>
+                            <td>{header.value}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  </div>
                 </Row>
               )}
             </>
