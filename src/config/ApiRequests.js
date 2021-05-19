@@ -75,6 +75,10 @@ export default class Requests {
     return this.api.put(`/requests/update/${requestId}`, request);
   }
 
+  sendRequest(requestId, request) {
+    return this.api.post(`/requests/send/${requestId}`, request);
+  }
+
   // users
   getAllUsers() {
     return this.api.get('/users/all');

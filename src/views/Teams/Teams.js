@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Card,
+  Button, Card,
   Col,
   Container,
   Row,
-  Button,
-  CardHeader,
 } from 'reactstrap';
-import TeamsForm from './TeamsForm';
+import DefaultEmptySearch from '../../components/DefaultEmptySearch/DefaultEmptySearch';
+import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
-import TeamCard from './TeamCard';
 import useAppContext from '../../contexts/ApplicationContext';
 import useGlobal from '../../contexts/GlobalContext';
-
 import './styles.css';
-import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
+import TeamCard from './TeamCard';
+import TeamsForm from './TeamsForm';
 
 function Teams() {
   const { requests } = useAppContext();
@@ -83,15 +81,12 @@ function Teams() {
       </DefaultHeader>
       <Container fluid>
         <Row className="mt-5">
+          <Col sm="8" md="8" lg="8" xl="9">
+            <h2 className="text-secondary">Snippets</h2>
+          </Col>
           <Col md="12">
+            {(((teams.length > 0) && (
             <Card className="shadow">
-              <CardHeader className="border-0">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0">My Teams</h3>
-                  </div>
-                </Row>
-              </CardHeader>
               { teams.map((team) => (
                 <TeamCard
                   key={team.id}
@@ -101,6 +96,7 @@ function Teams() {
                 />
               ))}
             </Card>
+            ))) || (<DefaultEmptySearch />)}
           </Col>
         </Row>
         <DefaultModal

@@ -17,10 +17,11 @@ import RequestsGroup from './RequestsGroup';
 
 const Requests = (props) => {
   const { requests } = useApp();
-  const { openErrorNotification, openSuccessNotification } = useGlobal();
+  const { openErrorNotification, openSuccessNotification, getHttpStatusColor } = useGlobal();
   const [collection, setCollection] = useState();
   const [formModal, setFormModal] = useState(false);
   const [collections, setCollections] = useState([]);
+  const [requestSelected, setRequestSelected] = useState({});
 
   const getAllCollections = async () => {
     try {
@@ -89,12 +90,18 @@ const Requests = (props) => {
           <SendRequestsForm
             collection={collection}
             requests={requests}
+            requestSelected={requestSelected}
+            openErrorNotification={openErrorNotification}
+            openSuccessNotification={openSuccessNotification}
+            getHttpStatusColor={getHttpStatusColor}
           />
           <RequestsGroup
             collection={collection}
             requests={requests}
             openErrorNotification={openErrorNotification}
             openSuccessNotification={openSuccessNotification}
+            setRequestSelected={setRequestSelected}
+            requestSelected={requestSelected}
           />
         </Row>
       </Container>

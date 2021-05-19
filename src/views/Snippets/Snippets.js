@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
-  CardHeader,
+
   Col,
   Container,
   Row,
   Table,
 } from 'reactstrap';
+import DefaultEmptySearch from '../../components/DefaultEmptySearch/DefaultEmptySearch';
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
-import SnippetForm from './SnippetForm';
 import useAppContext from '../../contexts/ApplicationContext';
 import useGlobal from '../../contexts/GlobalContext';
 import DateUtils from '../../utils/DateUtils';
+import SnippetForm from './SnippetForm';
 import './styles.css';
 
 function Snippets() {
@@ -72,47 +73,45 @@ function Snippets() {
       </DefaultHeader>
       <Container fluid>
         <Row className="mt-5">
+          <Col sm="8" md="8" lg="8" xl="9">
+            <h2 className="text-secondary">Snippets</h2>
+          </Col>
           <Col md="12">
-            <Card className="shadow">
-              <CardHeader className="border-0">
-                <Row className="align-items-center">
-                  <div className="col">
-                    <h3 className="mb-0">My Snippets</h3>
-                  </div>
-                </Row>
-              </CardHeader>
-              <Table className="align-items-center table-flush" responsive>
-                <thead className="thead-light">
-                  <tr>
-                    <th>Actions</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Language</th>
-                    <th scope="col">Share</th>
-                    <th scope="col">Updated At</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {snippets.map(((snippet) => (
-                    <tr key={snippet.id}>
-                      <td>
-                        <Button color="success" onClick={() => editSnippet(snippet)}>
-                          <i className="fas fa-edit" />
-                        </Button>
-                        <Button color="danger" onClick={() => deleteSnippet(snippet)}>
-                          <i className="fas fa-trash" />
-                        </Button>
-                      </td>
-                      <th scope="row">{snippet.name}</th>
-                      <td>{snippet.description}</td>
-                      <td>{snippet.language}</td>
-                      <td>{snippet.shareOption}</td>
-                      <td>{DateUtils.getDistanceFormattedDate(snippet.createdAt)}</td>
+            {(((snippets.length > 0) && (
+              <Card className="shadow">
+                <Table className="align-items-center table-flush" responsive>
+                  <thead className="thead-light">
+                    <tr>
+                      <th>Actions</th>
+                      <th scope="col">Name</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Language</th>
+                      <th scope="col">Share</th>
+                      <th scope="col">Updated At</th>
                     </tr>
-                  )))}
-                </tbody>
-              </Table>
-            </Card>
+                  </thead>
+                  <tbody>
+                    {snippets.map(((snippet) => (
+                      <tr key={snippet.id}>
+                        <td>
+                          <Button color="success" onClick={() => editSnippet(snippet)}>
+                            <i className="fas fa-edit" />
+                          </Button>
+                          <Button color="danger" onClick={() => deleteSnippet(snippet)}>
+                            <i className="fas fa-trash" />
+                          </Button>
+                        </td>
+                        <th scope="row">{snippet.name}</th>
+                        <td>{snippet.description}</td>
+                        <td>{snippet.language}</td>
+                        <td>{snippet.shareOption}</td>
+                        <td>{DateUtils.getDistanceFormattedDate(snippet.createdAt)}</td>
+                      </tr>
+                    )))}
+                  </tbody>
+                </Table>
+              </Card>
+            )) || (<DefaultEmptySearch />))}
           </Col>
         </Row>
         <DefaultModal
