@@ -204,8 +204,12 @@ const SendRequestsForm = (props) => {
       startTime,
     };
 
-    if (requestBody) {
-      sendObject.requestBody = { id: requestBody.id, body: code };
+    if (requestBody || code) {
+      if (requestBody) {
+        sendObject.requestBody = { id: requestBody.id, body: code };
+      }
+
+      sendObject.requestBody = { body: code };
     }
 
     const requestInfo = await sendRequest(sendObject);
