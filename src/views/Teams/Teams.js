@@ -82,7 +82,7 @@ function Teams() {
       <Container fluid>
         <Row className="mt-5">
           <Col sm="8" md="8" lg="8" xl="9">
-            <h2 className="text-secondary">Snippets</h2>
+            <h2 className="text-secondary">Teams</h2>
           </Col>
           <Col md="12">
             {(((teams.length > 0) && (
