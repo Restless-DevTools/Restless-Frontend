@@ -29,7 +29,7 @@ const CollectionForm = (props) => {
         return { isValid: false, message: data.message };
       }
 
-      return { isValid: true };
+      return { isValid: true, collection: data };
     } catch (error) {
       return { isValid: false, message: error.response.data.message };
     }
@@ -54,7 +54,7 @@ const CollectionForm = (props) => {
     if (collectionInfo.isValid) {
       openSuccessNotification('Collection successfully created', 'Collection');
       toggleModal();
-      loadData();
+      loadData(collectionInfo.collection);
     } else {
       openErrorNotification(collectionInfo.message, 'Collection');
     }

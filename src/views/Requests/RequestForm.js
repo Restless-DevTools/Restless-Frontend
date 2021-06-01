@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import {
-  Button, Col, FormGroup, Input, Label, Row,
+  Button, Col, FormGroup, Input, Label, Row, Form,
 } from 'reactstrap';
 import useGlobal from '../../contexts/GlobalContext';
 import './styles.css';
@@ -17,6 +17,7 @@ const RequestForm = (props) => {
   const [group, setGroup] = useState();
 
   const [name, setName] = useState(requestSelected.name || '');
+  const [link, setLink] = useState(requestSelected.link || '');
 
   const [methods] = useState([
     { label: 'GET', value: 'GET' },
@@ -79,6 +80,7 @@ const RequestForm = (props) => {
       name,
       format,
       groupId: group,
+      link,
     };
 
     const request = edit
@@ -97,7 +99,22 @@ const RequestForm = (props) => {
   };
 
   return (
-    <div className="form-page">
+    <Form className="form-page" onSubmit={handleSubmit}>
+      <Row>
+        <Col>
+          <FormGroup>
+            <Label for="name">Link:</Label>
+            <Input
+              id="name"
+              placeholder="https://restlessdevtools.com"
+              type="text"
+              onChange={(e) => setLink(e.target.value)}
+              required
+              defaultValue={link}
+            />
+          </FormGroup>
+        </Col>
+      </Row>
       <Row>
         <Col>
           <FormGroup>
@@ -164,8 +181,7 @@ const RequestForm = (props) => {
           <Col>
             <Button
               color="success"
-              type="button"
-              onClick={() => handleSubmit()}
+              type="submit"
             >
               Save
             </Button>
@@ -176,7 +192,7 @@ const RequestForm = (props) => {
         </Row>
       </div>
 
-    </div>
+    </Form>
   );
 };
 
