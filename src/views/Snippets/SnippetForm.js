@@ -62,7 +62,6 @@ function SnippetForm(props) {
   const finishProccess = () => {
     toggleModal(false);
     getSnippets();
-    openSuccessNotification();
   };
 
   const handleSubmit = async (e) => {
@@ -80,10 +79,12 @@ function SnippetForm(props) {
       if (edit) {
         await requests.editSnippet(snippet.id, sendObject);
         finishProccess();
+        openSuccessNotification('Snippet updated Successfully', 'Snippet');
       } else {
         const { data } = await requests.createSnippet(sendObject);
         if (data.id) {
           finishProccess();
+          openSuccessNotification('Snippet created Successfully', 'Snippet');
         }
       }
     } catch (error) {
