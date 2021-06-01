@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import React from 'react';
 import {
   Container, DropdownItem, DropdownMenu,
@@ -10,6 +11,7 @@ import Logo from '../Logo/Logo';
 
 const DashboardNavbar = (props) => {
   const { logout } = useAuth();
+  const fullname = Cookies.get('FULLNAME');
 
   const navigate = (path) => {
     props.history.push(path);
@@ -64,7 +66,7 @@ const DashboardNavbar = (props) => {
                 </div>
                 <Media className="ml-2 d-none d-lg-block">
                   <span className="mb-0 text-sm font-weight-bold">
-                    User
+                    {fullname || 'User'}
                   </span>
                 </Media>
               </Media>
