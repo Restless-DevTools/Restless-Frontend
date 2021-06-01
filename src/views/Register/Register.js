@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -23,9 +23,14 @@ const Register = (props) => {
   const [name, setName] = useState('');
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
   const [passwordStrenght, setPasswordStrenght] = useState({ label: 'none', color: 'text-dark', isPasswordStrong: false });
+  const [loading, setLoading] = useState(false);
 
   const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
-  const { register, validatePasswordStrenght } = useAuth();
+  const {
+    register, githubLogin, validatePasswordStrenght, githubAuthorizeApi,
+  } = useAuth();
+
+  const handleToggleLoading = () => setLoading(!loading);
 
   const navigate = (path) => {
     props.history.push(path || '/auth/register');
@@ -58,6 +63,38 @@ const Register = (props) => {
     }
   };
 
+  const validateLogin = (loginInfo) => {
+    const { isValid, message } = loginInfo;
+
+    if (isValid) {
+      setLoading(false);
+      openSuccessNotification('Login successfully', 'Login');
+      props.history.push('/dashboard');
+    } else {
+      setLoading(false);
+      openErrorNotification(message, 'Login');
+    }
+  };
+
+  const handleGithubLogin = async (code) => {
+    const loginInfo = await githubLogin(code);
+    validateLogin(loginInfo);
+  };
+
+  useEffect(() => {
+    const url = window.location.href;
+    const hasCode = url.includes('?code=');
+
+    if (hasCode) {
+      handleToggleLoading();
+
+      const [redirect, code] = url.split('?code=');
+      window.history.pushState({}, null, redirect);
+
+      handleGithubLogin(code);
+    }
+  }, [props.history]);
+
   return (
     <Col lg="5" md="7">
       <Card className="bg-secondary shadow border-0">
@@ -69,16 +106,21 @@ const Register = (props) => {
           <div className="text-center">
             <Button
               block
-              className="btn-neutral btn-icon mr-4"
+              className="btn-neutral btn-icon"
               color="default"
-              href="#"
-              onClick={(e) => e.preventDefault()}
+              href={githubAuthorizeApi}
+              disabled={loading}
+              onClick={handleToggleLoading}
             >
               <span className="btn-inner--icon mr-1">
-                <img
-                  alt="github logo"
-                  src={Github}
-                />
+                {loading
+                  ? (<i className="text-primary fa fa-circle-notch fa-spin" />)
+                  : (
+                    <img
+                      alt="github logo"
+                      src={Github}
+                    />
+                  )}
               </span>
               <span className="btn-inner--text">Sign up with Github</span>
             </Button>
