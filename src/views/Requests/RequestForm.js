@@ -3,6 +3,7 @@ import Select from 'react-select';
 import {
   Button, Col, FormGroup, Input, Label, Row,
 } from 'reactstrap';
+import { Form } from 'reactstrap/lib';
 import useGlobal from '../../contexts/GlobalContext';
 import './styles.css';
 
@@ -59,7 +60,9 @@ const RequestForm = (props) => {
     return openSuccessNotification('Request updated Successfully', 'Request');
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (!group) {
       openErrorNotification('Group not selected', 'Group');
       return;
@@ -97,7 +100,7 @@ const RequestForm = (props) => {
   };
 
   return (
-    <div className="form-page">
+    <Form className="form-page" onSubmit={handleSubmit}>
       <Row>
         <Col>
           <FormGroup>
@@ -158,14 +161,12 @@ const RequestForm = (props) => {
           </FormGroup>
         </Col>
       </Row>
-
       <div className="action-pane">
         <Row>
           <Col>
             <Button
               color="success"
-              type="button"
-              onClick={() => handleSubmit()}
+              type="submit"
             >
               Save
             </Button>
@@ -175,8 +176,7 @@ const RequestForm = (props) => {
           </Col>
         </Row>
       </div>
-
-    </div>
+    </Form>
   );
 };
 
