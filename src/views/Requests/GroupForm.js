@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Button, Col, FormGroup, Input, Label, Row,
+  Button, Col, Form, FormGroup, Input, Label, Row,
 } from 'reactstrap';
 import useAppContext from '../../contexts/ApplicationContext';
 import useGlobal from '../../contexts/GlobalContext';
@@ -22,7 +22,9 @@ const GroupForm = (props) => {
     return openSuccessNotification('Group updated successfully', 'Group');
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (!collection) {
       openErrorNotification('First, select a collection', 'Group');
       return;
@@ -51,7 +53,7 @@ const GroupForm = (props) => {
   };
 
   return (
-    <div className="form-page">
+    <Form className="form-page" onSubmit={handleSubmit}>
       <Row>
         <Col>
           <FormGroup>
@@ -70,7 +72,7 @@ const GroupForm = (props) => {
       <div className="action-pane">
         <Row>
           <Col>
-            <Button color="success" type="button" onClick={() => handleSubmit()}>
+            <Button color="success" type="submit">
               Save
             </Button>
             <Button onClick={toggleModal} color="danger" type="button">
@@ -79,7 +81,7 @@ const GroupForm = (props) => {
           </Col>
         </Row>
       </div>
-    </div>
+    </Form>
   );
 };
 

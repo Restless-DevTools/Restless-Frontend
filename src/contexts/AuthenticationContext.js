@@ -89,7 +89,7 @@ export const AuthenticationProvider = ({ children }) => {
   // logout
   const clearOldCookies = () => {
     Cookies.remove('TOKEN');
-    Cookies.remove('USERNAME');
+    Cookies.remove('FULLNAME');
   };
 
   const logout = () => {
@@ -111,7 +111,7 @@ export const AuthenticationProvider = ({ children }) => {
 
       clearOldCookies();
       Cookies.set('TOKEN', data.token);
-      Cookies.set('USERNAME', username);
+      Cookies.set('FULLNAME', data.user.name);
 
       return { isValid: true };
     } catch (error) {
@@ -133,7 +133,7 @@ export const AuthenticationProvider = ({ children }) => {
 
       clearOldCookies();
       Cookies.set('TOKEN', data.token);
-      Cookies.set('USERNAME', data.username);
+      Cookies.set('FULLNAME', data.user.name);
 
       return { isValid: true };
     } catch (error) {
