@@ -1,0 +1,14 @@
+
+.default-collapse-list-card {
+  background-color: #383a59;
+  padding: 3px;
+  color: white;
+  font-size: 0.98rem;
+  margin: 6px;
+}
+
+.button-link {
+  color: white !important;
+  font-size: 0.8rem ;
+}
+

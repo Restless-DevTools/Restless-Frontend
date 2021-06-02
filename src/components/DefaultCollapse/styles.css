@@ -1,0 +1,19 @@
+
+.default-collapse-card {
+  padding: 8px;
+  color: white;
+  font-size: 0.98rem;
+  margin: 6px;
+}
+
+.dropdown-collapse {
+  margin: 0px;
+  color: white !important;
+}
+
+.button-link-collapse {
+  width: 100% !important;
+  color: white !important;
+  font-size: 0.8rem ;
+}
+
