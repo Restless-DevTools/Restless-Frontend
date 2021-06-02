@@ -1,4 +1,8 @@
-import { formatDistance } from 'date-fns';
+import { format, formatDistance } from 'date-fns';
+
+const getFullFormattedDate = (date) => format(
+  new Date(date), 'MM/dd/yyyy HH:mm',
+);
 
 const getDistanceFormattedDate = (date) => formatDistance(
   new Date(date), new Date(), { addSuffix: true },
@@ -25,4 +29,8 @@ const formatTimeFromMilliseconds = (time) => {
   return `${ms} milliseconds`;
 };
 
-export default { getDistanceFormattedDate, formatTimeFromMilliseconds };
+export default {
+  getDistanceFormattedDate,
+  formatTimeFromMilliseconds,
+  getFullFormattedDate,
+};

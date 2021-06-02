@@ -81,7 +81,7 @@ const Response = ({ response, getHttpStatusColor }) => {
               <Row>
                 <Button onClick={() => { setShowHeaders(!showHeaders); }} className="btn-icon" color="primary" type="button">
                   <span>
-                    <i className="fa fa-info" />
+                    <i className={`fa fa-${showHeaders ? 'eye-slash' : 'eye'}`} />
                   </span>
                   <span className="btn-inner--text">Headers</span>
                 </Button>

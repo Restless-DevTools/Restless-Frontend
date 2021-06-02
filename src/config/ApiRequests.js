@@ -79,6 +79,24 @@ export default class Requests {
     return this.api.post(`/requests/send/${requestId}`, request);
   }
 
+  // Reponses
+
+  getAllResponses(requestId) {
+    return this.api.get('/responses/all', {
+      params: {
+        requestId,
+      },
+    });
+  }
+
+  getResponse(responseId) {
+    return this.api.get(`/responses/show/${responseId}`);
+  }
+
+  deleteResponse(responseId) {
+    return this.api.delete(`/responses/delete/${responseId}`);
+  }
+
   // users
   getAllUsers() {
     return this.api.get('/users/all');
