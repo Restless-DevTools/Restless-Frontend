@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
 import {
-  Badge,
-  Button, Col, Collapse, Row, ButtonDropdown, DropdownToggle, DropdownItem, DropdownMenu,
+  Card,
+  Col,
+  Collapse,
+  Row,
+  ButtonDropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu,
+  Button,
 } from 'reactstrap';
+
+import './styles.css';
 
 const DefaultCollapse = (props) => {
   const {
-    children, group, selectedGroup, toggleGroup, badgeCount, editGroup, deleteGroup,
+    children, group, selectedGroup, toggleGroup, editGroup, deleteGroup,
   } = props;
 
   const isSelected = selectedGroup === group.id;
@@ -20,39 +29,51 @@ const DefaultCollapse = (props) => {
   return (
     <div key={group.id}>
       <Row className="m-0 align-items-center">
-        <Col md="10" className="text-center px-0">
-          <Button
-            block
-            onClick={() => { toggleGroup(group.id); }}
-            className="btn-icon mb-1 text-left"
+        <Col md="12" className="text-center px-0">
+          <Card
+            className="default-collapse-card"
             color="primary"
             type="button"
           >
-            <span>
-              <i className={isSelected ? 'fa fa-arrow-down' : 'fa fa-arrow-right'} />
-            </span>
-            <span className="btn-inner--text">{group.name}</span>
-            <Badge color="dark">{badgeCount}</Badge>
-
-          </Button>
-        </Col>
-        <Col md="2">
-
-          <ButtonDropdown isOpen={dropDown} toggle={toggleDropDown} direction="left">
-            <DropdownToggle caret>
-              <i className="fa fa-cogs" />
-            </DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem onClick={() => editGroup(group.id)}>
-                <i className="fa fa-edit" />
-                Edit
-              </DropdownItem>
-              <DropdownItem onClick={() => deleteGroup(group.id)}>
-                <i className="fa fa-trash" />
-                Delete
-              </DropdownItem>
-            </DropdownMenu>
-          </ButtonDropdown>
+            <Row>
+              <Col md="9">
+                <Row>
+                  <Col md="12">
+                    <Button
+                      color="link"
+                      type="button"
+                      onClick={() => { toggleGroup(group.id); }}
+                      className="button-link-collapse"
+                    >
+                      <Col md="2" className="float-left">
+                        <i className={isSelected ? 'fa fa-arrow-down' : 'fa fa-arrow-right'} />
+                      </Col>
+                      <Col md="10">
+                        {group.name}
+                      </Col>
+                    </Button>
+                  </Col>
+                </Row>
+              </Col>
+              <Col md="3" className="pull-right">
+                <ButtonDropdown isOpen={dropDown} toggle={toggleDropDown} direction="left">
+                  <DropdownToggle color="link" className="dropdown-collapse">
+                    <i className="fas fa-ellipsis-v" />
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={() => editGroup(group.id)}>
+                      <i className="fa fa-edit" />
+                      Edit
+                    </DropdownItem>
+                    <DropdownItem onClick={() => deleteGroup(group.id)}>
+                      <i className="fa fa-trash" />
+                      Delete
+                    </DropdownItem>
+                  </DropdownMenu>
+                </ButtonDropdown>
+              </Col>
+            </Row>
+          </Card>
         </Col>
       </Row>
       <Collapse isOpen={isSelected}>
