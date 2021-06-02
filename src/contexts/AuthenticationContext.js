@@ -193,15 +193,9 @@ export const AuthenticationProvider = ({ children }) => {
 
   // State control
 
-  useEffect(() => {
-    const validateTokenAsync = async () => {
-      const validateTokenInfo = await validateToken();
-
-      return validateTokenInfo;
-    };
-
+  useEffect(async () => {
     if (token) {
-      const { isValid } = validateTokenAsync();
+      const { isValid } = await validateToken();
 
       if (isValid) {
         setSigned(true);
