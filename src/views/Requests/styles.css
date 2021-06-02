@@ -25,6 +25,11 @@
   overflow-y: scroll;
 }
 
+.responses-table {
+  max-height: 30rem;
+  overflow-y: scroll;
+}
+
 @media (max-width: 768px) {
   .default-modal {
     max-width: 100%;

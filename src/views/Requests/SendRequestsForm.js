@@ -282,16 +282,18 @@ const SendRequestsForm = (props) => {
           <CardBody>
             <Row className="align-items-center">
               <Col xs="3" sm="3" md="3" className="text-left mb-3 mb-md-0">
-                <Button
-                  onClick={() => setHistoryModal(!historyModal)}
-                  className="btn-icon"
-                  color="primary"
-                  type="button"
-                >
-                  <span>
-                    <i className="fa fa-history" />
-                  </span>
-                </Button>
+                {requestId && (
+                  <Button
+                    onClick={() => setHistoryModal(!historyModal)}
+                    className="btn-icon"
+                    color="primary"
+                    type="button"
+                  >
+                    <span>
+                      <i className="fa fa-history" />
+                    </span>
+                  </Button>
+                )}
               </Col>
               <Col xs="12" sm="6" md="6" className="mb-3 mb-md-0">
                 <FormGroup className="mb-0">
@@ -395,7 +397,10 @@ const SendRequestsForm = (props) => {
         className="default-modal"
         toggleModal={setHistoryModal}
       >
-        <History />
+        <History
+          request={requestSelected}
+          getHttpStatusColor={getHttpStatusColor}
+        />
       </DefaultModal>
     </>
   );

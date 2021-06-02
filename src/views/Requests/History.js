@@ -1,28 +1,82 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   Table,
 } from 'reactstrap';
+import useApp from '../../contexts/ApplicationContext';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
 import Response from './Response';
 import './styles.css';
+import useGlobal from '../../contexts/GlobalContext';
+import DefaultEmptySearch from '../../components/DefaultEmptySearch/DefaultEmptySearch';
+import DateUtils from '../../utils/DateUtils';
 
-const History = () => {
+const History = (props) => {
+  const { request, getHttpStatusColor } = props;
+
+  const { requests } = useApp();
+  const { openErrorNotification, openSuccessNotification } = useGlobal();
   const [responseModal, setResponseModal] = useState(false);
+  const [responses, setResponses] = useState([]);
+  const [selectedResponse, setSelectedResponse] = useState(null);
 
-  const actionsContainer = () => (
+  const getAllResponses = async () => {
+    try {
+      if (request.id) {
+        const { data } = await requests.getAllResponses(request.id);
+
+        if (data.length) {
+          setResponses(data);
+        }
+      }
+    } catch (error) {
+      openErrorNotification('Can\'t fetch the records in backend.', 'Responses');
+      setResponses([]);
+    }
+  };
+
+  const handleDeleteResponse = async (response) => {
+    try {
+      const { data } = await requests.deleteResponse(response.id);
+
+      if (data.status) {
+        openSuccessNotification(data.message, 'Responses');
+        getAllResponses();
+      } else {
+        openErrorNotification(data.message, 'Responses');
+      }
+    } catch (error) {
+      openErrorNotification('Can\'t fetch the records in backend.', 'Responses');
+    }
+  };
+
+  const handleDatailResponse = (response) => {
+    setSelectedResponse(response);
+    setResponseModal(!responseModal);
+  };
+
+  useEffect(() => {
+    getAllResponses();
+  }, []);
+
+  const actionsContainer = (response) => (
     <>
-      <Button className="btn-icon" color="primary" type="button">
+      <Button
+        onClick={() => handleDatailResponse(response)}
+        className="btn-icon"
+        color="primary"
+        type="button"
+      >
         <span>
-          <i className="fa fa-info" />
+          <i className="fa fa-eye" />
         </span>
       </Button>
-      <Button onClick={() => setResponseModal(!responseModal)} className="btn-icon" color="success" type="button">
-        <span>
-          <i className="fa fa-window-restore" />
-        </span>
-      </Button>
-      <Button className="btn-icon" color="danger" type="button">
+      <Button
+        onClick={() => handleDeleteResponse(response)}
+        className="btn-icon"
+        color="danger"
+        type="button"
+      >
         <span>
           <i className="fa fa-trash" />
         </span>
@@ -32,47 +86,55 @@ const History = () => {
 
   return (
     <>
-      <Table className="align-items-center table-flush" responsive>
-        <thead className="thead-light">
-          <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Status</th>
-            <th scope="col">Method</th>
-            <th scope="col">Url</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>13 Hours ago</td>
-            <th scope="row" className="text-success">HTTP: 200</th>
-            <td>POST</td>
-            <td>http://api.restless.dev/teams/create</td>
-            <td>{actionsContainer()}</td>
-          </tr>
-          <tr>
-            <td>18/03/2021</td>
-            <th scope="row" className="text-danger">HTTP: 500</th>
-            <td>POST</td>
-            <td>http://api.restless.dev/teams/create</td>
-            <td>{actionsContainer()}</td>
-          </tr>
-          <tr>
-            <td>21 Hours ago</td>
-            <th scope="row" className="text-success">HTTP: 200</th>
-            <td>GET</td>
-            <td>http://api.restless.dev/teams</td>
-            <td>{actionsContainer()}</td>
-          </tr>
-        </tbody>
-      </Table>
+      {(responses && responses.length > 0) ? (
+        <div className="responses-table">
+          <Table className="align-items-center table-flush" responsive>
+            <thead className="thead-light">
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Status</th>
+                <th scope="col">Method</th>
+                <th scope="col">Url</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {responses.map((response) => (
+                <tr key={response.id}>
+                  <td
+                    title={DateUtils.getFullFormattedDate(response.updatedAt)}
+                  >
+                    {DateUtils.getDistanceFormattedDate(response.updatedAt)}
+                  </td>
+                  <th scope="row">
+                    <span
+                      className="text-darker pl-1 pr-1 bold"
+                      style={{ background: getHttpStatusColor(response.status) }}
+                    >
+                      HTTP:
+                      {' '}
+                      {response.status}
+                    </span>
+                  </th>
+                  <td>{request.method}</td>
+                  <td>{request.link}</td>
+                  <td>{actionsContainer(response)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      ) : (<DefaultEmptySearch dark />)}
       <DefaultModal
         isOpen={responseModal}
         title="Response"
         className="default-modal"
         toggleModal={setResponseModal}
       >
-        <Response />
+        <Response
+          response={selectedResponse}
+          getHttpStatusColor={getHttpStatusColor}
+        />
       </DefaultModal>
     </>
   );

@@ -42,6 +42,7 @@ const RequestsGroup = (props) => {
         }
       }
     } catch (error) {
+      openErrorNotification('Can\'t fetch the records in backend.', 'Groups');
       setGroups([]);
     }
   };
