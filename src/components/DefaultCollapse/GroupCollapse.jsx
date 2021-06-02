@@ -57,8 +57,8 @@ const DefaultCollapse = (props) => {
               </Col>
               <Col md="3" className="pull-right">
                 <ButtonDropdown isOpen={dropDown} toggle={toggleDropDown} direction="left">
-                  <DropdownToggle caret color="link" className="dropdown-collapse">
-                    <i className="fa fa-cogs" />
+                  <DropdownToggle color="link" className="dropdown-collapse">
+                    <i className="fas fa-ellipsis-v" />
                   </DropdownToggle>
                   <DropdownMenu>
                     <DropdownItem onClick={() => editGroup(group.id)}>
