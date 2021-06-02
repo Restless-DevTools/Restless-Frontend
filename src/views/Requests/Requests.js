@@ -108,10 +108,13 @@ const Requests = (props) => {
       <DefaultModal
         isOpen={formModal}
         title="New Collection"
-        className="default-modal"
+        className="default-small-modal"
         toggleModal={setFormModal}
       >
-        <CollectionForm toggleModal={toggleModal} />
+        <CollectionForm
+          toggleModal={toggleModal}
+          loadData={handleSelectChange}
+        />
       </DefaultModal>
     </>
   );
