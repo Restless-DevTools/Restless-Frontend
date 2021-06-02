@@ -3,7 +3,6 @@ import Select from 'react-select';
 import {
   Button, Col, FormGroup, Input, Label, Row, Form,
 } from 'reactstrap';
-import { Form } from 'reactstrap/lib';
 import useGlobal from '../../contexts/GlobalContext';
 import './styles.css';
 
