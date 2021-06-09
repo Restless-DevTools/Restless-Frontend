@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import {
   Button, Col, Form, FormGroup, Input, Label, Row,
@@ -11,15 +11,29 @@ const CollectionForm = (props) => {
   const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
   const { requests } = useApp();
 
-  const [permission, setPermission] = useState();
+  const [permission, setPermission] = useState(null);
   const [collectionName, setCollectionName] = useState('');
   const [collectionDescription, setCollectionDescription] = useState('');
+  const [teams, setTeams] = useState([]);
+  const [team, setTeam] = useState(null);
 
   const [permissions] = useState([
     { label: 'Private', value: 'PRIVATE' },
     { label: 'Public', value: 'PUBLIC' },
     { label: 'Team', value: 'TEAM' },
   ]);
+
+  const getAllTeams = async () => {
+    try {
+      const { data } = await requests.getAllTeams();
+
+      if (data.length) {
+        setTeams(data);
+      }
+    } catch (error) {
+      openErrorNotification('Can not fetch the records in backend.', 'Teams');
+    }
+  };
 
   const createCollection = async (userData) => {
     try {
@@ -43,11 +57,22 @@ const CollectionForm = (props) => {
       return;
     }
 
+    if (permission && permission.value === 'TEAM') {
+      if (!team) {
+        openInfoNotification('The team field must be filled', 'Collection');
+        return;
+      }
+    }
+
     const sendObject = {
       name: collectionName,
       description: collectionDescription,
       permissionType: permission.value,
     };
+
+    if (team) {
+      sendObject.teamId = team.id;
+    }
 
     const collectionInfo = await createCollection(sendObject);
 
@@ -59,6 +84,10 @@ const CollectionForm = (props) => {
       openErrorNotification(collectionInfo.message, 'Collection');
     }
   };
+
+  useEffect(() => {
+    getAllTeams();
+  }, []);
 
   return (
     <Form className="form-page" onSubmit={handleSaveCollection}>
@@ -98,7 +127,7 @@ const CollectionForm = (props) => {
               getOptionLabel={(perm) => perm.label}
               getOptionValue={(perm) => perm.value}
               onChange={(value) => setPermission(value)}
-              placeholder="Permission type"
+              placeholder="Select the permission type"
               defaultValue={permission}
               value={permission}
               name="permission"
@@ -107,6 +136,26 @@ const CollectionForm = (props) => {
           </FormGroup>
         </Col>
       </Row>
+      {(permission && permission.value === 'TEAM') && (
+        <Row>
+          <Col>
+            <FormGroup>
+              <Label for="team">Teams:</Label>
+              <Select
+                options={teams}
+                getOptionLabel={(value) => value.name}
+                getOptionValue={(value) => value.id}
+                onChange={(value) => setTeam(value)}
+                placeholder="Select the team"
+                defaultValue={team}
+                value={team}
+                name="team"
+                isClearable
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+      )}
 
       <footer className="action-pane">
         <Row>

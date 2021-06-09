@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import Select from 'react-select';
 import {
@@ -10,8 +10,6 @@ function SnippetForm(props) {
   const {
     snippet, requests, edit, toggleModal, getSnippets,
   } = props;
-  const [language, setLanguage] = useState(props.snippet.language || 'javascript');
-  const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
 
   const [languages] = useState([
     { label: 'TypeScript', value: 'typescript' },
@@ -46,10 +44,6 @@ function SnippetForm(props) {
     { label: 'GO', value: 'go' },
   ]);
 
-  const [code, setCode] = useState(snippet.code || '// Restless is awesome!');
-  const [name, setName] = useState(snippet.name);
-  const [description, setDescription] = useState(snippet.description);
-
   const [shareOptions] = useState([
     { label: 'Private', value: 'PRIVATE' },
     { label: 'Public', value: 'PUBLIC' },
@@ -57,7 +51,32 @@ function SnippetForm(props) {
     { label: 'User', value: 'USER' },
   ]);
 
-  const [shareOption, setShareOption] = useState(snippet.shareOption);
+  const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
+  const [language, setLanguage] = useState(props.snippet.language || 'javascript');
+  const [code, setCode] = useState(snippet.code || '// Restless is awesome!');
+  const [name, setName] = useState(snippet.name);
+  const [description, setDescription] = useState(snippet.description);
+  const [shareOption, setShareOption] = useState(
+    shareOptions.find((opt) => opt.value === snippet.shareOption) || null,
+  );
+  const [teams, setTeams] = useState([]);
+  const [team, setTeam] = useState(null);
+
+  const getAllTeams = async () => {
+    try {
+      const { data } = await requests.getAllTeams();
+
+      if (data.length) {
+        setTeams(data);
+
+        if (snippet.teamId) {
+          setTeam(data.find((opt) => opt.id === snippet.teamId));
+        }
+      }
+    } catch (error) {
+      openErrorNotification('Can not fetch the records in backend.', 'Teams');
+    }
+  };
 
   const finishProccess = () => {
     toggleModal(false);
@@ -67,13 +86,31 @@ function SnippetForm(props) {
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
-      const sendObject = {
-        code, name, description, language, shareOption,
-      };
 
       if (!shareOption) {
         openInfoNotification('Select a share option', 'Snippet');
         return;
+      }
+
+      if (shareOption && shareOption.value === 'TEAM') {
+        if (!team) {
+          openInfoNotification('The team field must be filled', 'Collection');
+          return;
+        }
+      }
+
+      const sendObject = {
+        code,
+        name,
+        description,
+        language,
+        shareOption: shareOption.value,
+      };
+
+      if (team && shareOption.value === 'TEAM') {
+        sendObject.teamId = team.id;
+      } else {
+        sendObject.teamId = null;
       }
 
       if (edit) {
@@ -91,6 +128,10 @@ function SnippetForm(props) {
       openErrorNotification('Something went wrong!');
     }
   };
+
+  useEffect(() => {
+    getAllTeams();
+  }, []);
 
   return (
     <div className="form-page">
@@ -141,28 +182,36 @@ function SnippetForm(props) {
               <Label for="share">Share:</Label>
               <Select
                 options={shareOptions}
-                onChange={(evt) => setShareOption(evt.value)}
+                getOptionLabel={(option) => option.label}
+                getOptionValue={(option) => option.value}
+                onChange={(value) => setShareOption(value)}
                 placeholder="Share Snippet"
-                value={shareOptions.find((opt) => opt.value === shareOption)}
+                value={shareOption}
                 name="share"
               />
             </FormGroup>
           </Col>
         </Row>
 
-        {shareOption === 'team' && (
-        <Row>
-          <Col md="6">
-            <FormGroup>
-              <Label for="team">Team:</Label>
-              <Select
-                options={[{ value: 'Restless', label: 'Restless' }]}
-                placeholder="Select your team"
-                name="team"
-              />
-            </FormGroup>
-          </Col>
-        </Row>
+        {(shareOption && shareOption.value === 'TEAM') && (
+          <Row>
+            <Col>
+              <FormGroup>
+                <Label for="team">Teams:</Label>
+                <Select
+                  options={teams}
+                  getOptionLabel={(value) => value.name}
+                  getOptionValue={(value) => value.id}
+                  onChange={(value) => setTeam(value)}
+                  placeholder="Select the team"
+                  defaultValue={team}
+                  value={team}
+                  name="team"
+                  isClearable
+                />
+              </FormGroup>
+            </Col>
+          </Row>
         )}
 
         <Row>
