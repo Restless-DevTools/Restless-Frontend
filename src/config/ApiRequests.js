@@ -8,6 +8,10 @@ export default class Requests {
     return this.api.get('/collections/all');
   }
 
+  getAllPublicCollections() {
+    return this.api.get('/collections/public');
+  }
+
   createCollection(collection) {
     return this.api.post('/collections/create', collection);
   }
@@ -97,7 +101,7 @@ export default class Requests {
     return this.api.delete(`/responses/delete/${responseId}`);
   }
 
-  // users
+  // Users
   getAllUsers() {
     return this.api.get('/users/all');
   }
