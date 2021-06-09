@@ -59,7 +59,7 @@ const CollectionForm = (props) => {
 
     if (permission && permission.value === 'TEAM') {
       if (!team) {
-        openInfoNotification('The permission field must be filled', 'Collection');
+        openInfoNotification('The team field must be filled', 'Collection');
         return;
       }
     }
