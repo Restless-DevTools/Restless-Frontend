@@ -151,7 +151,7 @@ const Collections = (props) => {
                     cursor: activeTab !== 'user' && 'pointer',
                   }}
                 >
-                  Your Collections
+                  My Collections
                 </NavLink>
               </NavItem>
               <NavItem className="h2">
