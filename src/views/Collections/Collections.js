@@ -226,7 +226,7 @@ const Collections = (props) => {
                 : (<DefaultEmptySearch />)}
             </Row>
           </TabPane>
-          <TabPane tabId="shared">
+          <TabPane tabId="explore">
             <Row>
               {(filteredPublicCollections.length > 0)
                 ? filteredPublicCollections.map((collection) => (
