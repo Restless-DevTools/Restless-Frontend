@@ -107,8 +107,10 @@ function SnippetForm(props) {
         shareOption: shareOption.value,
       };
 
-      if (team) {
+      if (team && shareOption.value === 'TEAM') {
         sendObject.teamId = team.id;
+      } else {
+        sendObject.teamId = null;
       }
 
       if (edit) {
