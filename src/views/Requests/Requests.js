@@ -22,6 +22,7 @@ const Requests = (props) => {
   const [formModal, setFormModal] = useState(false);
   const [collections, setCollections] = useState([]);
   const [requestSelected, setRequestSelected] = useState({});
+  const [groups, setGroups] = useState([]);
 
   const getAllCollections = async () => {
     try {
@@ -32,6 +33,20 @@ const Requests = (props) => {
       }
     } catch (error) {
       openErrorNotification('Can not fetch the records in backend.', 'Collections');
+    }
+  };
+
+  const getGroups = async () => {
+    try {
+      if (collection) {
+        const { data } = await requests.getGroupsByCollection({ collectionId: collection.id });
+        if (data) {
+          setGroups(data);
+        }
+      }
+    } catch (error) {
+      openErrorNotification('Can\'t fetch the records in backend.', 'Groups');
+      setGroups([]);
     }
   };
 
@@ -94,6 +109,7 @@ const Requests = (props) => {
             openErrorNotification={openErrorNotification}
             openSuccessNotification={openSuccessNotification}
             getHttpStatusColor={getHttpStatusColor}
+            getGroups={getGroups}
           />
           <RequestsGroup
             collection={collection}
@@ -102,6 +118,9 @@ const Requests = (props) => {
             openSuccessNotification={openSuccessNotification}
             setRequestSelected={setRequestSelected}
             requestSelected={requestSelected}
+            groups={groups}
+            setGroups={setGroups}
+            getGroups={getGroups}
           />
         </Row>
       </Container>

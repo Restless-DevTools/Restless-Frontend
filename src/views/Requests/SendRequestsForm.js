@@ -31,6 +31,7 @@ const SendRequestsForm = (props) => {
     openErrorNotification,
     openSuccessNotification,
     getHttpStatusColor,
+    getGroups,
   } = props;
   const [responseModal, setResponseModal] = useState(false);
   const [historyModal, setHistoryModal] = useState(false);
@@ -222,6 +223,8 @@ const SendRequestsForm = (props) => {
     } else {
       openErrorNotification(requestInfo.message, 'Request');
     }
+
+    getGroups();
     setLoading(false);
   };
 
