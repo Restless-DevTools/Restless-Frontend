@@ -23,6 +23,7 @@ const RequestsGroup = (props) => {
   const {
     collection, requests, openSuccessNotification,
     openErrorNotification, requestSelected, setRequestSelected,
+    groups, setGroups, getGroups,
   } = props;
   const [groupModal, setGroupModal] = useState(false);
   const [requestModal, setRequestModal] = useState(false);
@@ -30,22 +31,6 @@ const RequestsGroup = (props) => {
   const [edit, setEdit] = useState(false);
 
   const [selectedGroup, setSelectedGroup] = useState(1);
-
-  const [groups, setGroups] = useState([]);
-
-  const getGroups = async () => {
-    try {
-      if (collection) {
-        const { data } = await requests.getGroupsByCollection({ collectionId: collection.id });
-        if (data) {
-          setGroups(data);
-        }
-      }
-    } catch (error) {
-      openErrorNotification('Can\'t fetch the records in backend.', 'Groups');
-      setGroups([]);
-    }
-  };
 
   useEffect(() => {
     getGroups();

@@ -116,8 +116,8 @@ const History = (props) => {
                       {response.status}
                     </span>
                   </th>
-                  <td>{request.method}</td>
-                  <td>{request.link}</td>
+                  <td>{response.method || request.method}</td>
+                  <td>{response.link || request.link}</td>
                   <td>{actionsContainer(response)}</td>
                 </tr>
               ))}
