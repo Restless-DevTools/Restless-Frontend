@@ -257,7 +257,7 @@ const SendRequestsForm = (props) => {
                     id="link"
                     placeholder="https://www.example.com"
                     type="text"
-                    defaultValue={link}
+                    value={link}
                     onChange={(e) => setLink(e.target.value)}
                   />
                 </FormGroup>
