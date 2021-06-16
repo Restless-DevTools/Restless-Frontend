@@ -65,7 +65,6 @@ const TeamCard = (props) => {
       </Card>
       <DefaultConfirmationModal
         isOpen={confirmationModal}
-        className="default-small-modal"
         toggleModal={setConfirmationModal}
         confirmText="Are you sure you want to delete this team?"
         confirmAction={() => { deleteTeam(teamToDelete); }}

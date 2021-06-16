@@ -6,7 +6,6 @@ import {
 const DefaultConfirmationModal = (props) => {
   const {
     isOpen,
-    className,
     toggleModal,
     confirmText,
     confirmAction,
@@ -25,7 +24,7 @@ const DefaultConfirmationModal = (props) => {
   };
 
   return (
-    <Modal isOpen={modal} toggle={toggle} className={className}>
+    <Modal isOpen={modal} toggle={toggle} className="default-small-modal">
       <ModalHeader className="px-4" tag="h2" toggle={toggle}>Confirm?</ModalHeader>
       <ModalBody className="py-1 px-4">
         {confirmText}

@@ -78,7 +78,6 @@ const DefaultCardList = (props) => {
       )}
       <DefaultConfirmationModal
         isOpen={confirmationModal}
-        className="default-small-modal"
         toggleModal={setConfirmationModal}
         confirmText="Are you sure you want to delete this request?"
         confirmAction={() => { remove(requestId); }}
