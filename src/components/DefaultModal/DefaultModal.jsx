@@ -3,7 +3,7 @@ import {
   Modal, ModalBody, ModalFooter, ModalHeader,
 } from 'reactstrap';
 
-const ModalExample = (props) => {
+const DefaultModal = (props) => {
   const {
     children,
     isOpen,
@@ -43,4 +43,4 @@ const ModalExample = (props) => {
   );
 };
 
-export default ModalExample;
+export default DefaultModal;

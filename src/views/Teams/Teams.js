@@ -19,9 +19,9 @@ function Teams() {
   const { openSuccessNotification, openErrorNotification } = useGlobal();
 
   const [formModal, setFormModal] = useState(false);
-
   const [teams, setTeams] = useState([]);
   const [edit, setEdit] = useState(false);
+  const [teamSelected, setTeamSelected] = useState({});
 
   const toggleModal = () => { setFormModal(!formModal); };
 
@@ -34,12 +34,6 @@ function Teams() {
       setTeams([]);
     }
   };
-
-  useEffect(() => {
-    getTeams();
-  }, []);
-
-  const [teamSelected, setTeamSelected] = useState({});
 
   const newTeam = () => {
     setEdit(false);
@@ -64,6 +58,10 @@ function Teams() {
     }
   };
 
+  useEffect(() => {
+    getTeams();
+  }, []);
+
   return (
     <>
       <DefaultHeader>
@@ -86,16 +84,16 @@ function Teams() {
           </Col>
           <Col md="12">
             {(((teams.length > 0) && (
-            <Card className="shadow">
-              { teams.map((team) => (
-                <TeamCard
-                  key={team.id}
-                  team={team}
-                  editTeam={editTeam}
-                  deleteTeam={deleteTeam}
-                />
-              ))}
-            </Card>
+              <Card className="shadow">
+                {teams.map((team) => (
+                  <TeamCard
+                    key={team.id}
+                    team={team}
+                    editTeam={editTeam}
+                    deleteTeam={deleteTeam}
+                  />
+                ))}
+              </Card>
             ))) || (<DefaultEmptySearch />)}
           </Col>
         </Row>

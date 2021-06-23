@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import {
   Button,
   Card,
-
   Col,
   Container,
   Row,
   Table,
 } from 'reactstrap';
+import DefaultConfirmationModal from '../../components/DefaultConfirmationModal/DefaultConfirmationModal';
 import DefaultEmptySearch from '../../components/DefaultEmptySearch/DefaultEmptySearch';
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
@@ -24,6 +24,8 @@ function Snippets() {
   const [snippets, setSnippets] = useState([]);
   const [snippetSelected, setSnippetSelected] = useState({});
   const [edit, setEdit] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const [snippetToDelete, setSnippetToDelete] = useState(null);
 
   const getSnippets = async () => {
     try {
@@ -33,10 +35,6 @@ function Snippets() {
       openErrorNotification('Can not fetch the records in backend.', 'Snippets');
     }
   };
-
-  useEffect(() => {
-    getSnippets();
-  }, []);
 
   const createSnippet = async () => {
     setEdit(false);
@@ -55,6 +53,16 @@ function Snippets() {
     openSuccessNotification('Snippet deleted successfully', 'Snippet');
     getSnippets();
   };
+
+  useEffect(() => {
+    if (!confirmationModal) {
+      setSnippetToDelete(null);
+    }
+  }, [confirmationModal]);
+
+  useEffect(() => {
+    getSnippets();
+  }, []);
 
   return (
     <>
@@ -97,7 +105,13 @@ function Snippets() {
                           <Button color="success" onClick={() => editSnippet(snippet)}>
                             <i className="fas fa-edit" />
                           </Button>
-                          <Button color="danger" onClick={() => deleteSnippet(snippet)}>
+                          <Button
+                            color="danger"
+                            onClick={() => {
+                              setConfirmationModal(true);
+                              setSnippetToDelete(snippet);
+                            }}
+                          >
                             <i className="fas fa-trash" />
                           </Button>
                         </td>
@@ -128,6 +142,12 @@ function Snippets() {
             edit={edit}
           />
         </DefaultModal>
+        <DefaultConfirmationModal
+          isOpen={confirmationModal}
+          toggleModal={setConfirmationModal}
+          confirmText="Are you sure you want to delete this snippet?"
+          confirmAction={() => { deleteSnippet(snippetToDelete); }}
+        />
       </Container>
     </>
   );
