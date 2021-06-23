@@ -20,6 +20,16 @@
   margin-top: 15px;
 }
 
+.collections {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.infinite-scroll-component__outerdiv {
+  flex: 1;
+}
+
 @media (max-width: 768px) {
   .default-modal {
     max-width: 100%;

@@ -15,6 +15,7 @@ import {
   TabPane,
 } from 'reactstrap';
 import { InputGroupAddon } from 'reactstrap/lib';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import DefaultEmptySearch from '../../components/DefaultEmptySearch/DefaultEmptySearch';
 import DefaultHeader from '../../components/DefaultHeader/DefaultHeader';
 import DefaultModal from '../../components/DefaultModal/DefaultModal';
@@ -36,6 +37,8 @@ const Collections = (props) => {
   const [filteredCollections, setFilteredCollections] = useState([]);
   const [filteredSharedCollections, setFilteredSharedCollections] = useState([]);
   const [filteredPublicCollections, setFilteredPublicCollections] = useState([]);
+  const [hasMoreCollections, setHasMoreCollections] = useState(true);
+  const [offset, setOffset] = useState(0);
 
   const getAllCollections = async () => {
     try {
@@ -57,14 +60,25 @@ const Collections = (props) => {
   };
 
   const getAllPublicCollections = async () => {
-    try {
-      const { data } = await requests.getAllPublicCollections();
+    if (!hasMoreCollections) {
+      return;
+    }
 
-      if (data.length) {
-        setPublicCollections(data);
-        setFilteredPublicCollections(data);
+    try {
+      const { data } = await requests.getPublicCollections(20, offset);
+
+      if (data.rows) {
+        let collectionsConcat = [];
+        if (offset !== 0) collectionsConcat = collectionsConcat.concat(publicCollections);
+        collectionsConcat = collectionsConcat.concat(data.rows);
+
+        setPublicCollections(collectionsConcat);
+        setFilteredPublicCollections(collectionsConcat);
+        setHasMoreCollections(data.rows.length !== 0);
+        setOffset(offset + data.rows.length);
       }
     } catch (error) {
+      console.log(error);
       openErrorNotification('Can not fetch the records in backend.', 'Collections');
     }
   };
@@ -139,7 +153,7 @@ const Collections = (props) => {
         </Col>
       </DefaultHeader>
       <Container fluid>
-        <Row className="mt-5">
+        <Row className="mt-5 mb-4">
           <Col sm="8" md="8" lg="8" xl="9">
             <Nav>
               <NavItem className="h2">
@@ -180,24 +194,26 @@ const Collections = (props) => {
               </NavItem>
             </Nav>
           </Col>
-          <Col sm="4" md="4" lg="4" xl="3">
-            <FormGroup className="navbar-search navbar-search-dark">
-              <InputGroup className="input-group-alternative">
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>
-                    <i className="fa fa-search" />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  className="w-50"
-                  type="text"
-                  placeholder="Search"
-                  value={filterValue}
-                  onChange={(evt) => { setFilterValue(evt.target.value); }}
-                />
-              </InputGroup>
-            </FormGroup>
-          </Col>
+          {activeTab !== 'explore' && (
+            <Col sm="4" md="4" lg="4" xl="3">
+              <FormGroup className="navbar-search navbar-search-dark mb-0">
+                <InputGroup className="input-group-alternative">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="fa fa-search" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    className="w-50"
+                    type="text"
+                    placeholder="Search"
+                    value={filterValue}
+                    onChange={(evt) => { setFilterValue(evt.target.value); }}
+                  />
+                </InputGroup>
+              </FormGroup>
+            </Col>
+          )}
         </Row>
         <TabContent activeTab={activeTab}>
           <TabPane tabId="user">
@@ -228,15 +244,40 @@ const Collections = (props) => {
           </TabPane>
           <TabPane tabId="explore">
             <Row>
-              {(filteredPublicCollections.length > 0)
-                ? filteredPublicCollections.map((collection) => (
-                  <CollectionCard
-                    key={collection.id}
-                    collection={collection}
-                    handleOpenCollection={handleOpenCollection}
-                  />
-                ))
-                : (<DefaultEmptySearch />)}
+              {(filteredPublicCollections.length > 0) ? (
+                <InfiniteScroll
+                  style={{ overflow: 'visible' }}
+                  dataLength={publicCollections.length}
+                  next={getAllPublicCollections}
+                  hasMore={hasMoreCollections}
+                  loader={(
+                    <div className="text-center text-white">
+                      <i className="fas fa-circle-notch fa-spin" />
+                      <p>
+                        <b>Loading</b>
+                      </p>
+                    </div>
+                  )}
+                  endMessage={(
+                    <div className="text-center text-white">
+                      <i className="fas fa-check-circle" />
+                      <p>
+                        <b>Yay! You have seen it all</b>
+                      </p>
+                    </div>
+                )}
+                >
+                  <div className="collections">
+                    {filteredPublicCollections.map((collection) => (
+                      <CollectionCard
+                        key={collection.id}
+                        collection={collection}
+                        handleOpenCollection={handleOpenCollection}
+                      />
+                    ))}
+                  </div>
+                </InfiniteScroll>
+              ) : (<DefaultEmptySearch />)}
             </Row>
           </TabPane>
         </TabContent>
