@@ -8,8 +8,12 @@ export default class Requests {
     return this.api.get('/collections/all');
   }
 
-  getAllPublicCollections() {
-    return this.api.get('/collections/public');
+  getPublicCollections(amount = 10, offset = 0, filters) {
+    return this.api.get(`/collections/public/?offset=${offset}&amount=${amount}`, {
+      params: {
+        filters,
+      },
+    });
   }
 
   createCollection(collection) {
