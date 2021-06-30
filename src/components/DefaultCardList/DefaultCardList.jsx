@@ -8,7 +8,7 @@ import './styles.css';
 
 const DefaultCardList = (props) => {
   const {
-    list, edit, remove, handleItemClick,
+    list, edit, remove, handleItemClick, collection,
   } = props;
 
   const [requestId, setRequestId] = useState(null);
@@ -23,6 +23,26 @@ const DefaultCardList = (props) => {
       setRequestId(null);
     }
   }, [confirmationModal]);
+
+  const handleAllowEdit = () => {
+    if (collection.sharedPermissions === 'EDIT') {
+      return true;
+    }
+
+    if (collection.sharedPermissions === 'DELETE') {
+      return true;
+    }
+
+    return false;
+  };
+
+  const handleAllowDelete = () => {
+    if (collection.sharedPermissions === 'DELETE') {
+      return true;
+    }
+
+    return false;
+  };
 
   return (
     <>
@@ -42,7 +62,7 @@ const DefaultCardList = (props) => {
                 </Button>
               </Col>
               <Col md="4" className="text-right">
-                {edit && (
+                {handleAllowEdit() && (
                   <Button
                     onClick={() => edit(request.id)}
                     className="btn-icon"
@@ -55,7 +75,7 @@ const DefaultCardList = (props) => {
                     </span>
                   </Button>
                 )}
-                {remove && (
+                { handleAllowDelete() && (
                   <Button
                     className="btn-icon"
                     color="danger"

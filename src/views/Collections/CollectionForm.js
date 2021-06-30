@@ -11,13 +11,19 @@ const CollectionForm = (props) => {
   const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
   const { requests } = useApp();
 
-  const [permission, setPermission] = useState(null);
+  const [shareOption, setShareOption] = useState(null);
   const [collectionName, setCollectionName] = useState('');
   const [collectionDescription, setCollectionDescription] = useState('');
   const [teams, setTeams] = useState([]);
   const [team, setTeam] = useState(null);
+  const [sharedPermissions, setSharedPermissions] = useState(null);
+  const [sharedPermissionsOptions] = useState([
+    { label: 'Can only see and execute', value: 'READ' },
+    { label: 'Can see and edit', value: 'WRITE' },
+    { label: 'Can see, edit and delete', value: 'DELETE' },
+  ]);
 
-  const [permissions] = useState([
+  const [shareOptions] = useState([
     { label: 'Private', value: 'PRIVATE' },
     { label: 'Public', value: 'PUBLIC' },
     { label: 'Team', value: 'TEAM' },
@@ -52,12 +58,12 @@ const CollectionForm = (props) => {
   const handleSaveCollection = async (e) => {
     e.preventDefault();
 
-    if (!permission) {
-      openInfoNotification('The permission field must be filled', 'Collection');
+    if (!shareOption) {
+      openInfoNotification('The shareOption field must be filled', 'Collection');
       return;
     }
 
-    if (permission && permission.value === 'TEAM') {
+    if (shareOption && shareOption.value === 'TEAM') {
       if (!team) {
         openInfoNotification('The team field must be filled', 'Collection');
         return;
@@ -67,7 +73,8 @@ const CollectionForm = (props) => {
     const sendObject = {
       name: collectionName,
       description: collectionDescription,
-      permissionType: permission.value,
+      shareOption: shareOption.value,
+      sharedPermissions: sharedPermissions.value,
     };
 
     if (team) {
@@ -88,6 +95,18 @@ const CollectionForm = (props) => {
   useEffect(() => {
     getAllTeams();
   }, []);
+
+  const checkSharedPermissions = () => {
+    if (!shareOption) {
+      return false;
+    }
+
+    if (shareOption.value === 'PUBLIC' || shareOption.value === 'TEAM') {
+      return true;
+    }
+
+    return false;
+  };
 
   return (
     <Form className="form-page" onSubmit={handleSaveCollection}>
@@ -121,22 +140,22 @@ const CollectionForm = (props) => {
       <Row>
         <Col>
           <FormGroup>
-            <Label for="permission">Permission:</Label>
+            <Label for="shareOption">Share Option:</Label>
             <Select
-              options={permissions}
+              options={shareOptions}
               getOptionLabel={(perm) => perm.label}
               getOptionValue={(perm) => perm.value}
-              onChange={(value) => setPermission(value)}
-              placeholder="Select the permission type"
-              defaultValue={permission}
-              value={permission}
-              name="permission"
+              onChange={(value) => setShareOption(value)}
+              placeholder="Select the share option"
+              defaultValue={shareOption}
+              value={shareOption}
+              name="shareOption"
               isClearable
             />
           </FormGroup>
         </Col>
       </Row>
-      {(permission && permission.value === 'TEAM') && (
+      {(shareOption && shareOption.value === 'TEAM') && (
         <Row>
           <Col>
             <FormGroup>
@@ -150,6 +169,27 @@ const CollectionForm = (props) => {
                 defaultValue={team}
                 value={team}
                 name="team"
+                isClearable
+              />
+            </FormGroup>
+          </Col>
+        </Row>
+      )}
+
+      {checkSharedPermissions() && (
+        <Row>
+          <Col>
+            <FormGroup>
+              <Label for="sharedPermissions">Shared Permissions:</Label>
+              <Select
+                options={sharedPermissionsOptions}
+                getOptionLabel={(value) => value.label}
+                getOptionValue={(value) => value.value}
+                onChange={(value) => setSharedPermissions(value)}
+                placeholder="Select the shared permissions"
+                defaultValue={shareOption}
+                value={sharedPermissions}
+                name="sharedPermissions"
                 isClearable
               />
             </FormGroup>
