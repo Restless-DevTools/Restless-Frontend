@@ -43,9 +43,18 @@ function Snippets() {
   };
 
   const editSnippet = async (snippet) => {
-    setEdit(true);
-    setSnippetSelected(snippet);
-    setFormModal(!formModal);
+    try {
+      setEdit(true);
+      const { data } = await requests.getSnippet(snippet.id);
+
+      if (data) {
+        setSnippetSelected(data);
+        setFormModal(!formModal);
+      }
+    } catch (error) {
+      console.log(error);
+      openErrorNotification('Can not fetch the records in backend.', 'Snippets');
+    }
   };
 
   const deleteSnippet = async (snippet) => {

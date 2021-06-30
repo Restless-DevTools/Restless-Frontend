@@ -178,6 +178,7 @@ const RequestsGroup = (props) => {
                 badgeCount={(group.requests && group.requests.length) ? group.requests.length : 0}
                 editGroup={editGroup}
                 deleteGroup={deleteGroup}
+                collection={collection}
               >
                 { group.requests && group.requests.length > 0 && (
                   <DefaultCardList
@@ -186,6 +187,7 @@ const RequestsGroup = (props) => {
                     edit={handleEdit}
                     remove={handleDeleteRequest}
                     handleItemClick={handleSelectRequest}
+                    collection={collection}
                   />
                 )}
               </DefaultCollapse>

@@ -15,7 +15,7 @@ import './styles.css';
 
 const DefaultCollapse = (props) => {
   const {
-    children, group, selectedGroup, toggleGroup, editGroup, deleteGroup,
+    collection, children, group, selectedGroup, toggleGroup, editGroup, deleteGroup,
   } = props;
 
   const isSelected = selectedGroup === group.id;
@@ -61,14 +61,18 @@ const DefaultCollapse = (props) => {
                     <i className="fas fa-ellipsis-v" />
                   </DropdownToggle>
                   <DropdownMenu>
-                    <DropdownItem onClick={() => editGroup(group.id)}>
-                      <i className="fa fa-edit" />
-                      Edit
-                    </DropdownItem>
-                    <DropdownItem onClick={() => deleteGroup(group.id)}>
-                      <i className="fa fa-trash" />
-                      Delete
-                    </DropdownItem>
+                    {(collection.sharedPermissions === 'EDIT' || collection.sharedPermissions === 'DELETE') && (
+                      <DropdownItem onClick={() => editGroup(group.id)}>
+                        <i className="fa fa-edit" />
+                        Edit
+                      </DropdownItem>
+                    )}
+                    {(collection.sharedPermissions === 'DELETE') && (
+                      <DropdownItem onClick={() => deleteGroup(group.id)}>
+                        <i className="fa fa-trash" />
+                        Delete
+                      </DropdownItem>
+                    )}
                   </DropdownMenu>
                 </ButtonDropdown>
               </Col>

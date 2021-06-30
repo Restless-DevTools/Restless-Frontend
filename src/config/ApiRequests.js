@@ -37,6 +37,10 @@ export default class Requests {
     return this.api.delete(`/snippets/delete/${snippetId}`);
   }
 
+  getSnippet(snippetId) {
+    return this.api.get(`/snippets/show/${snippetId}`);
+  }
+
   // Groups
   createGroup(group) {
     return this.api.post('/groups/create', group);
