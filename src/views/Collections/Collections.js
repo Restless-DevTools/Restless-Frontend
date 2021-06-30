@@ -74,7 +74,7 @@ const Collections = (props) => {
 
         setPublicCollections(collectionsConcat);
         setFilteredPublicCollections(collectionsConcat);
-        setHasMoreCollections(data.rows.length !== 0);
+        setHasMoreCollections(data.rows.length < data.count);
         setOffset(offset + data.rows.length);
       }
     } catch (error) {
