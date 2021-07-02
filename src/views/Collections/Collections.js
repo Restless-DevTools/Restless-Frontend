@@ -56,6 +56,12 @@ const Collections = (props) => {
 
         setFilteredCollections(user);
         setFilteredSharedCollections(shared);
+      } else {
+        setCollections([]);
+        setSharedCollections([]);
+
+        setFilteredCollections([]);
+        setFilteredSharedCollections([]);
       }
     } catch (error) {
       openErrorNotification('Can not fetch the records in backend.', 'Collections');
@@ -100,7 +106,9 @@ const Collections = (props) => {
   };
 
   const toggleCollectionModal = (shouldEdit) => {
-    if (!shouldEdit) setSelectedCollection(null);
+    if (!shouldEdit) {
+      setSelectedCollection(null);
+    }
 
     setCollectionModalTitle(shouldEdit ? 'Collection' : 'New Collection');
     setFormModal(!formModal);
@@ -226,26 +234,24 @@ const Collections = (props) => {
               </NavItem>
             </Nav>
           </Col>
-          {activeTab !== 'explore' && (
-            <Col sm="4" md="4" lg="4" xl="3">
-              <FormGroup className="navbar-search navbar-search-dark mb-0">
-                <InputGroup className="input-group-alternative">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="fa fa-search" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    className="w-50"
-                    type="text"
-                    placeholder="Search"
-                    value={filterValue}
-                    onChange={(evt) => { setFilterValue(evt.target.value); }}
-                  />
-                </InputGroup>
-              </FormGroup>
-            </Col>
-          )}
+          <Col sm="4" md="4" lg="4" xl="3">
+            <FormGroup className="navbar-search navbar-search-dark mb-0">
+              <InputGroup className="input-group-alternative">
+                <InputGroupAddon addonType="prepend">
+                  <InputGroupText>
+                    <i className="fa fa-search" />
+                  </InputGroupText>
+                </InputGroupAddon>
+                <Input
+                  className="w-50"
+                  type="text"
+                  placeholder="Search"
+                  value={filterValue}
+                  onChange={(evt) => { setFilterValue(evt.target.value); }}
+                />
+              </InputGroup>
+            </FormGroup>
+          </Col>
         </Row>
         <TabContent activeTab={activeTab}>
           <TabPane tabId="user">
