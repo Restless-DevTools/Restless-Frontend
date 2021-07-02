@@ -7,16 +7,12 @@ import useApp from '../../contexts/ApplicationContext';
 import useGlobal from '../../contexts/GlobalContext';
 
 const CollectionForm = (props) => {
-  const { toggleModal, loadData } = props;
+  const {
+    toggleModal, loadData, edit, collection,
+  } = props;
   const { openSuccessNotification, openErrorNotification, openInfoNotification } = useGlobal();
   const { requests } = useApp();
 
-  const [shareOption, setShareOption] = useState(null);
-  const [collectionName, setCollectionName] = useState('');
-  const [collectionDescription, setCollectionDescription] = useState('');
-  const [teams, setTeams] = useState([]);
-  const [team, setTeam] = useState(null);
-  const [sharedPermissions, setSharedPermissions] = useState(null);
   const [sharedPermissionsOptions] = useState([
     { label: 'Can only see and execute', value: 'READ' },
     { label: 'Can see and edit', value: 'WRITE' },
@@ -28,6 +24,41 @@ const CollectionForm = (props) => {
     { label: 'Public', value: 'PUBLIC' },
     { label: 'Team', value: 'TEAM' },
   ]);
+
+  const [collectionName, setCollectionName] = useState(
+    collection && collection.name
+      ? collection.name : '',
+  );
+  const [collectionDescription, setCollectionDescription] = useState(
+    collection && collection.description ? collection.description : '',
+  );
+  const [shareOption, setShareOption] = useState(
+    collection && collection.shareOption
+      ? shareOptions.find((o) => o.value === collection.shareOption)
+      : null,
+  );
+  const [sharedPermissions, setSharedPermissions] = useState(
+    collection && collection.sharedPermissions
+      ? sharedPermissionsOptions.filter((o) => o.value === collection.sharedPermissions)
+      : null,
+  );
+
+  const [team, setTeam] = useState(null);
+  const [teams, setTeams] = useState([]);
+
+  const handleDefaultTeam = () => {
+    if (collection && collection.teamId) {
+      setTeam(teams.find((t) => t.id === collection.teamId));
+    }
+  };
+
+  const printSuccessMessage = () => {
+    if (!edit) {
+      return openSuccessNotification('Collection created successfully', 'Collection');
+    }
+
+    return openSuccessNotification('Collection updated successfully', 'Collection');
+  };
 
   const getAllTeams = async () => {
     try {
@@ -41,9 +72,13 @@ const CollectionForm = (props) => {
     }
   };
 
-  const createCollection = async (userData) => {
+  const submitCollection = async (collectionData) => {
     try {
-      const { data } = await requests.createCollection(userData);
+      const request = !edit
+        ? requests.createCollection(collectionData)
+        : requests.editCollection(collection.id, collectionData);
+
+      const { data } = await request;
 
       if (!data.status && !data.id) {
         return { isValid: false, message: data.message };
@@ -55,11 +90,16 @@ const CollectionForm = (props) => {
     }
   };
 
-  const handleSaveCollection = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!shareOption) {
-      openInfoNotification('The shareOption field must be filled', 'Collection');
+      openInfoNotification('The share option field must be filled', 'Collection');
+      return;
+    }
+
+    if (!sharedPermissions && shareOption !== 'PRIVATE') {
+      openInfoNotification('The shared permissions field must be filled', 'Collection');
       return;
     }
 
@@ -74,27 +114,38 @@ const CollectionForm = (props) => {
       name: collectionName,
       description: collectionDescription,
       shareOption: shareOption.value,
-      sharedPermissions: sharedPermissions.value,
+      sharedPermissions: shareOption.value === 'PRIVATE'
+        ? 'DELETE'
+        : sharedPermissions.value,
+      teamId: team ? team.id : null,
     };
 
-    if (team) {
-      sendObject.teamId = team.id;
-    }
-
-    const collectionInfo = await createCollection(sendObject);
+    const collectionInfo = await submitCollection(sendObject);
 
     if (collectionInfo.isValid) {
-      openSuccessNotification('Collection successfully created', 'Collection');
+      loadData();
       toggleModal();
-      loadData(collectionInfo.collection);
+      printSuccessMessage();
     } else {
-      openErrorNotification(collectionInfo.message, 'Collection');
+      openErrorNotification('Something went wrong', 'Collection');
     }
   };
 
   useEffect(() => {
     getAllTeams();
   }, []);
+
+  useEffect(() => {
+    if (teams && teams.length) {
+      handleDefaultTeam();
+    }
+  }, [teams]);
+
+  useEffect(() => {
+    if (shareOption && shareOption !== 'TEAM') {
+      setTeam(null);
+    }
+  }, [shareOption]);
 
   const checkSharedPermissions = () => {
     if (!shareOption) {
@@ -109,7 +160,7 @@ const CollectionForm = (props) => {
   };
 
   return (
-    <Form className="form-page" onSubmit={handleSaveCollection}>
+    <Form className="form-page" onSubmit={handleSubmit}>
       <Row>
         <Col>
           <FormGroup>
@@ -118,6 +169,7 @@ const CollectionForm = (props) => {
               id="collection-name"
               placeholder="Write a name for your collection"
               onChange={(e) => { setCollectionName(e.target.value); }}
+              defaultValue={collectionName}
               type="text"
               required
             />
@@ -132,6 +184,7 @@ const CollectionForm = (props) => {
               id="collection-description"
               placeholder="Write a description for this collection"
               onChange={(e) => { setCollectionDescription(e.target.value); }}
+              defaultValue={collectionDescription}
               type="text"
             />
           </FormGroup>

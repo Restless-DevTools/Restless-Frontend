@@ -1,24 +1,62 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Badge,
-  Card, CardBody, CardFooter, CardHeader, CardText, Col, Row,
+  ButtonDropdown,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  CardText,
+  Col,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Row,
 } from 'reactstrap';
 import DateUtils from '../../utils/DateUtils';
 
 const CollectionCard = (props) => {
-  const { collection, handleOpenCollection } = props;
+  const {
+    collection,
+    handleOpenCollection,
+    canEdit,
+    handleEdit,
+    handleDelete,
+  } = props;
+  const [dropDown, setDropDown] = useState(false);
+
+  const toggleDropDown = () => setDropDown(!dropDown);
 
   return (
     <Col xl="3" lg="3" md="4" sm="6" className="collection-card">
-      <Card className="shadow btn p-0 text-left mb-5" onClick={() => { handleOpenCollection(collection); }}>
+      <Card className="shadow p-0 text-left mb-5">
         <CardHeader className="bg-dracula-secondary">
-          <Row>
-            <Col>
+          <Row className="align-items-center">
+            <Col xs="10">
               <CardText tag="h3" className="text-white">{collection.name}</CardText>
             </Col>
+            {canEdit && (
+              <Col xs="2">
+                <ButtonDropdown isOpen={dropDown} toggle={toggleDropDown} direction="left">
+                  <DropdownToggle color="link" className="dropdown-collapse">
+                    <i className="fas fa-ellipsis-v" />
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={() => { handleEdit(collection.id); }}>
+                      <i className="fa fa-edit" />
+                      Edit
+                    </DropdownItem>
+                    <DropdownItem onClick={() => { handleDelete(collection.id); }}>
+                      <i className="fa fa-trash" />
+                      Delete
+                    </DropdownItem>
+                  </DropdownMenu>
+                </ButtonDropdown>
+              </Col>
+            )}
           </Row>
         </CardHeader>
-        <CardBody>
+        <CardBody onClick={() => { handleOpenCollection(collection); }}>
           <Row className="align-items-center">
             <Col>
               <CardText tag="h4">
@@ -30,7 +68,7 @@ const CollectionCard = (props) => {
             </Col>
           </Row>
         </CardBody>
-        <CardFooter className="bg-dracula-secondary">
+        <CardFooter className="bg-dracula-secondary" onClick={() => { handleOpenCollection(collection); }}>
           <Row className="text-right">
             <Col md="12">
               <CardText className="text-white h5">
