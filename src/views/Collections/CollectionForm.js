@@ -98,7 +98,7 @@ const CollectionForm = (props) => {
       return;
     }
 
-    if (!sharedPermissions && shareOption !== 'PRIVATE') {
+    if (!sharedPermissions && shareOption.value !== 'PRIVATE') {
       openInfoNotification('The shared permissions field must be filled', 'Collection');
       return;
     }
