@@ -38,7 +38,7 @@ const CollectionCard = (props) => {
             {canEdit && (
               <Col xs="2">
                 <ButtonDropdown isOpen={dropDown} toggle={toggleDropDown} direction="left">
-                  <DropdownToggle color="link" className="dropdown-collapse">
+                  <DropdownToggle color="link" className="dropdown-collapse p-0">
                     <i className="fas fa-ellipsis-v" />
                   </DropdownToggle>
                   <DropdownMenu>
@@ -56,7 +56,10 @@ const CollectionCard = (props) => {
             )}
           </Row>
         </CardHeader>
-        <CardBody onClick={() => { handleOpenCollection(collection); }}>
+        <CardBody
+          onClick={() => { handleOpenCollection(collection); }}
+          style={{ cursor: 'pointer' }}
+        >
           <Row className="align-items-center">
             <Col>
               <CardText tag="h4">
@@ -68,7 +71,11 @@ const CollectionCard = (props) => {
             </Col>
           </Row>
         </CardBody>
-        <CardFooter className="bg-dracula-secondary" onClick={() => { handleOpenCollection(collection); }}>
+        <CardFooter
+          className="bg-dracula-secondary"
+          onClick={() => { handleOpenCollection(collection); }}
+          style={{ cursor: 'pointer' }}
+        >
           <Row className="text-right">
             <Col md="12">
               <CardText className="text-white h5">
