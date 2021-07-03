@@ -1,53 +1,119 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Badge,
-  Card, CardBody, CardFooter, CardHeader, CardText, Col, Row,
+  ButtonDropdown,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  CardText,
+  Col,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Row,
 } from 'reactstrap';
+import DefaultConfirmationModal from '../../components/DefaultConfirmationModal/DefaultConfirmationModal';
 import DateUtils from '../../utils/DateUtils';
 
 const CollectionCard = (props) => {
-  const { collection, handleOpenCollection } = props;
+  const {
+    collection,
+    handleOpenCollection,
+    canEdit,
+    handleEdit,
+    handleDelete,
+  } = props;
+  const [dropDown, setDropDown] = useState(false);
+  const [confirmationModal, setConfirmationModal] = useState(false);
+  const [collectionId, setCollectionId] = useState(null);
+
+  const toggleDropDown = () => setDropDown(!dropDown);
+
+  useEffect(() => {
+    if (!confirmationModal) {
+      setCollectionId(null);
+    }
+  }, [confirmationModal]);
 
   return (
-    <Col xl="3" lg="3" md="4" sm="6" className="collection-card">
-      <Card className="shadow btn p-0 text-left mb-5" onClick={() => { handleOpenCollection(collection); }}>
-        <CardHeader className="bg-dracula-secondary">
-          <Row>
-            <Col>
-              <CardText tag="h3" className="text-white">{collection.name}</CardText>
-            </Col>
-          </Row>
-        </CardHeader>
-        <CardBody>
-          <Row className="align-items-center">
-            <Col>
-              <CardText tag="h4">
-                {collection.description}
-              </CardText>
-              <Badge color="dark" className="m-0">
-                {collection.permissionType}
-              </Badge>
-            </Col>
-          </Row>
-        </CardBody>
-        <CardFooter className="bg-dracula-secondary">
-          <Row className="text-right">
-            <Col md="12">
-              <CardText className="text-white h5">
-                Created at:
-                {' '}
-                {DateUtils.getDistanceFormattedDate(collection.createdAt)}
-              </CardText>
-              <CardText className="text-white h5">
-                Updated at:
-                {' '}
-                {DateUtils.getDistanceFormattedDate(collection.updatedAt)}
-              </CardText>
-            </Col>
-          </Row>
-        </CardFooter>
-      </Card>
-    </Col>
+    <>
+      <Col xl="3" lg="3" md="4" sm="6" className="collection-card">
+        <Card className="shadow p-0 text-left mb-5">
+          <CardHeader className="bg-dracula-secondary">
+            <Row className="align-items-center">
+              <Col xs="10">
+                <CardText tag="h3" className="text-white">{collection.name}</CardText>
+              </Col>
+              {canEdit && (
+              <Col xs="2">
+                <ButtonDropdown isOpen={dropDown} toggle={toggleDropDown} direction="left">
+                  <DropdownToggle color="link" className="dropdown-collapse p-0">
+                    <i className="fas fa-ellipsis-v" />
+                  </DropdownToggle>
+                  <DropdownMenu>
+                    <DropdownItem onClick={() => { handleEdit(collection.id); }}>
+                      <i className="fa fa-edit" />
+                      Edit
+                    </DropdownItem>
+                    <DropdownItem onClick={() => {
+                      setConfirmationModal(true);
+                      setCollectionId(collection.id);
+                    }}
+                    >
+                      <i className="fa fa-trash" />
+                      Delete
+                    </DropdownItem>
+                  </DropdownMenu>
+                </ButtonDropdown>
+              </Col>
+              )}
+            </Row>
+          </CardHeader>
+          <CardBody
+            onClick={() => { handleOpenCollection(collection); }}
+            style={{ cursor: 'pointer' }}
+          >
+            <Row className="align-items-center">
+              <Col>
+                <CardText tag="h4">
+                  {collection.description}
+                </CardText>
+                <Badge color="dark" className="m-0">
+                  {collection.permissionType}
+                </Badge>
+              </Col>
+            </Row>
+          </CardBody>
+          <CardFooter
+            className="bg-dracula-secondary"
+            onClick={() => { handleOpenCollection(collection); }}
+            style={{ cursor: 'pointer' }}
+          >
+            <Row className="text-right">
+              <Col md="12">
+                <CardText className="text-white h5">
+                  Created at:
+                  {' '}
+                  {DateUtils.getDistanceFormattedDate(collection.createdAt)}
+                </CardText>
+                <CardText className="text-white h5">
+                  Updated at:
+                  {' '}
+                  {DateUtils.getDistanceFormattedDate(collection.updatedAt)}
+                </CardText>
+              </Col>
+            </Row>
+          </CardFooter>
+        </Card>
+      </Col>
+      <DefaultConfirmationModal
+        isOpen={confirmationModal}
+        toggleModal={setConfirmationModal}
+        confirmText="Are you sure you want to delete this collection?"
+        confirmAction={() => { handleDelete(collectionId); }}
+      />
+    </>
   );
 };
 

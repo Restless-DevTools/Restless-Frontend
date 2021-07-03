@@ -20,6 +20,14 @@ export default class Requests {
     return this.api.post('/collections/create', collection);
   }
 
+  editCollection(collectionId, collection) {
+    return this.api.put(`/collections/update/${collectionId}`, collection);
+  }
+
+  deleteCollection(collectionId) {
+    return this.api.delete(`/collections/delete/${collectionId}`);
+  }
+
   // Snippets
   getSnippets() {
     return this.api.get('/snippets/all');
