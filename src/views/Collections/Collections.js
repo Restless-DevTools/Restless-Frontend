@@ -110,7 +110,7 @@ const Collections = (props) => {
       setSelectedCollection(null);
     }
 
-    setCollectionModalTitle(shouldEdit ? 'Collection' : 'New Collection');
+    setCollectionModalTitle(shouldEdit ? 'Edit Collection' : 'New Collection');
     setFormModal(!formModal);
   };
 

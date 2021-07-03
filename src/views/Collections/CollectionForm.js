@@ -127,7 +127,7 @@ const CollectionForm = (props) => {
       toggleModal();
       printSuccessMessage();
     } else {
-      openErrorNotification('Something went wrong', 'Collection');
+      openErrorNotification((collectionInfo.message || 'Something went wrong'), 'Collection');
     }
   };
 
